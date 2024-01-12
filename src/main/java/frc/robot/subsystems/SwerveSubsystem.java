@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
@@ -10,9 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-//import edu.wpi.first.wpilibj.DriverStation;
-//import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -62,7 +59,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
 
-  private final WPI_PigeonIMU gyro;
+  private final Pigeon2 gyro;
   
   private final SwerveDriveOdometry odometery = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0),
@@ -72,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public static boolean isFieldOriented = false;
 
 
-  public SwerveSubsystem(WPI_PigeonIMU gyro ) {
+  public SwerveSubsystem(Pigeon2 gyro ) {
     new Thread(() -> {
       try {
         Thread.sleep(1000);
@@ -149,9 +146,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void gyroUpdate(){
-    SmartDashboard.putNumber("1Robot Yaw", (gyro.getYaw()));
-    SmartDashboard.putNumber("1Robot Pitch", gyro.getPitch());
-    SmartDashboard.putNumber("1Robot Roll", gyro.getRoll());
     SmartDashboard.putNumber("1Robot Angle", gyro.getAngle());
     SmartDashboard.putData(gyro);
   }
@@ -167,11 +161,11 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getPitch(){
-    return Rotation2d.fromDegrees(gyro.getPitch());
+    return Rotation2d.fromDegrees(gyro.getPitch().getValueAsDouble());
   }
 
   public Rotation2d getRoll(){
-    return Rotation2d.fromDegrees(gyro.getRoll());
+    return Rotation2d.fromDegrees(gyro.getRoll().getValueAsDouble());
   }
 
   public double getTilt(){
