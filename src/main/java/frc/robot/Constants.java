@@ -1,34 +1,81 @@
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public class Constants {
-    public static class ModuleConstants {
+/**
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * constants are needed, to reduce verbosity.
+ */
+public final class Constants {
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+    public static final int OperatorControllerPort = 1;
+    public static final double kDeadband = 0.1;
 
-        //how many inches is the wheel diameter
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-        //find gear ratio
-        public static final double kDriveMotorGearRatio = 1 / 6.75;
-        public static final double kTurningMotorGearRatio = 1 / 6.75;
-    
-        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-        public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter/60;
-    
-        public static final double kTurningEncoderRot2Meter = kTurningMotorGearRatio * 2 * Math.PI;
-        public static final double kTurningEncoderRPM2MeterPerSec = kTurningEncoderRot2Meter/60;
-    
-        //P in PID Controller for Turning Motor
-        public static final double kPTurning = 0.255;
-        public static final double kITurning = 0;
-        public static final double kDTurning = 0;
-    
-        public static final double PIDDeadband = 0.1;
-      }   
+    public static final int intakeButton = 2;
+    public static final int extakeButton = 1;
+    public static final int extendButton = 6;
+    public static final int retractButton = 5;
+    public static final int wristButton = 12;
 
 
-      public static class DriveConstants {
+    public static final int playerStationButton = 10;
+    public static final int highScoreButton = 7;
+    public static final int middleScoreButton = 9;
+    public static final int groundScoreButton = 11;
+  }
+
+  public static class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+    public static final double kMaxAngularSpeedRadiansPerSecond = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1.25;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
+    public static final double kPXController = 6;
+    public static final double kPYController = 6;
+    public static final double kPThetaController = 2;
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+            new TrapezoidProfile.Constraints(
+                    kMaxAngularSpeedRadiansPerSecond,
+                    kMaxAngularAccelerationRadiansPerSecondSquared);
+
+
+    public static final double ElevHigh = 100;
+
+    public static PIDController BalancePID = new PIDController(0.05, 0, 0);
+  }
+
+  public static class ModuleConstants {
+
+    //how many inches is the wheel diameter
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+    //find gear ratio
+    public static final double kDriveMotorGearRatio = 1 / 6.75;
+    public static final double kTurningMotorGearRatio = 1 / 6.75;
+
+    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter/60;
+
+    public static final double kTurningEncoderRot2Meter = kTurningMotorGearRatio * 2 * Math.PI;
+    public static final double kTurningEncoderRPM2MeterPerSec = kTurningEncoderRot2Meter/60;
+
+    //P in PID Controller for Turning Motor
+    public static final double kPTurning = 0.255;
+    public static final double kITurning = 0;
+    public static final double kDTurning = 0;
+
+    public static final double PIDDeadband = 0.1;
+  }
+
+  public static class DriveConstants {
 
     public static final double kTrackWidth = Units.inchesToMeters(20);
     //Distance between left and right wheels
@@ -116,7 +163,27 @@ public class Constants {
     public static final double scoreGroundWrist = 0;
     public static final double humanWrist = 0;
   }
+
+
+  public static class LEDConstants{
+    public static final int[][][] flags = {
+
+      { // rainbow flag
+        {0, 0, 0}, // red
+        {0, 0, 0}, // orange
+        {0, 0, 0}, // yellow
+        {0, 0, 0}, // green
+        {0, 0, 0}, // blue
+        {0, 0, 0} // purple
+      }, // end of rainbow flag
+
+      { // bi flag
+        {0, 0, 0}, // pink
+        {0, 0, 0}, // purple
+        {0, 0, 0} // blue
+      } // end of bi flag
+
+
+    }; // end of flags array
+  }
 }
-
-
-
