@@ -49,9 +49,6 @@ public class SwerveModule {
     turningMotor.restoreFactoryDefaults();
     
 
-    driveMotor.setInverted(driveMotorReversed);
-    turningMotor.setInverted(turningMotorReversed);
-
     driveEncoder = driveMotor.getEncoder();
     turningEncoder = turningMotor.getEncoder();
 
@@ -62,6 +59,9 @@ public class SwerveModule {
 
     turningPidController = new PIDController(Constants.ModuleConstants.kPTurning, Constants.ModuleConstants.kITurning, Constants.ModuleConstants.kDTurning);
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+
+    driveMotor.setInverted(driveMotorReversed);
+    turningMotor.setInverted(turningMotorReversed);
     
     driveMotor.setIdleMode(IdleMode.kBrake);
     turningMotor.setIdleMode(IdleMode.kBrake);
@@ -105,6 +105,10 @@ public class SwerveModule {
     turningEncoder.setPosition(getAbsoluteEncoderRad());
   }
 
+  public double getWheelSpeed(){
+    return driveEncoder.getVelocity();
+  }
+
   public SwerveModuleState getState(){
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRad()));
   } 
@@ -117,6 +121,7 @@ public class SwerveModule {
     state = SwerveModuleState.optimize(state, getState().angle);
     SmartDashboard.putNumber(name + " Current Angle", getState().angle.getRadians());
     SmartDashboard.putNumber(name + " Desired Angle", state.angle.getRadians());
+    SmartDashboard.putNumber(name + "Wheel Speed", getWheelSpeed());
     double turningMotorCalculate = turningPidController.calculate(getState().angle.getRadians(), state.angle.getRadians());
     SmartDashboard.putNumber(name + " Turning Motor Output", turningMotorCalculate);
     turningMotor.setIdleMode(IdleMode.kCoast);
