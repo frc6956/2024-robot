@@ -18,6 +18,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -61,6 +66,27 @@ public class RobotContainer {
 
   /* Auton Chooser */
   private final SendableChooser<Command> autoChooser;
+
+  public ShuffleboardTab tab = Shuffleboard.getTab("Driver View");
+  //public Shuffleboard.selectTab("Driver View").add("Is Working?", true);
+  public void ShuffleBoardSend(){
+    tab.add("Is Working", true).withWidget(BuiltInWidgets.kBooleanBox);
+    tab.add("Acceleration", 0).withWidget(BuiltInWidgets.kAccelerometer);
+    //After title, no comma made a sendable. Examine this further
+    tab.add("Front Left Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Front Right Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Back Left Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Back Right Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+
+    //acceleration dissappeared, look into command widget parameters/default values.
+  
+    tab.add(gyro);
+  
+  }
+
+
+  
+
 
   public RobotContainer() {
 
