@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public double getHeading() {
     //return Math.IEEEremainder((gyro.getAngle()), 360);
     return gyro.getAngle() * Math.PI / 180;
-    //return gyro.getYaw();
+    //return gyro.getYaw() * -1;
   }
 
   public Rotation2d getRotation2d() {
@@ -169,7 +169,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getYaw(){
-    return Rotation2d.fromDegrees(180 - gyro.getYaw().getValueAsDouble());
+    return Rotation2d.fromDegrees((180 - gyro.getYaw().getValueAsDouble()) * -1);
   }
 
   public double getTilt(){
