@@ -117,7 +117,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeading());
+    return getYaw();
   }
 
   public void stopModules() {
@@ -168,6 +168,10 @@ public class SwerveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(gyro.getRoll().getValueAsDouble());
   }
 
+  public Rotation2d getYaw(){
+    return Rotation2d.fromDegrees(180 - gyro.getYaw().getValueAsDouble());
+  }
+
   public double getTilt(){
     double pitch = getPitch().getDegrees();
     double roll = getRoll().getDegrees();
@@ -192,6 +196,11 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Module", frontRight.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Left Module", backLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Right Module", backRight.getAbsoluteEncoderRad());
+
+    SmartDashboard.putNumber("Front Left Average", frontLeft.getAverageAnalogEncoder());
+    SmartDashboard.putNumber("Front Right Average", frontRight.getAverageAnalogEncoder());
+    SmartDashboard.putNumber("Back Left Average", backLeft.getAverageAnalogEncoder());
+    SmartDashboard.putNumber("Back Right Average", backRight.getAverageAnalogEncoder());
 
     SmartDashboard.putData(this);
 

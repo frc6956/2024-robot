@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -14,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
@@ -32,6 +35,8 @@ public class SwerveModule {
   private final boolean absoluteEncoderReversed;
   private final double absoluteEncoderOffsetRad;
 
+  private ArrayList<Double> AnalogEncoderValues;
+
   private final String name;
 
   public SwerveModule(int driveMotorID, int turningMotorID, boolean driveMotorReversed, 
@@ -41,6 +46,7 @@ public class SwerveModule {
     this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
     this.absoluteEncoderReversed = absoluteEncoderReversed;
     absoluteEncoder = new AnalogEncoder(absoluteEncoderID);
+    AnalogEncoderValues = new ArrayList<Double>();
         
     driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorID, MotorType.kBrushless);
@@ -65,7 +71,9 @@ public class SwerveModule {
     
     driveMotor.setIdleMode(IdleMode.kBrake);
     turningMotor.setIdleMode(IdleMode.kBrake);
-
+    driveMotor.burnFlash();
+    turningMotor.burnFlash();
+    Timer.delay(1);
     resetEncoders();
   }
 
@@ -115,6 +123,24 @@ public class SwerveModule {
 
   public SwerveModulePosition getPosition(){
     return new SwerveModulePosition(driveEncoder.getPosition(), getState().angle);
+  }
+
+  public void addAnalogEncoder(){
+    if (AnalogEncoderValues.size() > 500){
+      AnalogEncoderValues.remove(0);
+      AnalogEncoderValues.add(getAbsoluteEncoderRad());
+    } else {
+      AnalogEncoderValues.add(getAbsoluteEncoderRad());
+    }
+  }
+
+  public double getAverageAnalogEncoder(){
+    addAnalogEncoder();
+    double total = 0;
+    for (int i = 0; i < AnalogEncoderValues.size(); i++){
+      total += AnalogEncoderValues.get(i);
+    }
+    return total / AnalogEncoderValues.size();
   }
 
   public void setDesiredState(SwerveModuleState state){

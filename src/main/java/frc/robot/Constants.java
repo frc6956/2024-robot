@@ -115,10 +115,10 @@ public final class Constants {
     public static final boolean kFrontRightDriveEncoderReversed = true; 
     public static final boolean kFrontRightTurningEncoderReversed = false; 
 
-    public static final boolean kBackLeftDriveEncoderReversed = false; 
+    public static final boolean kBackLeftDriveEncoderReversed = true; 
     public static final boolean kBackLeftTurningEncoderReversed = false; 
 
-    public static final boolean kBackRightDriveEncoderReversed = false; 
+    public static final boolean kBackRightDriveEncoderReversed = true; 
     public static final boolean kBackRightTurningEncoderReversed = false; 
 
     public static final int kFrontLeftAbsoluteEncoderPort = 1;
@@ -127,10 +127,10 @@ public final class Constants {
     public static final int kBackRightAbsoluteEncoderPort = 3;
 
     //offset values
-    public static final double kFrontLeftAbsoluteEncoderOffsetRad = 1.733;//1.720;//1.689;
-    public static final double kFrontRightAbsoluteEncoderOffsetRad = -1.489;//-1.503;//-1.495;
-    public static final double kBackLeftAbsoluteEncoderOffsetRad = 1.655;//-1.487;//-1.475;
-    public static final double kBackRightAbsoluteEncoderOffsetRad = 2.735;//-0.393;//-2.423; 0.39
+    public static final double kFrontLeftAbsoluteEncoderOffsetRad = 1.718;//1.733;//1.720;//1.689;
+    public static final double kFrontRightAbsoluteEncoderOffsetRad = -1.493;//-1.489;//-1.503;//-1.495;
+    public static final double kBackLeftAbsoluteEncoderOffsetRad = -1.462;//1.655;//-1.487;//-1.475;
+    public static final double kBackRightAbsoluteEncoderOffsetRad = -0.402;//2.735;//-0.393;//-2.423; 0.39
     public static final boolean kFrontLeftAbsoluteEncoderReversed = true;
     public static final boolean kFrontRightAbsoluteEncoderReversed = true;
     public static final boolean kBackLeftAbsoluteEncoderReversed = true;
