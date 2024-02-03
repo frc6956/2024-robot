@@ -24,9 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.robot.subsystems.apriltagvision.Vision;
-import frc.robot.commands.TeleopLimelightCenter;
-import frc.robot.commands.TeleopLimelightTurret;
+
 import frc.robot.commands.drivetrain.*;
 import frc.robot.auton.common.*;
 
@@ -66,7 +64,6 @@ public class RobotContainer {
 	// motorized devices
 	private final Pigeon2 gyro = new Pigeon2(0);
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(gyro);
-	private final Vision vision = new Vision();
 	
 	// pneumatic devices
 
@@ -149,16 +146,8 @@ public class RobotContainer {
 			driveController.povDown()
 			.whileTrue(new DrivetrainSetXFormation(drivetrain));	
 
-			driveController.button(1)
-			.whileTrue(
-				new TeleopLimelightCenter(
-					vision, 
-					drivetrain, 
-					() -> -driveController.getLeftY(),
-					() -> -driveController.getLeftX(),
-					() -> driveController.getRightX(),
-					() -> true)
-			);
+			driveController.button(1);
+			
 			
 			//driveController.button(3)
 			//.onTrue(new MoveInLShapeInReverse(drivetrain, this, 3));
@@ -171,18 +160,10 @@ public class RobotContainer {
 			//.onTrue(new DrivetrainTurnAngleUsingPidController(drivetrain, -90));
 			//.onTrue(new MoveInUShapeInReverse(drivetrain, this, 1));
 
-			driveController.button(2)
+			driveController.button(2);
 			//.onTrue(new MoveInReverse(drivetrain, this, 3));
 			//.onTrue(new DrivetrainTurnAngleUsingPidController(drivetrain, 90));
-			.whileTrue(
-				new TeleopLimelightTurret(
-					vision, 
-					drivetrain, 
-					() -> -driveController.getLeftY(),
-					() -> -driveController.getLeftX(),
-					() -> driveController.getRightX(),
-					() -> true)
-			);
+
 
 /* 
 		// copilot (gamepad)
@@ -340,10 +321,6 @@ public class RobotContainer {
 	public SwerveDrivetrain getDrivetrain()
 	{
 		return drivetrain;
-	}
-
-	public Vision getVision(){
-		return vision;
 	}
 
 	public XboxController getCopilotGamepad()
