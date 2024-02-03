@@ -46,6 +46,9 @@ public final class Constants {
 				new Translation2d(-WHEEL_BASE_METERS / 2, -TRACK_WIDTH_METERS / 2));
 
 		public static final boolean kGyroReversed = false;
+
+		public static final double CENTER_TO_WHEEL =
+                Math.sqrt(Math.pow(WHEEL_BASE_METERS / 2.0, 2) + Math.pow(TRACK_WIDTH_METERS / 2.0, 2));
 	}
 
 	public static final class SwerveModuleConstants {
@@ -53,6 +56,8 @@ public final class Constants {
 		// This changes the drive speed of the module (a pinion gear with more teeth will result in a
 		// robot that drives faster).
 		public static final int kDrivingMotorPinionTeeth = 14;
+
+		
 
 		// Invert the turning encoder, since the output shaft rotates in the opposite direction of
 		// the steering motor in the MAXSwerve Module.

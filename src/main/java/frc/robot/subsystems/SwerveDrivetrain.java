@@ -17,11 +17,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -151,6 +156,44 @@ public class SwerveDrivetrain extends SubsystemBase {
 		
 		turnPidController.enableContinuousInput(-180, 180); // because -180 degrees is the same as 180 degrees (needs input range to be defined first)
 		turnPidController.setTolerance(DEGREE_THRESHOLD); // n degree error tolerated
+
+
+
+		AutoBuilder.configureHolonomic(
+                this::getPose, // Robot pose supplier
+                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                () -> Constants.DrivetrainConstants.DRIVE_KINEMATICS.toChassisSpeeds(getModuleStates()), // ChassisSpeeds supplier.
+                                                                                             // MUST BE ROBOT RELATIVE
+                speeds -> {
+                    // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                    SwerveModuleState[] swerveModuleStates =
+                            Constants.DrivetrainConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
+                    setModuleStates(swerveModuleStates);
+                },
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
+                                                 // Constants class
+                        new PIDConstants( // Translation PID constants
+                                0,0,0
+                        ),
+                        new PIDConstants( // Rotation PID constants
+                                Constants.AutoConstants.X_CONTROLLER_P,
+                                Constants.AutoConstants.Y_CONTROLLER_P,
+                                Constants.AutoConstants.THETA_CONTROLLER_P
+                        ),
+                        Constants.DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND, // Max module speed, in m/s
+                        Constants.DrivetrainConstants.CENTER_TO_WHEEL, // Drive base radius in meters. Distance from robot center to
+                                                          // furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
+                },
+                this // Reference to this subsystem to set requirements
+        );
 	}
 
 	@Override
@@ -381,6 +424,15 @@ public class SwerveDrivetrain extends SubsystemBase {
 	public boolean isTurning(){
 		return isTurning;
 	}
+
+	public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        states[0] = getFrontLeftModule().getState();
+		states[1] = getFrontRightModule().getState();
+		states[2] = getRearLeftModule().getState();
+		states[3] = getRearRightModule().getState();
+        return states;
+    }
 
 	// this method needs to be paired with checkTurnAngleUsingPidController()
 	public void turnAngleUsingPidController(double angle) {

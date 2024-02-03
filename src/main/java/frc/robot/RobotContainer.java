@@ -11,6 +11,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -56,8 +58,8 @@ public class RobotContainer {
 	public static final String AUTON_SAMPLE_MOVE_IN_REVERSE = "Sample Move In Reverse";
 	public static final String AUTON_SAMPLE_MOVE_IN_GAMMA_SHAPE = "Sample Move In Gamma Shape";
 	public static final String AUTON_SAMPLE_MOVE_IN_L_SHAPE_IN_REVERSE = "Sample Move In L Shape In Reverse";
-	private String autonSelected;
-	private SendableChooser<String> autonChooser = new SendableChooser<>();
+	//private String autonSelected;
+	private SendableChooser<Command> autonChooser = new SendableChooser<>();
 	
 
 
@@ -89,19 +91,22 @@ public class RobotContainer {
 
 		// choosers (for auton)
 		
-		autonChooser.setDefaultOption("Do Nothing", AUTON_DO_NOTHING);
+		/*autonChooser.setDefaultOption("Do Nothing", AUTON_DO_NOTHING);
 		autonChooser.addOption("My Auto", AUTON_CUSTOM);
 		autonChooser.addOption("Sample Swerve", AUTON_SAMPLE_SWERVE);
 		autonChooser.addOption("Sample Move Forward", AUTON_SAMPLE_MOVE_FORWARD);
 		autonChooser.addOption("Sample Move In Reverse", AUTON_SAMPLE_MOVE_IN_REVERSE);
 		autonChooser.addOption("Sample Move In Gamma Shape", AUTON_SAMPLE_MOVE_IN_GAMMA_SHAPE);
 		autonChooser.addOption("Sample Move In L Shape In Reverse", AUTON_SAMPLE_MOVE_IN_L_SHAPE_IN_REVERSE);
-		SmartDashboard.putData("Auto choices", autonChooser);
+		SmartDashboard.putData("Auto choices", autonChooser);*/
 		
 
 		// Configure the button bindings
 
 		configureButtonBindings();
+
+		autonChooser = AutoBuilder.buildAutoChooser("Default");
+        SmartDashboard.putData("Auto Choices", autonChooser);
 
 
 		// Configure default commands
@@ -270,7 +275,7 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		autonSelected = autonChooser.getSelected();
+		/*autonSelected = autonChooser.getSelected();
 		System.out.println("Auton selected: " + autonSelected);
 		
 		switch (autonSelected) {
@@ -303,7 +308,8 @@ public class RobotContainer {
 				// nothing
 				return null;
 				//break;
-		} // end switch
+		} // end switch*/
+		return autonChooser.getSelected();
 	}
 
 	public TrajectoryConfig createTrajectoryConfig() {
@@ -326,46 +332,6 @@ public class RobotContainer {
 		return config;
 	}
 
-	/*public Trajectory createExampleTrajectory() {
-		// An example trajectory to follow. All units in meters.
-		Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-			// Start at the origin facing the +X direction
-			new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-			// Pass through these two interior waypoints, making an 's' curve path
-			List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-			// End 3 meters straight ahead of where we started, facing forward
-			new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
-			createTrajectoryConfig());
-
-		return exampleTrajectory;
-	}*/
-	
-	/*public Command createSwerveControllerCommand(Trajectory trajectory) {
-
-		ProfiledPIDController thetaController = new ProfiledPIDController(
-			AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
-			
-		thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-			trajectory, // trajectory to follow
-			drivetrain::getPose, // Functional interface to feed supplier
-			DrivetrainConstants.DRIVE_KINEMATICS, // kinematics of the drivetrain
-			new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0), // trajectory tracker PID controller for x position
-			new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0), // trajectory tracker PID controller for y position
-			thetaController, // trajectory tracker PID controller for rotation
-			drivetrain::setModuleStates, // raw output module states from the position controllers
-			drivetrain); // subsystems to require
-
-		// Reset odometry to the starting pose of the trajectory.
-		drivetrain.resetOdometry(trajectory.getInitialPose()); // WARNING: https://github.com/REVrobotics/MAXSwerve-Java-Template/issues/13
-
-		field.getObject("trajectory").setTrajectory(trajectory);
-
-		// Run path following command, then stop at the end.
-		return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0, false, false));
-	}*/
-
 	public Field2d getField()
 	{
 		return field;
@@ -385,7 +351,7 @@ public class RobotContainer {
 		return driveController.getHID();
 	}
 
-	public SendableChooser<String> getAutonChooser()
+	public SendableChooser<Command> getAutonChooser()
 	{
 		return autonChooser;
 	}
