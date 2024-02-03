@@ -24,9 +24,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.SwerveDrivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PhotonVision;
 
 import frc.robot.commands.drivetrain.*;
 import frc.robot.auton.common.*;
+import frc.utils.OnTheFlyPathing;
+
 
 
 /*
@@ -64,6 +68,8 @@ public class RobotContainer {
 	// motorized devices
 	private final Pigeon2 gyro = new Pigeon2(0);
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(gyro);
+	protected Limelight m_limelight = null;
+	protected PhotonVision m_photonVision = null;
 	
 	// pneumatic devices
 
@@ -147,6 +153,12 @@ public class RobotContainer {
 			.whileTrue(new DrivetrainSetXFormation(drivetrain));	
 
 			driveController.button(1);
+
+			driveController.y()
+			.whileTrue(
+				new OnTheFlyPathing().getOnTheFlyPath(0, 0)
+			  );
+		
 			
 			
 			//driveController.button(3)
@@ -344,4 +356,12 @@ public class RobotContainer {
 	public double getRot(){
 		return driveController.getRightX();
 	}
+
+	public Limelight getLimelight() {
+		return m_limelight;
+	  }
+	
+	  public PhotonVision getPhotonVision() {
+		return m_photonVision;
+	  }
 }

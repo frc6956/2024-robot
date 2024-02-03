@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,6 +35,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
 import frc.robot.Ports;
+import frc.robot.subsystems.PhotonVision;
+
 
 /**
  * The {@code Drivetrain} class contains fields and methods pertaining to the function of the drivetrain.
@@ -63,6 +68,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 	
 	private final static int TURN_ON_TARGET_MINIMUM_COUNT = 10; // number of times/iterations we need to be on target to really be on target
 	// end turn settings	
+
+	protected PhotonVision photonVision = null;
+
+
+	public PhotonVision getPhotonVision() {
+		return photonVision;
+	  }
 
 	// Create SwerveModules
 	private final SwerveModule m_frontLeft = new SwerveModule(
@@ -115,6 +127,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 	private int onTargetCountTurning; // counter indicating how many times/iterations we were on target
 
 	private PIDController turnPidController; // the PID controller used to turn
+
+	private SwerveDrivePoseEstimator PoseEstimator;
+
+	NetworkTable DriveTrainTable = NetworkTableInstance.getDefault().getTable("DriveTrain");
 
 
 	/** Creates a new Drivetrain. */
@@ -198,6 +214,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+
+		if (photonVision.getVisionPoseEstimationResult().isPresent()){
+			PoseEstimator.addVisionMeasurement(
+			  photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
+			  photonVision.getVisionPoseEstimationResult().get().timestampSeconds); 
+		}
+
 		// Update the odometry in the periodic block
 		m_odometry.update(
 			Rotation2d.fromDegrees(GYRO_ORIENTATION * gyro.getAngle()),
