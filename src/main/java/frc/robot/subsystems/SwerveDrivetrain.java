@@ -19,6 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,7 +37,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
 import frc.robot.Ports;
-import frc.robot.subsystems.PhotonVision;
+//import frc.robot.subsystems.PhotonVision;
 
 
 /**
@@ -132,6 +134,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	NetworkTable DriveTrainTable = NetworkTableInstance.getDefault().getTable("DriveTrain");
 
+	StructPublisher<Pose2d> OdometryPublisher = DriveTrainTable.getStructTopic("Odometry", Pose2d.struct).publish();
+
+	StructArrayPublisher<SwerveModuleState> SwerveModuleStatePublisher = 
+		DriveTrainTable.getStructArrayTopic("SwerveModuleStates", SwerveModuleState.struct).publish();
+
+	StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher = 
+		DriveTrainTable.getStructArrayTopic("DesiredSwerveModuleStates", SwerveModuleState.struct).publish();
+
 
 	/** Creates a new Drivetrain. */
 	public SwerveDrivetrain(Pigeon2 gyro) {
@@ -221,9 +231,18 @@ public class SwerveDrivetrain extends SubsystemBase {
 			  photonVision.getVisionPoseEstimationResult().get().timestampSeconds); 
 		}
 
+		PoseEstimator.update(
+			geRotation2d(),
+			new SwerveModulePosition[] {
+				m_frontLeft.getPosition(),
+				m_frontRight.getPosition(),
+				m_rearLeft.getPosition(),
+				m_rearRight.getPosition()});
+
 		// Update the odometry in the periodic block
 		m_odometry.update(
-			Rotation2d.fromDegrees(GYRO_ORIENTATION * gyro.getAngle()),
+			geRotation2d().plus(new Rotation2d(Constants.DrivetrainConstants.GyroAngularOffset)),
+			//Rotation2d.fromDegrees(GYRO_ORIENTATION * gyro.getAngle()),
 			new SwerveModulePosition[] {
 				m_frontLeft.getPosition(),
 				m_frontRight.getPosition(),
@@ -231,18 +250,27 @@ public class SwerveDrivetrain extends SubsystemBase {
 				m_rearRight.getPosition()
 			});
 
+		OdometryPublisher.set(getPose());
+
+		SwerveModuleStatePublisher.set(getModuleStates());
+		DesiredSwerveModuleStatePublisher.set(getDesiredSwerveModuleStates());
+		
 		calculateTurnAngleUsingPidController();
 
 		SmartDashboard.putData(gyro);
 	}
 
 	/**
-	 * Returns the currently-estimated pose of the robot.
+	 * Returns the currently-estimatd pose of the robot.
 	 *
 	 * @return The pose.
 	 */
 	public Pose2d getPose() {
 		return m_odometry.getPoseMeters();
+	}
+
+	public Rotation2d geRotation2d(){
+		return gyro.getRotation2d();
 	}
 
 	//public double getYaw() {
@@ -456,6 +484,15 @@ public class SwerveDrivetrain extends SubsystemBase {
 		states[3] = getRearRightModule().getState();
         return states;
     }
+
+	public SwerveModuleState[] getDesiredSwerveModuleStates(){
+		SwerveModuleState[] states = new SwerveModuleState[4];
+        states[0] = getFrontLeftModule().getDesiredState();
+		states[1] = getFrontRightModule().getDesiredState();
+		states[2] = getRearLeftModule().getDesiredState();
+		states[3] = getRearRightModule().getDesiredState();
+        return states;
+	}
 
 	// this method needs to be paired with checkTurnAngleUsingPidController()
 	public void turnAngleUsingPidController(double angle) {

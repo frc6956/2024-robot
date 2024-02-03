@@ -17,6 +17,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class OnTheFlyPathing {
 
+  SwerveDrivetrain swerveDrivetrain;
   //Data Logging
   NetworkTable OnTheFlyPathingTable = NetworkTableInstance.getDefault().getTable("On The Fly Pathing");
 
@@ -24,7 +25,8 @@ public class OnTheFlyPathing {
   StructPublisher<Pose2d> CurrentPose = OnTheFlyPathingTable.getStructTopic("Current Pose", Pose2d.struct).publish();
   StructArrayPublisher<Pose2d> ActivePath = OnTheFlyPathingTable.getStructArrayTopic("Active Path", Pose2d.struct).publish();
 
-  public OnTheFlyPathing(){
+  public OnTheFlyPathing(SwerveDrivetrain swerveDrivetrain){
+    this.swerveDrivetrain = swerveDrivetrain;
     PathPlannerLogging.setLogTargetPoseCallback((Pose) -> {
       TargetPose.set(Pose);
     });
@@ -46,8 +48,8 @@ public class OnTheFlyPathing {
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-      AutoConstants.kMaxSpeedDriveToPointMetersPerSecond,
-      AutoConstants.kMaxAccelerationDriveToPointMetersPerSecond,
+      Constants.AutoConstants.MAX_SPEED_METERS_PER_SECOND,
+      Constants.AutoConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND,
       Math.toRadians(540), Math.toRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -63,7 +65,7 @@ public class OnTheFlyPathing {
     Returns a command for the path to a point and sets the angle to the current heading
   */
   public Command getOnTheFlyPath(Translation2d targetPosition){
-    return getOnTheFlyPath(targetPosition.getX(), targetPosition.getY(), SwerveDrivetrain.getHeading());
+    return getOnTheFlyPath(targetPosition.getX(), targetPosition.getY(), swerveDrivetrain.getHeading());
   }
   /**
     Returns a command for the path to a point
@@ -75,6 +77,6 @@ public class OnTheFlyPathing {
     Returns a command for the path to a point and sets the angle to the current heading
   */
   public Command getOnTheFlyPath(double x, double y){
-    return getOnTheFlyPath(x, y, SwerveDrivetrain.getHeading());
+    return getOnTheFlyPath(x, y, swerveDrivetrain.getHeading());
   }
 }

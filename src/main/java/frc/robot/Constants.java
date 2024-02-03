@@ -46,6 +46,7 @@ public final class Constants {
 				new Translation2d(-WHEEL_BASE_METERS / 2, -TRACK_WIDTH_METERS / 2));
 
 		public static final boolean kGyroReversed = false;
+		public static final double GyroAngularOffset = Math.PI/2;
 
 		public static final double CENTER_TO_WHEEL =
                 Math.sqrt(Math.pow(WHEEL_BASE_METERS / 2.0, 2) + Math.pow(TRACK_WIDTH_METERS / 2.0, 2));

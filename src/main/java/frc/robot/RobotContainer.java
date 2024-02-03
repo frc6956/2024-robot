@@ -69,7 +69,7 @@ public class RobotContainer {
 	private final Pigeon2 gyro = new Pigeon2(0);
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain(gyro);
 	protected Limelight m_limelight = null;
-	protected PhotonVision m_photonVision = null;
+	protected PhotonVision m_photonVision = new PhotonVision();
 	
 	// pneumatic devices
 
@@ -156,7 +156,7 @@ public class RobotContainer {
 
 			driveController.y()
 			.whileTrue(
-				new OnTheFlyPathing().getOnTheFlyPath(0, 0)
+				new OnTheFlyPathing(drivetrain).getOnTheFlyPath(0, 0)
 			  );
 		
 			
@@ -172,7 +172,7 @@ public class RobotContainer {
 			//.onTrue(new DrivetrainTurnAngleUsingPidController(drivetrain, -90));
 			//.onTrue(new MoveInUShapeInReverse(drivetrain, this, 1));
 
-			driveController.button(2);
+			//driveController.button(2);
 			//.onTrue(new MoveInReverse(drivetrain, this, 3));
 			//.onTrue(new DrivetrainTurnAngleUsingPidController(drivetrain, 90));
 
