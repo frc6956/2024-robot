@@ -22,6 +22,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 	public static final double MINIMUM_ANGLE = -180.0;
     public static final double MAXIMUM_ANGLE = 180.0;
+	public static final double HEIGHT_OF_ROTATION = 
 	public static final class DrivetrainConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
@@ -123,6 +124,11 @@ public final class Constants {
 
 	public static final class NeoMotorConstants {
 		public static final double FREE_SPEED_RPM = 5676;
+
+		public static final int SHOOTER_LEFT_ID = 9;
+		public static final int SHOOTER_RIGHT_ID = 10;
+		public static final int SHOOTER_ELEV_LEFT_ID = 11;
+		public static final int SHOOTER_ELEV_RIGHT_ID = 12;
 	}
 
 	public static final class Vision {
