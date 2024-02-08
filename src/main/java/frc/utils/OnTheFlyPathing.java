@@ -21,6 +21,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class OnTheFlyPathing {
 
+  SwerveDrivetrain swerveDrivetrain;
   //Data Logging
   NetworkTable OnTheFlyPathingTable = NetworkTableInstance.getDefault().getTable("On The Fly Pathing");
 
