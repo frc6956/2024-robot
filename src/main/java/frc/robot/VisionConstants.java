@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public final class VisionConstants {
-  public static final String camName = "Camera_Module_v1";
+  public static final String camName = "PhotonCamera";
   public static final Transform3d RobotToCam = new Transform3d();
 
   public enum AprilTagIDs{

@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import org.opencv.photo.Photo;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -71,10 +73,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	protected PhotonVision photonVision = null;
 
-
-	public PhotonVision getPhotonVision() {
-		return photonVision;
-	  }
 
 	// Create SwerveModules
 	private final SwerveModule m_frontLeft = new SwerveModule(
@@ -134,7 +132,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 
 	/** Creates a new Drivetrain. */
-	public SwerveDrivetrain(Pigeon2 gyro) {
+	public SwerveDrivetrain(Pigeon2 gyro, PhotonVision photonVision) {
+		this.photonVision = photonVision;
 		m_frontLeft.calibrateVirtualPosition(FRONT_LEFT_VIRTUAL_OFFSET_RADIANS); // set virtual position for absolute encoder
 		m_frontRight.calibrateVirtualPosition(FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS);
 		m_rearLeft.calibrateVirtualPosition(REAR_LEFT_VIRTUAL_OFFSET_RADIANS);
@@ -214,7 +213,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-
+		
 		if (photonVision.getVisionPoseEstimationResult().isPresent()){
 			PoseEstimator.addVisionMeasurement(
 			  photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 

@@ -22,7 +22,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 	public static final double MINIMUM_ANGLE = -180.0;
     public static final double MAXIMUM_ANGLE = 180.0;
-	public static final double HEIGHT_OF_ROTATION = 
+	public static final double HEIGHT_OF_ROTATION = 57.75;
 	public static final class DrivetrainConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
