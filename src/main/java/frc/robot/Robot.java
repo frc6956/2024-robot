@@ -27,14 +27,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		// Port forwarders for LimeLight
-		// Do not place these function calls in any periodic functions
-		PortForwarder.add(5800, "limelight.local", 5800);
-		PortForwarder.add(5801, "limelight.local", 5801);
-		PortForwarder.add(5802, "limelight.local", 5802);
-		PortForwarder.add(5803, "limelight.local", 5803);
-		PortForwarder.add(5804, "limelight.local", 5804);
-		PortForwarder.add(5805, "limelight.local", 5805);
 
 		// Instantiate our RobotContainer.  This will perform all our button bindings, and put our
 		// autonomous chooser on the dashboard.
@@ -145,14 +137,6 @@ public class Robot extends TimedRobot {
 		m_robotContainer.getField().setRobotPose(m_robotContainer.getDrivetrain().getPose());
 		SmartDashboard.putNumber(   "Heading",             m_robotContainer.getDrivetrain().getHeading());
 
-		SmartDashboard.putString("Auton selected", m_robotContainer.getAutonChooser().getSelected());	
-		SmartDashboard.putString("Game piece", m_robotContainer.getGamePieceChooser().getSelected());
-		SmartDashboard.putString("Start position", m_robotContainer.getStartPositionChooser().getSelected());
-		SmartDashboard.putString("Main target", m_robotContainer.getMainTargetChooser().getSelected());
-		SmartDashboard.putString("Camera option", m_robotContainer.getCameraOptionChooser().getSelected());
-		SmartDashboard.putString("Sonar option", m_robotContainer.getSonarOptionChooser().getSelected());
-		SmartDashboard.putString("Release chosen", m_robotContainer.getReleaseChooser().getSelected());
-		SmartDashboard.putString("Auton option", m_robotContainer.getAutonOptionChooser().getSelected());
 	}
 
 	@Override
