@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -15,40 +16,40 @@ public class Constants {
         public static final class ModFL {
             public static final String name = "Front Left Module";
             public static final int moduleNumber = 0;
-            public static final int driveMotorID = 6;
-            public static final int angleMotorID = 8;
-            public static final int canCoderID = 10;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-13.7);
+            public static final int driveMotorID = 4;
+            public static final int angleMotorID = 3;
+            public static final int canCoderID = 0;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //1.72 rad
         }
 
         /* Front Right Module */
         public static final class ModFR {
             public static final String name = "Front Right Module";
             public static final int moduleNumber = 1;
-            public static final int driveMotorID = 11;
-            public static final int angleMotorID = 9;
-            public static final int canCoderID = 7;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(146.1);
+            public static final int driveMotorID = 5;
+            public static final int angleMotorID = 6;
+            public static final int canCoderID = 1;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //-1.49 rad
         }
         
         /* Back Left Module */
         public static final class ModBL {
             public static final String name = "Back Left Module";
             public static final int moduleNumber = 2;
-            public static final int driveMotorID = 17;
-            public static final int angleMotorID = 13;
-            public static final int canCoderID = 4;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(134.03);
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 1;
+            public static final int canCoderID = 2;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); // -1.47 rad
         }
 
         /* Back Right Module */
         public static final class ModBR { 
             public static final String name = "Back Right Module";
             public static final int moduleNumber = 3;
-            public static final int driveMotorID = 14;
-            public static final int angleMotorID = 5;
-            public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(122.9);
+            public static final int driveMotorID = 8;
+            public static final int angleMotorID = 7;
+            public static final int canCoderID = 3;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); // -0.39 rad
         }
     }
 
@@ -61,8 +62,8 @@ public class Constants {
 
         public static final int GyroID = 0;
 
-        public static final double TrackWidth = Units.inchesToMeters(26);
-        public static final double WheelBase = Units.inchesToMeters(26);
+        public static final double TrackWidth = Units.inchesToMeters(21.75);
+        public static final double WheelBase = Units.inchesToMeters(21.75);
         public static final double WheelDiameter = Units.inchesToMeters(4);
         public static final double WheelCircumference = WheelDiameter * Math.PI;
 
@@ -78,8 +79,29 @@ public class Constants {
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(moduleTranslations);
 
+
+        /* Conversion Factors */
+
+        public static final int kDrivingMotorPinionTeeth = 14;
+
+        // Calculations required for driving motor conversion factors and feed forward
+		public static final double DriveFreeSpinRPS = NeoMotorConstants.FreeSpeedRPM / 60;
+		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+		public static final double DriveMotorReduction = (45.0 * 17 * 50) / (kDrivingMotorPinionTeeth * 15 * 27);
+		public static final double DriveFreeWheelSpeedRPS = (DriveFreeSpinRPS * WheelCircumference)	/ DriveMotorReduction;
+
+        public static final double TurnMotorReduction = 150.0 / 7.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
+
+
+        public static final double DriveConversionFactor = (WheelDiameter * Math.PI) / DriveMotorReduction;
+        public static final double AngleConversionFactor = (2 * Math.PI) / TurnMotorReduction;
+
+        public static final double DriveVelocityConversionFactor = ((WheelDiameter * Math.PI) / DriveMotorReduction) / 60.0; // meters per second, per RPM
+
+
         /* Speed */
-        public static final double MaxSpeed = 0;
+        public static final double MaxSpeed = 4;
+        public static final double MaxAngularSpeed = 2 * Math.PI;
         /* Feed Forward */
         public static final double DriveKS = 0;
         public static final double DriveKV = 0;
@@ -87,34 +109,28 @@ public class Constants {
 
 
         /* Drive PID */
-        public static final double DriveP = 0.0;
+        public static final double DriveP = 0.04;
         public static final double DriveI = 0.0;
         public static final double DriveD = 0.0;
 
-        public static final double DriveF = 0.0;
+        public static final double DriveF = 1 / DriveFreeWheelSpeedRPS;
 
         /* Turn PID */
-        public static final double TurnP = 0.0;
+        public static final double TurnP = 0.255;
         public static final double TurnI = 0.0;
         public static final double TurnD = 0.0;
 
         public static final double TurnF = 0.0;
 
         /* Drive Motor */
-        public static final int DriveContinuousCurrentLimit = 0;
+        public static final int DriveContinuousCurrentLimit = 40;
         public static final boolean DriveInvert = false;
         public static final IdleMode DriveIdleMode = IdleMode.kBrake;
 
         /* Angle Motor */
-        public static final int AngleContinuousCurrentLimit = 0;
+        public static final int AngleContinuousCurrentLimit = 20;
         public static final boolean AngleInvert = false;
         public static final IdleMode AngleIdleMode = IdleMode.kCoast;
-        
-        /* Conversion Factors */
-        public static final double DriveConversionFactor = 0.0;
-        public static final double AngleConversionFactor = 0.0;
-
-        public static final double DriveVelocityConversionFactor = 0.0;
 
         /* Voltage Compensation */
         public static final int DriveVoltageComp = 0;
@@ -124,6 +140,14 @@ public class Constants {
 
 
     public static class Auto{
+
+        public static final double MaxSpeed = 3.0;
+        public static final double MaxAcceleration = 3;
+        public static final double MaxAngularSpeed = Math.PI;
+        public static final double MaxAngularAcceleration = Math.PI;
+
+        public static final TrapezoidProfile.Constraints ThetaControllerContraints = new TrapezoidProfile.Constraints(
+            MaxAngularSpeed, MaxAngularAcceleration);
 
         /* PID */
         public static final double AutoTurnP = 0.0;
@@ -135,4 +159,8 @@ public class Constants {
         public static final double AutoDriveD = 0.0;
 
     }
+
+    public static final class NeoMotorConstants {
+		public static final double FreeSpeedRPM = 5676;
+	}
 }
