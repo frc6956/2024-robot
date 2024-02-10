@@ -43,28 +43,28 @@ public class Swerve extends SubsystemBase {
                 ModFL.name,
                 ModFL.driveMotorID, 
                 ModFL.angleMotorID, 
-                ModFL.canCoderID, 
+                ModFL.encoderID, 
                 ModFL.angleOffset),
             new SwerveModule(
                 ModFR.moduleNumber, 
                 ModFR.name,
                 ModFR.driveMotorID, 
                 ModFR.angleMotorID, 
-                ModFR.canCoderID, 
+                ModFR.encoderID, 
                 ModFR.angleOffset),
             new SwerveModule(
                 ModBL.moduleNumber, 
                 ModBL.name,
                 ModBL.driveMotorID, 
                 ModBL.angleMotorID, 
-                ModBL.canCoderID, 
+                ModBL.encoderID, 
                 ModBL.angleOffset),
             new SwerveModule(
                 ModBR.moduleNumber, 
                 ModBR.name,
                 ModBR.driveMotorID, 
                 ModBR.angleMotorID, 
-                ModBR.canCoderID, 
+                ModBR.encoderID, 
                 ModBR.angleOffset),
         };
 
@@ -125,7 +125,7 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getHeading(), getModulePositions());
         m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber(mod.name + " Cancoder", mod.getCanCoder().getDegrees());
+            SmartDashboard.putNumber(mod.name + " Encoder", mod.getThriftyEncoder().getDegrees());
             SmartDashboard.putNumber(mod.name + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
             SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);

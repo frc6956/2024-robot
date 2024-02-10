@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
+    public static final boolean usingThriftyEncoder = true;
 
     public static class OperatorConstants{
         public static double stickDeadband = 0.15;
@@ -30,8 +31,9 @@ public class Constants {
             public static final int moduleNumber = 0;
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 3;
-            public static final int canCoderID = 0;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //1.72 rad
+            public static final int encoderID = 0;
+            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0);
+            public static final Rotation2d angleOffset = Rotation2d.fromRadians(1.72); //1.72 rad
         }
 
         /* Front Right Module */
@@ -40,8 +42,9 @@ public class Constants {
             public static final int moduleNumber = 1;
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
-            public static final int canCoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //-1.49 rad
+            public static final int encoderID = 1;
+            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
+            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-1.49); //-1.49 rad
         }
         
         /* Back Left Module */
@@ -50,8 +53,9 @@ public class Constants {
             public static final int moduleNumber = 2;
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
-            public static final int canCoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); // -1.47 rad
+            public static final int encoderID = 2;
+            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
+            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-1.47); // -1.47 rad
         }
 
         /* Back Right Module */
@@ -60,8 +64,9 @@ public class Constants {
             public static final int moduleNumber = 3;
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;
-            public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); // -0.39 rad
+            public static final int encoderID = 3;
+            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
+            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-0.39); // -0.39 rad
         }
     }
 
