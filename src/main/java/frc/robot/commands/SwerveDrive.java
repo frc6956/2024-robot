@@ -32,7 +32,7 @@ public class SwerveDrive extends Command {
                        BooleanSupplier isEvading,
                        BooleanSupplier isLocked) {
 
-        swerve = swerve;
+        this.swerve = swerve;
         addRequirements(swerve);
 
         m_translationSup = translationSup;

@@ -32,8 +32,8 @@ public class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 3;
             public static final int encoderID = 0;
-            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0);
-            public static final Rotation2d angleOffset = Rotation2d.fromRadians(1.72); //1.72 rad
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-85.3); // -86
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //1.72 rad
         }
 
         /* Front Right Module */
@@ -43,8 +43,8 @@ public class Constants {
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
             public static final int encoderID = 1;
-            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
-            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-1.49); //-1.49 rad
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(98.54); //99
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //-1.49 rad
         }
         
         /* Back Left Module */
@@ -54,8 +54,8 @@ public class Constants {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int encoderID = 2;
-            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
-            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-1.47); // -1.47 rad
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-84.87); 
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // -1.47 rad
         }
 
         /* Back Right Module */
@@ -65,8 +65,8 @@ public class Constants {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;
             public static final int encoderID = 3;
-            //public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); 
-            public static final Rotation2d angleOffset = Rotation2d.fromRadians(-0.39); // -0.39 rad
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-22.28); 
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // -0.39 rad
         }
     }
 
@@ -104,16 +104,18 @@ public class Constants {
         // Calculations required for driving motor conversion factors and feed forward
 		public static final double DriveFreeSpinRPS = NeoMotorConstants.FreeSpeedRPM / 60;
 		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-		public static final double DriveMotorReduction = (45.0 * 17 * 50) / (kDrivingMotorPinionTeeth * 15 * 27);
+		//public static final double DriveMotorReduction = (45.0 * 17 * 50) / (kDrivingMotorPinionTeeth * 15 * 27);
+        public static final double DriveMotorReduction = 8.14 / 1.0;
 		public static final double DriveFreeWheelSpeedRPS = (DriveFreeSpinRPS * WheelCircumference)	/ DriveMotorReduction;
 
-        public static final double TurnMotorReduction = 150.0 / 7.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
+        public static final double TurnMotorReduction = 150.0 / 7.0 / 1.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
 
 
         public static final double DriveConversionFactor = (WheelDiameter * Math.PI) / DriveMotorReduction;
-        public static final double AngleConversionFactor = (2 * Math.PI) / TurnMotorReduction;
+        public static final double AngleConversionFactor = 360 / TurnMotorReduction;//(2 * Math.PI) / TurnMotorReduction;
 
         public static final double DriveVelocityConversionFactor = ((WheelDiameter * Math.PI) / DriveMotorReduction) / 60.0; // meters per second, per RPM
+        public static final double AngleVelocityConversionFactor = (2 * Math.PI) / TurnMotorReduction / 60;
 
 
         /* Speed */
@@ -133,7 +135,7 @@ public class Constants {
         public static final double DriveF = 1 / DriveFreeWheelSpeedRPS;
 
         /* Turn PID */
-        public static final double TurnP = 0.255;
+        public static final double TurnP = 0.01;
         public static final double TurnI = 0.0;
         public static final double TurnD = 0.0;
 
@@ -146,20 +148,20 @@ public class Constants {
 
         /* Angle Motor */
         public static final int AngleContinuousCurrentLimit = 20;
-        public static final boolean AngleInvert = false;
+        public static final boolean AngleInvert = true;
         public static final IdleMode AngleIdleMode = IdleMode.kCoast;
 
         /* Voltage Compensation */
-        public static final int DriveVoltageComp = 0;
-        public static final int AngleVoltageComp = 0;
+        public static final int DriveVoltageComp = 12;
+        public static final int AngleVoltageComp = 12;
 
     }
 
 
     public static class Auto{
 
-        public static final double MaxSpeed = 3.0;
-        public static final double MaxAcceleration = 3;
+        public static final double MaxSpeed = 5;
+        public static final double MaxAcceleration = 5;
         public static final double MaxAngularSpeed = Math.PI;
         public static final double MaxAngularAcceleration = Math.PI;
 

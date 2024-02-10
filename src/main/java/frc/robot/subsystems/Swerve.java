@@ -44,28 +44,32 @@ public class Swerve extends SubsystemBase {
                 ModFL.driveMotorID, 
                 ModFL.angleMotorID, 
                 ModFL.encoderID, 
-                ModFL.angleOffset),
+                ModFL.angleOffset,
+                false),
             new SwerveModule(
                 ModFR.moduleNumber, 
                 ModFR.name,
                 ModFR.driveMotorID, 
                 ModFR.angleMotorID, 
                 ModFR.encoderID, 
-                ModFR.angleOffset),
+                ModFR.angleOffset,
+                false),
             new SwerveModule(
                 ModBL.moduleNumber, 
                 ModBL.name,
                 ModBL.driveMotorID, 
                 ModBL.angleMotorID, 
                 ModBL.encoderID, 
-                ModBL.angleOffset),
+                ModBL.angleOffset,
+                false),
             new SwerveModule(
                 ModBR.moduleNumber, 
                 ModBR.name,
                 ModBR.driveMotorID, 
                 ModBR.angleMotorID, 
                 ModBR.encoderID, 
-                ModBR.angleOffset),
+                ModBR.angleOffset,
+                false),
         };
 
         /*
