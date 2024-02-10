@@ -9,6 +9,18 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
+
+
+    public static class OperatorConstants{
+        public static double stickDeadband = 0.15;
+
+        public static int driverPort = 0;
+        public static int operatorPort = 1;
+
+        public static final double DirectionSlewRate = 1.2; // radians per second
+		public static final double MagnitudeSlewRate = 1.5; // 2.0; //1.8; // percent per second (1 = 100%)
+		public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
+    }
     
     public static class ModuleConstants{
 
