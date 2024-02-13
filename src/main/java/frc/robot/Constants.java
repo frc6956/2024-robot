@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalSource;
 
 public class Constants {
 
@@ -190,6 +189,22 @@ public class Constants {
     public static class ShooterConstants{
         public static final int leftShooterID = 12;
         public static final int rightShooterID = 13;
+    }
+    public static class AnglerConstants{
+        public static final int leftAnglerID = 14;
+        public static final int rightAnglerID = 15;
+
+        public static final double angleP = 0.0;
+        public static final double angleI = 0.0;
+        public static final double angleD = 0.0;
+
+        public static final double anglerOffset = 0;
+
+        public static final double HOME = 55;
+        public static final double MAX = 60;
+        public static final double MIN = 20;
+
+        public static final int anglerPort = 8;
     }
     
 
