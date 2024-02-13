@@ -7,10 +7,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalSource;
 
 public class Constants {
 
     public static final boolean usingThriftyEncoder = true;
+
+    /* Voltage Compensation */
+    public static final int voltageComp = 12;
 
     public static class OperatorConstants{
         public static double stickDeadband = 0.15;
@@ -151,11 +155,43 @@ public class Constants {
         public static final boolean AngleInvert = true;
         public static final IdleMode AngleIdleMode = IdleMode.kCoast;
 
-        /* Voltage Compensation */
-        public static final int DriveVoltageComp = 12;
-        public static final int AngleVoltageComp = 12;
-
     }
+
+
+
+    public static class IntakeConstants{
+        public static final int upIntakeID = 10;
+        public static final int lowIntakeID = 11;
+
+        public static final boolean lowInvert = true;
+        public static final boolean upInvert = false;
+
+        public static final double intakeSpeed = 0.7;
+        public static final double feedSpeed = 0.5;
+        public static final double ampSpeed = 0.3;
+        public static final double extakeSpeed = 0.5;
+    }
+
+    public static class WristConstants{
+        public static final int wristPort = 9;
+        public static final double offset = 0.0;
+        public static final int wristID = 9;
+
+        public static final double wristP = 0.0;
+        public static final double wristI = 0.0;
+        public static final double wristD = 0.0;
+
+        public static final double STOW = 120;
+        public static final double AMP = 55;
+        public static final double PICKUP = -20;
+    }
+
+
+    public static class ShooterConstants{
+        public static final int leftShooterID = 12;
+        public static final int rightShooterID = 13;
+    }
+    
 
 
     public static class Auto{
