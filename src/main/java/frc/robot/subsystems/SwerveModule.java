@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.lib.math.OnboardModuleState;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.sensors.ThriftyEncoder;
 
@@ -140,7 +141,7 @@ public class SwerveModule {
         angleController.setI(DriveConstants.TurnI);
         angleController.setD(DriveConstants.TurnD);
         angleController.setFF(DriveConstants.TurnF);
-        m_angleMotor.enableVoltageCompensation(DriveConstants.AngleVoltageComp);
+        m_angleMotor.enableVoltageCompensation(Constants.voltageComp);
         m_angleMotor.burnFlash();
         Timer.delay(1.0); 
         resetToAbsolute();
@@ -158,7 +159,7 @@ public class SwerveModule {
         driveController.setI(DriveConstants.DriveI);
         driveController.setD(DriveConstants.DriveD);
         driveController.setFF(DriveConstants.DriveF);
-        m_driveMotor.enableVoltageCompensation(DriveConstants.DriveVoltageComp);
+        m_driveMotor.enableVoltageCompensation(Constants.voltageComp);
         m_driveMotor.burnFlash();
         driveEncoder.setPosition(0.0);
     }

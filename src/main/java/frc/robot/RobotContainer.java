@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -40,6 +41,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve swerve = new Swerve();
+  private final Wrist intake = new Wrist();
 
 
   /* Auton Chooser */
