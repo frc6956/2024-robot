@@ -29,12 +29,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.geometry.Translation2dPlus;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ModuleConstants.*;
+import frc.robot.sensors.FancyLightVision;
 
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
-    private final PhotonVision photonVision;
+    private final FancyLightVision photonVision;
     final Field2d m_field = new Field2d();
 
     SwerveDrivePoseEstimator PoseEstimator;
@@ -49,7 +50,7 @@ public class Swerve extends SubsystemBase {
     StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
     
 
-    public Swerve(PhotonVision photonVision) {
+    public Swerve(FancyLightVision photonVision) {
         this.photonVision = photonVision;
         gyro = new Pigeon2(DriveConstants.GyroID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Wrist;
-import frc.robot.subsystems.PhotonVision;
+import frc.robot.sensors.FancyLightVision;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -41,7 +41,7 @@ public class RobotContainer {
   
 
   /* Subsystems */
-  private final PhotonVision photonVision = new PhotonVision();
+  private final FancyLightVision photonVision = new FancyLightVision();
   private final Swerve swerve = new Swerve(photonVision);
   //private final Wrist wrist = new Wrist();
 
