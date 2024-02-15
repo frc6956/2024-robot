@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 
+import org.opencv.photo.Photo;
+
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -10,10 +12,15 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -27,12 +34,23 @@ public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
+    private final PhotonVision photonVision;
     final Field2d m_field = new Field2d();
+
+    SwerveDrivePoseEstimator PoseEstimator;
 
     private static final Translation2d[] WHEEL_POSITIONS =
         Arrays.copyOf(DriveConstants.moduleTranslations, DriveConstants.moduleTranslations.length);
 
-    public Swerve() {
+    NetworkTable SwerveTable;
+
+    StructPublisher<Pose2d> OdomentryPublisher;
+    StructArrayPublisher<SwerveModuleState> SwerveModuleStatePublisher;
+    StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
+    
+
+    public Swerve(PhotonVision photonVision) {
+        this.photonVision = photonVision;
         gyro = new Pigeon2(DriveConstants.GyroID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         zeroGyro();
@@ -81,9 +99,16 @@ public class Swerve extends SubsystemBase {
         resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDriveOdometry(
-                DriveConstants.swerveKinematics,
-                getHeading(),
-                getModulePositions()
+            DriveConstants.swerveKinematics,
+            getHeading(),
+            getModulePositions()
+        );
+
+        PoseEstimator = new SwerveDrivePoseEstimator(
+            DriveConstants.swerveKinematics, 
+            getHeading(), 
+            getModulePositions(), 
+            new Pose2d()
         );
 
         AutoBuilder.configureHolonomic(
@@ -92,41 +117,68 @@ public class Swerve extends SubsystemBase {
             this::getSpeeds, 
             this::driveRobotRelative, 
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                                                 // Constants class
-                        new PIDConstants( // Translation PID constants
-                                Auto.AutoDriveP,
-                                Auto.AutoDriveI,
-                                Auto.AutoDriveD
-                        ),
-                        new PIDConstants( // Rotation PID constants
-                                Auto.AutoTurnP,
-                                Auto.AutoTurnI,
-                                Auto.AutoTurnD
-                        ),
-                        DriveConstants.MaxSpeed, // Max module speed, in m/s
-                        DriveConstants.CenterToWheel, // Drive base radius in meters. Distance from robot center to
-                                                          // furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                // Constants class
+                new PIDConstants( // Translation PID constants
+                        Auto.AutoDriveP,
+                        Auto.AutoDriveI,
+                        Auto.AutoDriveD
+                ),
+                new PIDConstants( // Rotation PID constants
+                        Auto.AutoTurnP,
+                        Auto.AutoTurnI,
+                        Auto.AutoTurnD
+                ),
+                DriveConstants.MaxSpeed, // Max module speed, in m/s
+                DriveConstants.CenterToWheel, // Drive base radius in meters. Distance from robot center to
+                                                  // furthest module.
+                new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ), 
                 () -> {
-                                            // Boolean supplier that controls when the path will be mirrored for the red alliance
-                                            // This will flip the path being followed to the red side of the field.
-                                            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                        // Boolean supplier that controls when the path will be mirrored for the red alliance
+                        // This will flip the path being followed to the red side of the field.
+                        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                        var alliance = DriverStation.getAlliance();
+                        if (alliance.isPresent()) {
+                            return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                }, 
+                this);
 
-                                            var alliance = DriverStation.getAlliance();
-                                            if (alliance.isPresent()) {
-                                            return alliance.get() == DriverStation.Alliance.Red;
-                                            }
-                                            return false;
-                                        }, 
-                                        this);
+        SwerveTable = NetworkTableInstance.getDefault().getTable("photonvision");
+        
+        OdomentryPublisher = SwerveTable.getStructTopic("Odomentry", Pose2d.struct).publish();
 
+        SwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("SwerveModuleStates", SwerveModuleState.struct).publish();
 
-    }
+        DesiredSwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("DesiredSwerveModuleStates", SwerveModuleState.struct).publish();
+
+    } // end of Swerve Contructor
 
     @Override
     public void periodic() {
-        swerveOdometry.update(getHeading(), getModulePositions());
+
+        if (photonVision.getVisionPoseEstimationResult().isPresent()){
+            System.out.println("hasTarget");
+            PoseEstimator.addVisionMeasurement(
+                photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
+                Timer.getFPGATimestamp());
+        }
+
+        PoseEstimator.update(
+            getHeading(), 
+            getModulePositions());
+
+        swerveOdometry.update(
+            getHeading(), 
+            getModulePositions());
+
+        OdomentryPublisher.set(getPose());
+
+        SwerveModuleStatePublisher.set(getModuleStates());
+
+        DesiredSwerveModuleStatePublisher.set(getDesiredSwerveModuleStates());
+        
         m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber(mod.name + " Encoder", mod.getThriftyEncoder().getDegrees());
@@ -226,6 +278,14 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
+        }
+        return states;
+    }
+
+    public SwerveModuleState[] getDesiredSwerveModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (SwerveModule mod : mSwerveMods) {
+            states[mod.moduleNumber] = mod.getDesiredState();
         }
         return states;
     }

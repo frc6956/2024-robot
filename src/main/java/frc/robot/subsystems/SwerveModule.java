@@ -27,6 +27,7 @@ public class SwerveModule {
     private boolean driveInvert;
     private Rotation2d angleOffset;
     private Rotation2d lastAngle;
+    private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
     private CANSparkMax m_angleMotor;
     private CANSparkMax m_driveMotor;
@@ -71,6 +72,7 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         /* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
         desiredState = OnboardModuleState.optimize(desiredState, getState().angle); 
+        m_desiredState = desiredState;
         setAngle(desiredState);
         setSpeed(desiredState, isOpenLoop);
     }
@@ -169,6 +171,10 @@ public class SwerveModule {
             driveEncoder.getVelocity(),
             getAngle()
         ); 
+    }
+
+    public SwerveModuleState getDesiredState(){
+        return m_desiredState;
     }
 
     public SwerveModulePosition getPosition(){

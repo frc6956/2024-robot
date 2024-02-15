@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -14,6 +15,26 @@ public class Constants {
 
     /* Voltage Compensation */
     public static final int voltageComp = 12;
+
+    public static class CommandConstants{
+        public static final double kXP = 0.1;
+        public static final double kXI = 0;
+        public static final double kxD = 0;
+
+        public static final double kYP = 0.1;
+        public static final double kYI = 0;
+        public static final double kYD = 0;
+
+        public static final double kThetaP = 0.1;
+
+        public static final double MaxVelocity = 3;
+        public static final double MaxAcceleration = 3;
+
+        public static final double xGoal = 0;
+        public static final double yGoal = 0;
+
+        public static final double errorTolerence = 0.3;
+    }
 
     public static class OperatorConstants{
         public static double stickDeadband = 0.15;
@@ -228,6 +249,35 @@ public class Constants {
         public static final double AutoDriveI = 0.0;
         public static final double AutoDriveD = 0.0;
 
+    }
+
+    public static final class VisionConstants{
+        public static final String camName = "PhotonCamera";
+
+        public static final Transform3d RobotToCam = new Transform3d();
+
+        public enum AprilTagIDs{
+            RedSpeakerCenter(4),
+            RedSpeakerSide(3),
+            BlueSpeakerCenter(7),
+            BlueSpeakerSide(8),
+            RedSourceDriverStationClose(9),
+            RedSourceDriverStationFar(10),
+            BlueSourceDriverStationClose(2),
+            BlueSourceDriverStationFar(1),
+            RedAmp(5),
+            BlueAmp(6);
+
+            private final int ID;
+
+            AprilTagIDs(int ID){
+                this.ID = ID;
+            }
+            public int getID(){
+                return ID;
+            }
+        }
+        
     }
 
     public static final class NeoMotorConstants {
