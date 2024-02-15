@@ -60,7 +60,7 @@ public final class Translation2dPlus extends Translation2d {
 	 * The scalar projection of a vector u onto a vector v is the length of
 	 * the "shadow" cast by u onto v under a "light" that is placed on a line
 	 * normal to v and containing the endpoint of u, given that u and v share
-	 * a starting point.
+	 * a starting point. spotless:off
 	 * tl;dr:
 	 *    _*
 	 * u  /|
@@ -71,6 +71,7 @@ public final class Translation2dPlus extends Translation2d {
 	 *   |
 	 *  scal_v(u)
 	 * u.scal(v)
+   * spotless:on
 	 *
 	 * @return (u . v) / norm(v)
 	 */
