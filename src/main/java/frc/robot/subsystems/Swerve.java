@@ -146,7 +146,7 @@ public class Swerve extends SubsystemBase {
                 }, 
                 this);
 
-        SwerveTable = NetworkTableInstance.getDefault().getTable("photonvision");
+        SwerveTable = NetworkTableInstance.getDefault().getTable("PhotonCamera");
         
         OdomentryPublisher = SwerveTable.getStructTopic("Odomentry", Pose2d.struct).publish();
 
@@ -157,14 +157,20 @@ public class Swerve extends SubsystemBase {
     } // end of Swerve Contructor
 
     @Override
+
+    // Need to change getVisionPoseEstimationResult().isPresent() to BiConsumer Equivalent
+
     public void periodic() {
 
-        if (photonVision.getVisionPoseEstimationResult().isPresent()){
-            System.out.println("hasTarget");
-            PoseEstimator.addVisionMeasurement(
-                photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
-                Timer.getFPGATimestamp());
-        }
+        // The code commented below I believe is already accounted for in the FancyLightVision code
+
+        // System.out.println(photonVision.getVisionPoseEstimationResult().isPresent());;
+        // if (photonVision.posePresent){
+        //     System.out.println("hasTarget");
+        //     PoseEstimator.addVisionMeasurement(
+        //         photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
+        //         Timer.getFPGATimestamp());
+        // }
 
         PoseEstimator.update(
             getHeading(), 
@@ -187,6 +193,10 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
             SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);
         }
+    }
+
+    public void visionPose(Pose2d pose, double timestamp){
+        PoseEstimator.addVisionMeasurement(pose, timestamp);
     }
 
     public Field2d getField2d() {

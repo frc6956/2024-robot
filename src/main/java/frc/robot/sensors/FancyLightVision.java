@@ -1,9 +1,11 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+//*****************************************************************IMPLEMENT NETWORKTABLES AND SMART DASHBOARD*************************************/
 package frc.robot.sensors;
 
+
+import java.util.function.BiConsumer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,56 +14,99 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+//import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.geometry.Transform3d;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
+//import edu.wpi.first.networktables.NetworkTable;
+//import edu.wpi.first.networktables.NetworkTableInstance;
+
 public class FancyLightVision extends SubsystemBase {
   /** Creates a new PhotonVision. */
-  PhotonCamera cam;
-  AprilTagFieldLayout aprilTagFieldLayout;
-  PhotonPoseEstimator PoseEstimator;
+  public PhotonCamera cam;
+  private final BiConsumer<Pose2d, Double> consumer;
+//  private AprilTagFieldLayout aprilTagFieldLayout;
+  private PhotonPoseEstimator poseEstimator;
 
-  public FancyLightVision() {
-    cam = new PhotonCamera(VisionConstants.camName);
-    try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-    } catch (IOException IOE){
-      IOE.printStackTrace();
-    }
-
-    PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, VisionConstants.RobotToCam);
+  public FancyLightVision(BiConsumer<Pose2d, Double> consumer) throws IOException{
+    cam = new PhotonCamera(VisionConstants.camName);    
+    poseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile), 
+    PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.RobotToCam);
+    this.consumer = consumer;
+    //NetworkTable PhotonTable = NetworkTableInstance.getDefault().getTable("photonvision");
+      
   }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Vision PoseEstimation X", getVisionPoseEstimationResult().get().estimatedPose.toPose2d().getX());
-    SmartDashboard.putNumber("Vision PoseEstimation Y", getVisionPoseEstimationResult().get().estimatedPose.toPose2d().getY());
-    SmartDashboard.putNumber("Vision PoseEstimation R", getVisionPoseEstimationResult().get().estimatedPose.toPose2d().getRotation().getDegrees());
-  }
+    boolean connected = cam.isConnected();
+    if (!connected){
+      return;
+    }
+    
+    PhotonPipelineResult pipelineResult = cam.getLatestResult();
+    boolean targetsAcquired = pipelineResult.hasTargets();
+    
+    if (!targetsAcquired){
+      return;
+    }
 
-  public PhotonPipelineResult getLatestResult(){
+    List<PhotonTrackedTarget> blurryTargets = new ArrayList<>();
+    for (PhotonTrackedTarget target : pipelineResult.targets){
+      if (target.getPoseAmbiguity()>0.2){
+        blurryTargets.add(target);
+      }
+    }
+
+    pipelineResult.targets.removeAll(blurryTargets);
+
+    Optional<EstimatedRobotPose> poseResult = poseEstimator.update(pipelineResult);
+    boolean posePresent = poseResult.isPresent();
+
+    if (!posePresent){
+      return;
+    }
+
+    EstimatedRobotPose estimatedPose = poseResult.get();
+
+    consumer.accept(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+  }
+}
+
+
+
+
+
+
+
+
+
+ /*  public PhotonPipelineResult getLatestResult(){
     return cam.getLatestResult();
   }
 
   public Optional<EstimatedRobotPose> getVisionPoseEstimationResult(){
-    return PoseEstimator.update();
+    return poseEstimator.update();
   }
 
-  public EstimatedRobotPose ifExistGEstimatedRobotPose(){
+  public EstimatedRobotPose EstimatedPose(){
     if (getVisionPoseEstimationResult().isPresent()){
       return getVisionPoseEstimationResult().get();
     } else return null;
   }
 
+
+  //double check this
   public PhotonTrackedTarget getBestTarget(){
     return getLatestResult().getBestTarget();
   }
@@ -135,3 +180,4 @@ public class FancyLightVision extends SubsystemBase {
 
 
 }
+*/

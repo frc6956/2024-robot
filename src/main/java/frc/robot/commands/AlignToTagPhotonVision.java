@@ -29,6 +29,7 @@ public class AlignToTagPhotonVision extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     this.vision = vision;
+    addRequirements(swerve, vision);
   }
 
   // Called when the command is initially scheduled.
@@ -38,10 +39,10 @@ public class AlignToTagPhotonVision extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    camToTarget = vision.getCamToTarget();
-    xError = CommandConstants.xGoal - camToTarget.getX();
-    yError = CommandConstants.yGoal - camToTarget.getY();
-    thetaError = camToTarget.getRotation().getAngle();
+    // camToTarget = vision.getCameraToTarget();
+    // xError = CommandConstants.xGoal - camToTarget.getX();
+    // yError = CommandConstants.yGoal - camToTarget.getY();
+    // thetaError = camToTarget.getRotation().getAngle();
 
     swerve.drive(
       new Translation2d(-xError, -yError).times(DriveConstants.MaxSpeed), 
