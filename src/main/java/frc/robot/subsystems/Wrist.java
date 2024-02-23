@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -19,7 +20,8 @@ public class Wrist extends SubsystemBase {
 
   DutyCycleEncoder angleEncoder;
 
-  CANSparkMax angleMotor;
+  CANSparkMax leftMotor;
+  CANSparkMax rightMotor;
 
   PIDController angleController;
 
@@ -28,10 +30,20 @@ public class Wrist extends SubsystemBase {
   public Wrist() {
     angleEncoder = new DutyCycleEncoder(WristConstants.wristPort);
 
-    angleMotor = new CANSparkMax(WristConstants.wristID, MotorType.kBrushless);
-    angleMotor.enableVoltageCompensation(Constants.voltageComp);
+    leftMotor = new CANSparkMax(WristConstants.wristID, MotorType.kBrushless);
+    leftMotor.restoreFactoryDefaults();
+    leftMotor.enableVoltageCompensation(Constants.voltageComp);
+
+    rightMotor = new CANSparkMax(WristConstants.wrist2ID, MotorType.kBrushless);
+    rightMotor.restoreFactoryDefaults();
+    rightMotor.enableVoltageCompensation(Constants.voltageComp);
 
     angleController = new PIDController(WristConstants.wristP, WristConstants.wristI, WristConstants.wristD);
+
+    rightMotor.setIdleMode(IdleMode.kBrake);
+    leftMotor.setIdleMode(IdleMode.kBrake);
+
+    rightMotor.setInverted(true);
 
     
   }
@@ -47,7 +59,18 @@ public class Wrist extends SubsystemBase {
     
     target = rotation;
     
-    angleMotor.set(angleController.calculate(getDegrees(), rotation));
+    leftMotor.set(angleController.calculate(getDegrees(), rotation));
+    rightMotor.set(angleController.calculate(getDegrees(), rotation));
+  }
+
+  public void stop(){
+    leftMotor.set(0);
+    rightMotor.set(0);
+  }
+
+  public void setSpeed(double speed){
+    leftMotor.set(speed);
+    rightMotor.set(speed);
   }
 
 
@@ -64,12 +87,14 @@ public class Wrist extends SubsystemBase {
 
 
   public void holdWrist(){
-    angleMotor.set(angleController.calculate(getDegrees(), target));
+    leftMotor.set(angleController.calculate(getDegrees(), target));
+    rightMotor.set(angleController.calculate(getDegrees(), target));
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Through Bore Encoder", getDegrees());
+    SmartDashboard.putNumber("Wrist Encoder", getDegrees());
+
   }
 }

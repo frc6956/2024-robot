@@ -43,54 +43,54 @@ public class Constants {
         public static int operatorPort = 1;
 
         public static final double DirectionSlewRate = 1.2; // radians per second
-		public static final double MagnitudeSlewRate = 1.5; // 2.0; //1.8; // percent per second (1 = 100%)
+		public static final double MagnitudeSlewRate = 2.1; // 2.0; //1.8; // percent per second (1 = 100%)
 		public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
     }
     
     public static class ModuleConstants{
 
         /* Front Left Module */
-        public static final class ModFL {
-            public static final String name = "Front Left Module";
-            public static final int moduleNumber = 0;
-            public static final int driveMotorID = 4;
-            public static final int angleMotorID = 3;
-            public static final int encoderID = 0;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-86.5); // -86
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //1.72 rad
+        public static final class ModFL { 
+            public static final String name = "Front Left Module1";
+            public static final int moduleNumber = 3;
+            public static final int driveMotorID = 7;
+            public static final int angleMotorID = 8;
+            public static final int encoderID = 1;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-53.1); 
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // 
         }
 
         /* Front Right Module */
         public static final class ModFR {
-            public static final String name = "Front Right Module";
-            public static final int moduleNumber = 1;
+            public static final String name = "Front Right Module1";
+            public static final int moduleNumber = 2;
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
-            public static final int encoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(99.5); //99
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //-1.49 rad
+            public static final int encoderID = 2;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-121.3); 
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // 
         }
         
         /* Back Left Module */
         public static final class ModBL {
-            public static final String name = "Back Left Module";
-            public static final int moduleNumber = 2;
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 1;
-            public static final int encoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-84.4); 
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // -1.47 rad
+            public static final String name = "Back Left Module1";
+            public static final int moduleNumber = 1;
+            public static final int driveMotorID = 4;
+            public static final int angleMotorID = 3;
+            public static final int encoderID = 3;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(72.0); //
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
 
         /* Back Right Module */
-        public static final class ModBR { 
-            public static final String name = "Back Right Module";
-            public static final int moduleNumber = 3;
-            public static final int driveMotorID = 8;
-            public static final int angleMotorID = 7;
-            public static final int encoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-23.3); 
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // -0.39 rad
+        public static final class ModBR {
+            public static final String name = "Back Right Module1";
+            public static final int moduleNumber = 0;
+            public static final int driveMotorID = 1;
+            public static final int angleMotorID = 2;
+            public static final int encoderID = 4;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(95.3); // 
+            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
     }
 
@@ -180,54 +180,41 @@ public class Constants {
 
 
     public static class IntakeConstants{
-        public static final int upIntakeID = 10;
-        public static final int lowIntakeID = 11;
+        public static final int upIntakeID = 9;
+        public static final int lowIntakeID = 10;
 
         public static final boolean lowInvert = true;
         public static final boolean upInvert = false;
 
-        public static final double intakeSpeed = 0.7;
-        public static final double feedSpeed = 0.5;
-        public static final double ampSpeed = 0.3;
-        public static final double extakeSpeed = 0.5;
+        public static final double intakeSpeed = 0.3;
+        public static final double feedSpeed = 0.1;
+        public static final double ampSpeed = 0.15;
+        public static final double extakeSpeed = -0.3;
     }
 
     public static class WristConstants{
-        public static final int wristPort = 9;
+        public static final int wristPort = 0;
         public static final double offset = 0.0;
-        public static final int wristID = 9;
+        public static final int wristID = 15;
+        public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.0;
+        public static final double wristP = 0.1;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
-        public static final double STOW = 120;
-        public static final double AMP = 55;
-        public static final double PICKUP = -20;
-    }
-
-
-    public static class ShooterConstants{
-        public static final int leftShooterID = 12;
-        public static final int rightShooterID = 13;
-    }
-    public static class AnglerConstants{
-        public static final int leftAnglerID = 14;
-        public static final int rightAnglerID = 15;
-
-        public static final double angleP = 0.0;
-        public static final double angleI = 0.0;
-        public static final double angleD = 0.0;
-
-        public static final double anglerOffset = 0;
-
-        public static final double HOME = 55;
-        public static final double MAX = 60;
-        public static final double MIN = 20;
-
-        public static final int anglerPort = 8;
+        public static final double STOW = 200;
+        public static final double AMP = 190;
+        public static final double PICKUP = 95;
     }
     
+
+    public static class FeederConstants {
+        public static final int topFeederID = 11;
+        public static final int bottomFeederID = 12;
+        public static final double feedSpeed = 0.8;    
+        public static final double feedOutSpeed = -0.5;
+        
+    } 
 
 
     public static class Auto{

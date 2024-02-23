@@ -29,13 +29,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.geometry.Translation2dPlus;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ModuleConstants.*;
-import frc.robot.sensors.FancyLightVision;
 
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
-    private final FancyLightVision photonVision;
     final Field2d m_field = new Field2d();
 
     SwerveDrivePoseEstimator PoseEstimator;
@@ -50,8 +48,7 @@ public class Swerve extends SubsystemBase {
     StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
     
 
-    public Swerve(FancyLightVision photonVision) {
-        this.photonVision = photonVision;
+    public Swerve() {
         gyro = new Pigeon2(DriveConstants.GyroID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         zeroGyro();
@@ -162,16 +159,6 @@ public class Swerve extends SubsystemBase {
 
     public void periodic() {
 
-        // The code commented below I believe is already accounted for in the FancyLightVision code
-
-        // System.out.println(photonVision.getVisionPoseEstimationResult().isPresent());;
-        // if (photonVision.posePresent){
-        //     System.out.println("hasTarget");
-        //     PoseEstimator.addVisionMeasurement(
-        //         photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
-        //         Timer.getFPGATimestamp());
-        // }
-
         PoseEstimator.update(
             getHeading(), 
             getModulePositions());
@@ -188,7 +175,7 @@ public class Swerve extends SubsystemBase {
         
         m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber(mod.name + " Encoder", mod.getThriftyEncoder().getDegrees());
+            SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());//mod.getThriftyEncoder().getDegrees());
             SmartDashboard.putNumber(mod.name + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
             SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);

@@ -19,11 +19,16 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
 
+
     upperIntakeMotor = new CANSparkFlex(IntakeConstants.upIntakeID, MotorType.kBrushless);
+    upperIntakeMotor.restoreFactoryDefaults();
     upperIntakeMotor.setInverted(IntakeConstants.upInvert);
 
     lowerIntakeMotor = new CANSparkFlex(IntakeConstants.lowIntakeID, MotorType.kBrushless);
+    lowerIntakeMotor.restoreFactoryDefaults();
     lowerIntakeMotor.setInverted(IntakeConstants.lowInvert);
+
+
   }
 
   @Override

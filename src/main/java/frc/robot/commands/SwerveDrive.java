@@ -1,3 +1,4 @@
+
 package frc.robot.commands;
 
 import frc.robot.Constants.DriveConstants;
@@ -64,7 +65,7 @@ public class SwerveDrive extends Command {
         /* Drive */
         swerve.drive(
             new Translation2d(-xAxisFiltered, -yAxisFiltered).times(DriveConstants.MaxSpeed), 
-            -rAxisSquared * DriveConstants.MaxAngularSpeed, 
+            rAxisSquared * DriveConstants.MaxAngularSpeed, 
             !m_robotCentricSup.getAsBoolean(), 
             true,
             m_isEvading.getAsBoolean(),

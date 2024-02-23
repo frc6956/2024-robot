@@ -9,13 +9,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CommandConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.sensors.FancyLightVision;
 import frc.robot.subsystems.Swerve;
 
 public class AlignToTagPhotonVision extends Command {
   /** Creates a new AlignToTagPhotonVision. */
   Swerve swerve;
-  FancyLightVision vision;
   Transform3d camToTarget;
 
   double xError;
@@ -25,11 +23,10 @@ public class AlignToTagPhotonVision extends Command {
   boolean yFinished;
   boolean thetaFinished;
 
-  public AlignToTagPhotonVision(Swerve swerve, FancyLightVision vision) {
+  public AlignToTagPhotonVision(Swerve swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
-    this.vision = vision;
-    addRequirements(swerve, vision);
+    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.

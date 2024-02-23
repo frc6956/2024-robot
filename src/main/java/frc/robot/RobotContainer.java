@@ -20,16 +20,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.commands.AlignToTagPhotonVision;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Wrist;
 import frc.robot.sensors.FancyLightVision;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
-
 
   /* Controllers */
   private final XboxController driver = new XboxController(OperatorConstants.driverPort);
@@ -46,17 +50,26 @@ public class RobotContainer {
   private final JoystickButton isLocked = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton alignToTag = new JoystickButton(driver, XboxController.Button.kA.value);
 
+  private final JoystickButton stow = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton pickUp = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+  private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kA.value);
+  private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kX.value);
+  private final JoystickButton shoot = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+  private final JoystickButton feed = new JoystickButton(operator, XboxController.Button.kB.value);
+
   /* Operator Buttons */
 
   
 
   /* Subsystems */
 
-  
-
+  private final Intake intake = new Intake();
+  //private final Climber climber = new Climber();
+  private final Wrist wrist = new Wrist();
   private FancyLightVision photonVision;
-  private final Swerve swerve = new Swerve(photonVision);
-  //private final Wrist wrist = new Wrist();
+  private final Swerve swerve = new Swerve();
+  private final Feeder feeder = new Feeder();
+
 
 
   /* Auton Chooser */
@@ -82,6 +95,32 @@ public class RobotContainer {
         () -> isLocked.getAsBoolean()
       )
     );
+    
+    wrist.setDefaultCommand(
+      new RunCommand(
+        () -> wrist.setPosition(WristConstants.STOW), 
+        wrist)
+    );
+    
+    wrist.setDefaultCommand(
+      new RunCommand(
+        () -> wrist.stop(), 
+        wrist)
+    );
+
+    intake.setDefaultCommand(
+      new RunCommand(
+        () -> intake.stop(),
+        intake
+      )
+    );
+    
+    feeder.setDefaultCommand(
+      new RunCommand(
+        () -> feeder.stop(),
+        feeder
+      )
+    );
 
     /* Pathplanner Named Commands */
       //NamedCommands.registerCommand("Intake", new IntakeNote(m_intake, m_robotState));
@@ -98,6 +137,23 @@ public class RobotContainer {
   private void configureBindings() {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+
+    stow.whileTrue(new RunCommand(() -> wrist.setSpeed(0.1), wrist));
+
+    pickUp.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
+
+    intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
+
+    intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
+
+    extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
+
+    extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
+
+    shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
+
+    feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
+    
 
     //alignToTag.whileTrue(new AlignToTagPhotonVision(swerve, photonVision));
 

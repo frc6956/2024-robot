@@ -31,8 +31,8 @@ public class SwerveModule {
 
     private CANSparkMax m_angleMotor;
     private CANSparkMax m_driveMotor;
-    private ThriftyEncoder angleEncoder;
-    //private CANcoder angleEncoder;
+    //private ThriftyEncoder angleEncoder;
+    private CANcoder angleEncoder;
     private RelativeEncoder integratedAngleEncoder;
     private RelativeEncoder driveEncoder;
 
@@ -48,16 +48,16 @@ public class SwerveModule {
         this.driveInvert = driveInvert;
         
         /* Angle Encoder Config */
-        //angleEncoder = new CANcoder(encoderID);
-        angleEncoder = new ThriftyEncoder(encoderID);
-        Timer.delay(1.0);
+        angleEncoder = new CANcoder(encoderID);
+        //angleEncoder = new ThriftyEncoder(encoderID);
+        //Timer.delay(0.5);
         configAngleEncoder();
 
         /* Angle Motor Config */
         m_angleMotor = new CANSparkMax(angleMotorID, MotorType.kBrushless);
         integratedAngleEncoder = m_angleMotor.getEncoder();
         angleController = m_angleMotor.getPIDController();
-        Timer.delay(1.0);
+        //Timer.delay(0.5);
         configAngleMotor();
 
         /* Drive Motor Config */
@@ -105,30 +105,32 @@ public class SwerveModule {
         return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
     }
 
-    /* 
+    
     public Rotation2d getCanCoder(){
-        return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition().getValueAsDouble());
+        return Rotation2d.fromRadians(angleEncoder.getAbsolutePosition().getValue()*2*Math.PI);
     }
-    */
+    /*
 
     public Rotation2d getThriftyEncoder(){
         return Rotation2d.fromRadians(angleEncoder.getPosition());
     }
+    */
 
     public void resetToAbsolute(){
-        //double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
-        double absolutePosition = getThriftyEncoder().getDegrees() - angleOffset.getDegrees();
+        //integratedAngleEncoder.setPosition(0);
+        double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
+        //double absolutePosition = getThriftyEncoder().getDegrees() - angleOffset.getDegrees();
         integratedAngleEncoder.setPosition(absolutePosition);
     }
 
     private void configAngleEncoder(){    
         /* The default for a canCoder is 0-360 degrees for getAbsolutePosition */
-        /* 
+         
         CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
         swerveCANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
         angleEncoder.getConfigurator().apply(swerveCANcoderConfig);
-        */
+        
     }
 
     private void configAngleMotor(){
@@ -145,7 +147,7 @@ public class SwerveModule {
         angleController.setFF(DriveConstants.TurnF);
         m_angleMotor.enableVoltageCompensation(Constants.voltageComp);
         m_angleMotor.burnFlash();
-        Timer.delay(1.0); 
+        Timer.delay(0.5); 
         resetToAbsolute();
     }
 
