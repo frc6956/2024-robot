@@ -43,7 +43,8 @@ public class Wrist extends SubsystemBase {
     rightMotor.setIdleMode(IdleMode.kBrake);
     leftMotor.setIdleMode(IdleMode.kBrake);
 
-    rightMotor.setInverted(true);
+    rightMotor.setInverted(WristConstants.rightInvert);
+    leftMotor.setInverted(WristConstants.leftInvert);
 
     
   }

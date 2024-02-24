@@ -5,28 +5,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
-public class TeleopIntake extends Command {
+public class TeleopIntakeFeed extends Command {
   /** Creates a new TeleopIntake. */
   String status;
   Intake intake;
+  Feeder feeder;
   boolean hasNote;
 
-  public TeleopIntake(Intake intake, String status) {
+  public TeleopIntakeFeed(Intake intake, Feeder feeder,String status) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake=intake;
+    this.feeder=feeder;
     this.status=status;
-    addRequirements(intake);
+    addRequirements(intake, feeder);
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-
-  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -34,11 +31,28 @@ public class TeleopIntake extends Command {
     hasNote = intake.hasNote();
     switch (status) {
       case "INTAKE":
-        intake.setSpeed(IntakeConstants.intakeSpeed);
+        if(!hasNote){
+          intake.setSpeed(IntakeConstants.intakeSpeed);
+        }
+        feeder.setSpeed(IntakeConstants.intakeSpeed);
         break;
-    
+      case "EXTAKE":
+        intake.setSpeed(IntakeConstants.extakeSpeed);
+        feeder.setSpeed(IntakeConstants.extakeSpeed);
+        break;
+      case "SHOOT":
+        if (intake.getRPM() > IntakeConstants.shootRPM){
+          feeder.setSpeed(IntakeConstants.feedSpeed);
+        }
+        intake.setSpeed(IntakeConstants.shootSpeed);
+        break;
+      case "STOP":
+        intake.stop();
+        feeder.stop();
+        break;
       default:
         intake.stop();
+        feeder.stop();
         break;
     }
   }
@@ -47,11 +61,6 @@ public class TeleopIntake extends Command {
   @Override
   public void end(boolean interrupted) {
     intake.stop();
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    feeder.stop();
   }
 }

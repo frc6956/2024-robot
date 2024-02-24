@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,6 +17,9 @@ public class Intake extends SubsystemBase {
 
   CANSparkFlex upperIntakeMotor;
   CANSparkFlex lowerIntakeMotor;
+
+  RelativeEncoder upperEncoder;
+  RelativeEncoder lowerEncoder;
 
   DigitalInput inputBreak;
 
@@ -33,7 +37,8 @@ public class Intake extends SubsystemBase {
     lowerIntakeMotor.setInverted(IntakeConstants.lowInvert);
     lowerIntakeMotor.burnFlash();
 
-
+    upperEncoder = upperIntakeMotor.getEncoder();
+    lowerEncoder = lowerIntakeMotor.getEncoder();
   }
 
   @Override
@@ -44,6 +49,11 @@ public class Intake extends SubsystemBase {
   public void setSpeed(double speed){
     upperIntakeMotor.set(speed);
     lowerIntakeMotor.set(speed);
+  }
+
+  public int getRPM(){
+    int rpm = (int)(Math.abs(upperEncoder.getVelocity()) + Math.abs(lowerEncoder.getVelocity()))/2;
+    return rpm; 
   }
 
   public void stop(){
