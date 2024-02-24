@@ -191,7 +191,7 @@ public class Constants {
         public static final boolean upInvert = false;
 
         public static final double intakeSpeed = 0.3;
-        public static final double feedSpeed = 0.1;
+        public static final double feedSpeed = -1;
         public static final double ampSpeed = 0.15;
         public static final double extakeSpeed = -0.3;
         public static final double shootSpeed = -1;
@@ -228,7 +228,7 @@ public class Constants {
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = 0.8;    
+        public static final double feedSpeed = -1;    
 
         public static final boolean topInvert = true;
         public static final boolean bottomInvert = false;
