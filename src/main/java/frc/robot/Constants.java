@@ -196,9 +196,9 @@ public class Constants {
         public static final double extakeSpeed = -0.3;
         public static final double shootSpeed = -1;
 
-        public static final int intakeBreakID = 7;
+        public static final int intakeBreakID = 1;
 
-        public static final int shootRPM = 6000;
+        public static final int shootRPM = 5000;
 
         public static final String doIntake = "INTAKE";
         public static final String doExtale = "EXTAKE";
@@ -239,7 +239,7 @@ public class Constants {
         public static final int rightMotorID = 17;
 
         public static final boolean leftInvert = false;
-        public static final boolean rightInvert = true;
+        public static final boolean rightInvert = false;
 
         public static final double climbSpeed = 0.5;
     }

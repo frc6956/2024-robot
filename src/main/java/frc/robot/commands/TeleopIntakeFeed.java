@@ -41,7 +41,7 @@ public class TeleopIntakeFeed extends Command {
         feeder.setSpeed(IntakeConstants.extakeSpeed);
         break;
       case "SHOOT":
-        if (intake.getRPM() > IntakeConstants.shootRPM){
+        if (intake.getRPM() >= IntakeConstants.shootRPM){
           feeder.setSpeed(IntakeConstants.feedSpeed);
         }
         intake.setSpeed(IntakeConstants.shootSpeed);
