@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -16,17 +17,21 @@ public class Intake extends SubsystemBase {
   CANSparkFlex upperIntakeMotor;
   CANSparkFlex lowerIntakeMotor;
 
+  DigitalInput inputBreak;
+
 
   public Intake() {
-
+    inputBreak = new DigitalInput(IntakeConstants.intakeBreakID);
 
     upperIntakeMotor = new CANSparkFlex(IntakeConstants.upIntakeID, MotorType.kBrushless);
     upperIntakeMotor.restoreFactoryDefaults();
     upperIntakeMotor.setInverted(IntakeConstants.upInvert);
+    upperIntakeMotor.burnFlash();
 
     lowerIntakeMotor = new CANSparkFlex(IntakeConstants.lowIntakeID, MotorType.kBrushless);
     lowerIntakeMotor.restoreFactoryDefaults();
     lowerIntakeMotor.setInverted(IntakeConstants.lowInvert);
+    lowerIntakeMotor.burnFlash();
 
 
   }
@@ -44,5 +49,9 @@ public class Intake extends SubsystemBase {
   public void stop(){
     upperIntakeMotor.set(0);
     lowerIntakeMotor.set(0);
+  }
+
+  public boolean hasNote(){
+    return inputBreak.get(); 
   }
 }

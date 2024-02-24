@@ -59,8 +59,14 @@ public class Wrist extends SubsystemBase {
     
     target = rotation;
     
+    
     leftMotor.set(angleController.calculate(getDegrees(), rotation));
     rightMotor.set(angleController.calculate(getDegrees(), rotation));
+  }
+
+  public void setOutput(double output){
+    leftMotor.set(output);
+    rightMotor.set(output);
   }
 
   public void stop(){
@@ -69,6 +75,11 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setSpeed(double speed){
+    if (speed > 0 && getDegrees() > WristConstants.STOW){
+      stop();
+    } else if (speed < 0 && getDegrees() < WristConstants.PICKUP){
+      stop();
+    }
     leftMotor.set(speed);
     rightMotor.set(speed);
   }
@@ -86,9 +97,16 @@ public class Wrist extends SubsystemBase {
   }
 
 
-  public void holdWrist(){
-    leftMotor.set(angleController.calculate(getDegrees(), target));
-    rightMotor.set(angleController.calculate(getDegrees(), target));
+  public void holdWrist(double setpoint){
+    double output = angleController.calculate(getDegrees(), setpoint);
+    if (Math.abs(output) > 0.1){
+      output = Math.copySign(0.05, output);
+    } else if (Math.abs(output) < 0.005){
+      output=0;
+    }
+
+    leftMotor.set(output);
+    rightMotor.set(output); 
   }
 
   @Override

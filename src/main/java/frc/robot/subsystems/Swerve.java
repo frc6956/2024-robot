@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.geometry.Translation2dPlus;
+import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ModuleConstants.*;
 
@@ -112,8 +113,13 @@ public class Swerve extends SubsystemBase {
         AutoBuilder.configureHolonomic(
             this::getPose, 
             this::resetOdometry, 
-            this::getSpeeds, 
-            this::driveRobotRelative, 
+            () -> DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates()),
+            speeds -> {
+                    // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                    SwerveModuleState[] swerveModuleStates =
+                            DriveConstants.swerveKinematics.toSwerveModuleStates(speeds);
+                    setModuleStates(swerveModuleStates);
+            },
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                 // Constants class
                 new PIDConstants( // Translation PID constants
@@ -126,10 +132,10 @@ public class Swerve extends SubsystemBase {
                         Auto.AutoTurnI,
                         Auto.AutoTurnD
                 ),
-                DriveConstants.MaxSpeed, // Max module speed, in m/s
+                Auto.MaxSpeed, // Max module speed, in m/s
                 DriveConstants.CenterToWheel, // Drive base radius in meters. Distance from robot center to
                                                   // furthest module.
-                new ReplanningConfig() // Default path replanning config. See the API for the options here
+                new ReplanningConfig(true, true) // Default path replanning config. See the API for the options here
                 ), 
                 () -> {
                         // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -167,6 +173,8 @@ public class Swerve extends SubsystemBase {
             getHeading(), 
             getModulePositions());
 
+        m_field.setRobotPose(swerveOdometry.getPoseMeters());
+
         OdomentryPublisher.set(getPose());
 
         SwerveModuleStatePublisher.set(getModuleStates());
@@ -177,8 +185,8 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());//mod.getThriftyEncoder().getDegrees());
             SmartDashboard.putNumber(mod.name + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
-            SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);
+            //SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
+            //SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);
         }
     }
 
@@ -243,17 +251,10 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-
-        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    
-        SwerveModuleState[] targetStates = DriveConstants.swerveKinematics.toSwerveModuleStates(targetSpeeds);
-        setModuleStates(targetStates);
-
-    }
-
     public double getYaw() {
-        return gyro.getYaw().getValueAsDouble();
+        return (DriveConstants.GyroInvert) ?
+                180 - (gyro.getYaw().getValueAsDouble()) :
+                gyro.getYaw().getValueAsDouble();
     }
 
     public Rotation2d getHeading() {
@@ -294,10 +295,6 @@ public class Swerve extends SubsystemBase {
             positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
-    }
-
-    public ChassisSpeeds getSpeeds() {
-        return DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
     private Translation2d getCenterOfRotation(final Rotation2d direction, final double rotation) {

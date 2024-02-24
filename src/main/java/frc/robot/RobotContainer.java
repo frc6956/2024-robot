@@ -27,6 +27,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.commands.AlignToTagPhotonVision;
+import frc.robot.commands.HoldWrist;
+import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Wrist;
 import frc.robot.sensors.FancyLightVision;
@@ -48,10 +50,11 @@ public class RobotContainer {
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton isEvading = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton isLocked = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton alignToTag = new JoystickButton(driver, XboxController.Button.kA.value);
+  //private final JoystickButton alignToTag = new JoystickButton(driver, XboxController.Button.kA.value);
 
-  private final JoystickButton stow = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton pickUp = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+  private final JoystickButton pickup = new JoystickButton(operator, XboxController.Button.kY.value);
+  private final JoystickButton rotateUp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton rotateDown = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kA.value);
   private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kX.value);
   private final JoystickButton shoot = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
@@ -91,21 +94,13 @@ public class RobotContainer {
         () -> driver.getRawAxis(strafeAxis), 
         () -> driver.getRawAxis(rotationAxis), 
         () -> false,
-        () -> isEvading.getAsBoolean(),
+        () -> false,
         () -> isLocked.getAsBoolean()
       )
     );
     
     wrist.setDefaultCommand(
-      new RunCommand(
-        () -> wrist.setPosition(WristConstants.STOW), 
-        wrist)
-    );
-    
-    wrist.setDefaultCommand(
-      new RunCommand(
-        () -> wrist.stop(), 
-        wrist)
+      new HoldWrist(wrist)
     );
 
     intake.setDefaultCommand(
@@ -138,9 +133,13 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
-    stow.whileTrue(new RunCommand(() -> wrist.setSpeed(0.1), wrist));
+    pickup.onTrue(new SetPosition(wrist, WristConstants.PICKUP));
 
-    pickUp.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
+
+
+    rotateUp.whileTrue(new RunCommand(() -> wrist.setSpeed(0.1), wrist));
+
+    rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
 
     intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
 
@@ -166,10 +165,12 @@ public class RobotContainer {
 
   public void printValues(){
     /* Robot Position */
-    SmartDashboard.putData("Swerve", swerve);
+    //SmartDashboard.putData("Swerve", swerve);
+
     SmartDashboard.putString("Robot Pose2d", swerve.getPose().getTranslation().toString());
+    SmartDashboard.putString("Robot Pose2d Rotation", swerve.getPose().getRotation().toString());
     SmartDashboard.putNumber("Robot Yaw", swerve.getYaw());
-    SmartDashboard.putNumber("Robot Pitch", swerve.getPitch());
-    SmartDashboard.putNumber("Robot Roll", swerve.getRoll());
+    //SmartDashboard.putNumber("Robot Pitch", swerve.getPitch());
+    //SmartDashboard.putNumber("Robot Roll", swerve.getRoll());
   }
 }

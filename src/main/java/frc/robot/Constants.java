@@ -43,7 +43,7 @@ public class Constants {
         public static int operatorPort = 1;
 
         public static final double DirectionSlewRate = 1.2; // radians per second
-		public static final double MagnitudeSlewRate = 2.1; // 2.0; //1.8; // percent per second (1 = 100%)
+		public static final double MagnitudeSlewRate = 3; // 2.0; //1.8; // percent per second (1 = 100%)
 		public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
     }
     
@@ -102,9 +102,10 @@ public class Constants {
         public static final double MaxAngle = 180;
 
         public static final int GyroID = 0;
+        public static final boolean GyroInvert = false;
 
-        public static final double TrackWidth = Units.inchesToMeters(21.75);
-        public static final double WheelBase = Units.inchesToMeters(21.75);
+        public static final double TrackWidth = Units.inchesToMeters(20.75);
+        public static final double WheelBase = Units.inchesToMeters(20.75);
         public static final double WheelDiameter = Units.inchesToMeters(4);
         public static final double WheelCircumference = WheelDiameter * Math.PI;
 
@@ -135,7 +136,7 @@ public class Constants {
         public static final double TurnMotorReduction = 150.0 / 7.0 / 1.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
 
 
-        public static final double DriveConversionFactor = (WheelDiameter * Math.PI) / DriveMotorReduction;
+        public static final double DriveConversionFactor = DriveMotorReduction;//(WheelDiameter * Math.PI) / DriveMotorReduction;
         public static final double AngleConversionFactor = 360 / TurnMotorReduction;//(2 * Math.PI) / TurnMotorReduction;
 
         public static final double DriveVelocityConversionFactor = ((WheelDiameter * Math.PI) / DriveMotorReduction) / 60.0; // meters per second, per RPM
@@ -143,8 +144,11 @@ public class Constants {
 
 
         /* Speed */
-        public static final double MaxSpeed = 4;
-        public static final double MaxAngularSpeed = 2 * Math.PI;
+        public static final double MaxSpeed = 10;
+        public static final double MaxAngularSpeed = Math.PI * 2;
+
+        public static final double SpeedOutputLimit = 1; 
+        public static final double AngularOutputLimit = Math.PI/2;
         /* Feed Forward */
         public static final double DriveKS = 0;
         public static final double DriveKV = 0;
@@ -190,6 +194,8 @@ public class Constants {
         public static final double feedSpeed = 0.1;
         public static final double ampSpeed = 0.15;
         public static final double extakeSpeed = -0.3;
+
+        public static final int intakeBreakID = 7;
     }
 
     public static class WristConstants{
@@ -198,13 +204,13 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.1;
+        public static final double wristP = 0.006;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
-        public static final double STOW = 200;
-        public static final double AMP = 190;
-        public static final double PICKUP = 95;
+        public static final double STOW = 197;
+        public static final double AMP = 202;
+        public static final double PICKUP = 85;
     }
     
 
@@ -228,11 +234,11 @@ public class Constants {
             MaxAngularSpeed, MaxAngularAcceleration);
 
         /* PID */
-        public static final double AutoTurnP = 0.0;
+        public static final double AutoTurnP = 0.1;
         public static final double AutoTurnI = 0.0;
         public static final double AutoTurnD = 0.0;
 
-        public static final double AutoDriveP = 0.0;
+        public static final double AutoDriveP = 0.5;
         public static final double AutoDriveI = 0.0;
         public static final double AutoDriveD = 0.0;
 
