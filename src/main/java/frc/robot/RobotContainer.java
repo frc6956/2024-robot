@@ -60,6 +60,7 @@ public class RobotContainer {
   private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kX.value);
   private final JoystickButton shoot = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
   private final JoystickButton feed = new JoystickButton(operator, XboxController.Button.kB.value);
+  private final JoystickButton climbOveride = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
 
   /* Operator Buttons */
 
@@ -68,7 +69,7 @@ public class RobotContainer {
   /* Subsystems */
 
   private final Intake intake = new Intake();
-  //private final Climber climber = new Climber();
+  private final Climber climber = new Climber();
   private final Wrist wrist = new Wrist();
   private FancyLightVision photonVision;
   private final Swerve swerve = new Swerve();
@@ -127,6 +128,12 @@ public class RobotContainer {
         IntakeConstants.doNothing)
     );
 
+    climber.setDefaultCommand(
+      new RunCommand(
+        () -> climber.setSpeed(operator.getLeftY()), 
+        climber)
+    );
+
     /* Pathplanner Named Commands */
       //NamedCommands.registerCommand("Intake", new IntakeNote(m_intake, m_robotState));
 
@@ -151,18 +158,19 @@ public class RobotContainer {
 
     rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
 
-    
-    intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
-    //intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake));
-    intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
+    //intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
+    intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake));
+    //intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
 
-    extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
-    //extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtake));
-    extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
+    //extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
+    extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale));
+    //extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
 
-    shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
-    //feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot));
-    feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
+    //shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
+    feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot));
+    //feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
+
+    climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
     
 
     //alignToTag.whileTrue(new AlignToTagPhotonVision(swerve, photonVision));
@@ -181,6 +189,7 @@ public class RobotContainer {
     SmartDashboard.putString("Robot Pose2d", swerve.getPose().getTranslation().toString());
     SmartDashboard.putString("Robot Pose2d Rotation", swerve.getPose().getRotation().toString());
     SmartDashboard.putNumber("Robot Yaw", swerve.getYaw());
+    SmartDashboard.putNumber("IntakeRPM", intake.getRPM());
     //SmartDashboard.putNumber("Robot Pitch", swerve.getPitch());
     //SmartDashboard.putNumber("Robot Roll", swerve.getRoll());
   }

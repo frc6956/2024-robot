@@ -190,6 +190,16 @@ public class Constants {
         public static final double feedSpeed = 0.1;
         public static final double ampSpeed = 0.15;
         public static final double extakeSpeed = -0.3;
+        public static final double shootSpeed = -1;
+
+        public static final int intakeBreakID = 1;
+
+        public static final int shootRPM = 5000;
+
+        public static final String doIntake = "INTAKE";
+        public static final String doExtale = "EXTAKE";
+        public static final String doShoot = "SHOOT";
+        public static final String doNothing = "STOP";
     }
 
     public static class WristConstants{
@@ -215,6 +225,16 @@ public class Constants {
         public static final double feedOutSpeed = -0.5;
         
     } 
+
+    public static class ClimberConstants {
+        public static final int leftMotorID = 16;
+        public static final int rightMotorID = 17;
+
+        public static final boolean leftInvert = false;
+        public static final boolean rightInvert = false;
+
+        public static final double climbSpeed = 0.5;
+    }
 
 
     public static class Auto{
