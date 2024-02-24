@@ -191,11 +191,19 @@ public class Constants {
         public static final boolean upInvert = false;
 
         public static final double intakeSpeed = 0.3;
-        public static final double feedSpeed = 0.1;
+        public static final double feedSpeed = -1;
         public static final double ampSpeed = 0.15;
         public static final double extakeSpeed = -0.3;
+        public static final double shootSpeed = -1;
 
         public static final int intakeBreakID = 7;
+
+        public static final int shootRPM = 6000;
+
+        public static final String doIntake = "INTAKE";
+        public static final String doExtale = "EXTAKE";
+        public static final String doShoot = "SHOOT";
+        public static final String doNothing = "STOP";
     }
 
     public static class WristConstants{
@@ -211,15 +219,19 @@ public class Constants {
         public static final double STOW = 197;
         public static final double AMP = 202;
         public static final double PICKUP = 85;
+
+        public static final boolean leftInvert = false;
+        public static final boolean rightInvert = true;
     }
     
 
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = 0.8;    
-        public static final double feedOutSpeed = -0.5;
-        
+        public static final double feedSpeed = -1;    
+
+        public static final boolean topInvert = true;
+        public static final boolean bottomInvert = false;
     } 
 
 

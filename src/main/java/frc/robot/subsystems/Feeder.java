@@ -22,8 +22,8 @@ public class Feeder extends SubsystemBase{
     topFeeder.restoreFactoryDefaults();
     bottomFeeder.restoreFactoryDefaults();
 
-    topFeeder.setInverted(true);
-    bottomFeeder.setInverted(false);
+    topFeeder.setInverted(FeederConstants.topInvert);
+    bottomFeeder.setInverted(FeederConstants.bottomInvert);
 
     topFeeder.setIdleMode(IdleMode.kCoast);
     bottomFeeder.setIdleMode(IdleMode.kCoast);

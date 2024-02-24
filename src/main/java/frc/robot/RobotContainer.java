@@ -30,6 +30,7 @@ import frc.robot.commands.AlignToTagPhotonVision;
 import frc.robot.commands.HoldWrist;
 import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.TeleopIntakeFeed;
 import frc.robot.subsystems.Wrist;
 import frc.robot.sensors.FancyLightVision;
 import frc.robot.subsystems.Swerve;
@@ -103,6 +104,7 @@ public class RobotContainer {
       new HoldWrist(wrist)
     );
 
+    //
     intake.setDefaultCommand(
       new RunCommand(
         () -> intake.stop(),
@@ -115,6 +117,14 @@ public class RobotContainer {
         () -> feeder.stop(),
         feeder
       )
+    );
+    //
+
+    intake.setDefaultCommand(
+      new TeleopIntakeFeed(
+        intake, 
+        feeder, 
+        IntakeConstants.doNothing)
     );
 
     /* Pathplanner Named Commands */
@@ -141,16 +151,17 @@ public class RobotContainer {
 
     rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
 
+    
     intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
-
+    //intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake));
     intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
 
     extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
-
+    //extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtake));
     extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
 
     shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
-
+    //feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot));
     feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
     
 

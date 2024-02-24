@@ -25,13 +25,14 @@ public class SwerveDrive extends Command {
     private BooleanSupplier m_isEvading;
     private BooleanSupplier m_isLocked;
 
-    public SwerveDrive(Swerve swerve, 
-                       DoubleSupplier translationSup, 
-                       DoubleSupplier strafeSup, 
-                       DoubleSupplier rotationSup, 
-                       BooleanSupplier robotCentricSup, 
-                       BooleanSupplier isEvading,
-                       BooleanSupplier isLocked) {
+    public SwerveDrive(
+        Swerve swerve, 
+        DoubleSupplier translationSup, 
+        DoubleSupplier strafeSup, 
+        DoubleSupplier rotationSup, 
+        BooleanSupplier robotCentricSup, 
+        BooleanSupplier isEvading,
+        BooleanSupplier isLocked) {
 
         this.swerve = swerve;
         addRequirements(swerve);
