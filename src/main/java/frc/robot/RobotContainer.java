@@ -103,29 +103,14 @@ public class RobotContainer {
     
     wrist.setDefaultCommand(
       new HoldWrist(wrist)
-    );
-
-    //
-    intake.setDefaultCommand(
-      new RunCommand(
-        () -> intake.stop(),
-        intake
-      )
-    );
-    
-    feeder.setDefaultCommand(
-      new RunCommand(
-        () -> feeder.stop(),
-        feeder
-      )
-    );
-    //
+    ); 
 
     intake.setDefaultCommand(
       new TeleopIntakeFeed(
         intake, 
         feeder, 
-        IntakeConstants.doNothing)
+        IntakeConstants.doNothing,
+        wrist)
     );
 
     climber.setDefaultCommand(
@@ -159,15 +144,15 @@ public class RobotContainer {
     rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
 
     //intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
-    intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake));
+    intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
     //intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
 
     //extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
-    extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale));
+    extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale, getWrist()));
     //extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
 
     //shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
-    feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot));
+    feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
     //feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
 
     climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
@@ -192,5 +177,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("IntakeRPM", intake.getRPM());
     //SmartDashboard.putNumber("Robot Pitch", swerve.getPitch());
     //SmartDashboard.putNumber("Robot Roll", swerve.getRoll());
+  }
+
+  public Wrist getWrist(){
+    return wrist;
   }
 }

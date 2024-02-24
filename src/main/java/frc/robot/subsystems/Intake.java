@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
 
   public int getRPM(){
     int rpm = (int)(Math.abs(upperEncoder.getVelocity()) + Math.abs(lowerEncoder.getVelocity()))/2;
-    return rpm; 
+    return rpm;  
   }
 
   public void stop(){
@@ -64,6 +64,6 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean hasNote(){
-    return !inputBreak.get();
+    return inputBreak.get();
   }
 }

@@ -16,15 +16,20 @@ public class LEDs extends SubsystemBase {
 
   private Panel panel = new Panel(LED_Constants.panelWidth, LED_Constants.panelHeight);
 
-  private Strip leftIntake = new Strip(LED_Constants.leftIntakeLength);
-  private Strip rightIntake = new Strip(LED_Constants.rightIntakeLength);
+  private Strip intakeGlow = new Strip(LED_Constants.intakeGlow);
 
   private Strip frontGlow = new Strip(LED_Constants.frontUnderGlowLength);
   private Strip backGlow = new Strip(LED_Constants.backUnderGlowLength);
   private Strip leftGlow = new Strip(LED_Constants.leftUnderGlowLength);
   private Strip rightGlow = new Strip(LED_Constants.rightUnderGlowLength);
 
-  //private Strip[] ledStrips = getStrips();
+  Strip[] strips = new Strip[] {
+      frontGlow,
+      backGlow,
+      leftGlow,
+      rightGlow,
+      intakeGlow
+  };
 
   public LEDs() {
     //PWM port 1 on the Rio
@@ -54,9 +59,5 @@ public class LEDs extends SubsystemBase {
     int length = panel.getLength();
     return length;
   }
-
-  //public Strip[] getStrips(){
-    
-  //}
 
 }

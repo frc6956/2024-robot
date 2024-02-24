@@ -187,7 +187,7 @@ public class Constants {
         public static final boolean lowInvert = true;
         public static final boolean upInvert = false;
 
-        public static final double intakeSpeed = 0.3;
+        public static final double intakeSpeed = 0.15;
         public static final double feedSpeed = 0.1;
         public static final double ampSpeed = 0.15;
         public static final double extakeSpeed = -0.3;
@@ -201,6 +201,8 @@ public class Constants {
         public static final String doExtale = "EXTAKE";
         public static final String doShoot = "SHOOT";
         public static final String doNothing = "STOP";
+
+        public static final int intakeAngle = 200;
     }
 
     public static class WristConstants{
@@ -209,7 +211,7 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.1;
+        public static final double wristP = 0.006;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
@@ -305,7 +307,6 @@ public class Constants {
         public static final int backUnderGlowLength = 14;
         public static final int rightUnderGlowLength = 14;
 
-        public static final int leftIntakeLength = 20;
-        public static final int rightIntakeLength = 20;
+        public static final int intakeGlow = 20;
     }
 }
