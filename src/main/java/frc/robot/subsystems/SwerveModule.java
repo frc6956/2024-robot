@@ -19,7 +19,6 @@ import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.sensors.ThriftyEncoder;
 
 public class SwerveModule {
     public int moduleNumber;

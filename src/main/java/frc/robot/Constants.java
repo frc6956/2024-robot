@@ -234,6 +234,16 @@ public class Constants {
         public static final boolean bottomInvert = false;
     } 
 
+    public static class ClimberConstants {
+        public static final int leftMotorID = 16;
+        public static final int rightMotorID = 17;
+
+        public static final boolean leftInvert = false;
+        public static final boolean rightInvert = true;
+
+        public static final double climbSpeed = 0.5;
+    }
+
 
     public static class Auto{
 
