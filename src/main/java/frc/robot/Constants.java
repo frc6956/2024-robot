@@ -102,6 +102,7 @@ public class Constants {
         public static final double MaxAngle = 180;
 
         public static final int GyroID = 0;
+        public static final boolean GyroInvert = false;
 
         public static final double TrackWidth = Units.inchesToMeters(21.75);
         public static final double WheelBase = Units.inchesToMeters(21.75);
@@ -215,15 +216,19 @@ public class Constants {
         public static final double STOW = 200;
         public static final double AMP = 190;
         public static final double PICKUP = 95;
+
+        public static final boolean leftInvert = false;
+        public static final boolean rightInvert = true;
     }
     
 
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = 0.8;    
-        public static final double feedOutSpeed = -0.5;
+        public static final double feedSpeed = -1;    
         
+        public static final boolean topInvert = true;
+        public static final boolean bottomInvert = false;
     } 
 
     public static class ClimberConstants {
