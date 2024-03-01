@@ -5,9 +5,7 @@
 package frc.robot.sensors;
 
 
-import java.util.function.BiConsumer;
 import java.io.IOException;
-import java.nio.file.ProviderMismatchException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,12 +19,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -57,6 +50,16 @@ public class PhotonVision extends SubsystemBase {
     return cam.getLatestResult();
   }
 
+  public PhotonTrackedTarget getSpeakerCenterTarget(PhotonPipelineResult result){
+    List<PhotonTrackedTarget> targets = getLatestResult().getTargets();
+    for (PhotonTrackedTarget target : targets){
+      if (target.getFiducialId() == 4 || target.getFiducialId() == 7){
+        return target;
+      }
+    }
+    return null;
+  }
+
   public Optional<EstimatedRobotPose> getVisionPoseEstimationResult(){
     return poseEstimator.update();
   }
@@ -83,6 +86,16 @@ public class PhotonVision extends SubsystemBase {
     targets.forEach(target -> tagIDs.add(target.getFiducialId()));
 
     return tagIDs;
+  }
+
+
+
+  public boolean hasCenterSpeaker(PhotonPipelineResult result){
+    if (result.getBestTarget().getFiducialId() == 4 || result.getBestTarget().getFiducialId() == 7){
+      return true;
+    } 
+    return false;
+      
   }
 
   public boolean containsID(Integer ID){

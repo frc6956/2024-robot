@@ -7,6 +7,8 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -65,16 +67,17 @@ public class TeleopPhotonTurret extends Command {
     double yAxisFiltered = m_yAxisLimiter.calculate(yAxisSquared);
     if (photonVision.hasAprilTag()){
 
-    
-      if (photonVision.bestTargetIsCenterSpeaker() && photonVision.getLatestResult().hasTargets()){
-        
+    PhotonPipelineResult result = photonVision.getLatestResult();
+      if (photonVision.hasCenterSpeaker(result) && result.hasTargets() && result != null){
+        PhotonTrackedTarget target = photonVision.getSpeakerCenterTarget(result);
+        System.out.println("has target");
         PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI, VisionConstants.visionD);
         
         rotController.enableContinuousInput(-180, 180);
 
         double rotate = rotController.calculate(
           swerve.getYaw(),
-          swerve.getYaw() + photonVision.getLatestResult().getBestTarget().getYaw()
+          swerve.getYaw() + target.getYaw()
         );
 
         swerve.drive(

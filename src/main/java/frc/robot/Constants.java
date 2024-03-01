@@ -216,9 +216,9 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.006;
-        public static final double wristPUP = 0.005;
-        public static final double wristPUPGrav = 0.005;
+        public static final double wristP = 0.0065;
+        public static final double wristPUP = 0.006;
+        public static final double wristPUPGrav = 0.006;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
@@ -230,7 +230,7 @@ public class Constants {
         public static final boolean leftInvert = false;
         public static final boolean rightInvert = true;
 
-        public static final double MaxRotateSpeed = -0.1;
+        public static final double MaxRotateSpeed = -0.2;
         public static final double MaxRotateUpSpeed = 0.3;
     }
     
@@ -279,12 +279,13 @@ public class Constants {
 
     public static final class VisionConstants{
         public static final String camName = "SpeakerCamera";
-        public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(28);
-        public static final double CAMERA_PITCH_RADIANS = Math.PI/20;
+        public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(25.75);
+        public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(19);
+        public static final double Camera_ROLL_RADIANS = Units.degreesToRadians(-1);
         public static final double CENTER_SPEAKER_TOPTAG_HEIGHT = Units.inchesToMeters(60.375);
-        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(72+8);
+        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(72+9);
         public static final double WRIST_AXLE_HEIGHT = Units.inchesToMeters(11);
-        public static final Transform3d RobotToCam = new Transform3d(0, CAMERA_HEIGHT_METERS, 0, new Rotation3d(1, CAMERA_PITCH_RADIANS, 0));
+        public static final Transform3d RobotToCam = new Transform3d(0, CAMERA_HEIGHT_METERS, 0, new Rotation3d(Camera_ROLL_RADIANS, CAMERA_PITCH_RADIANS, 0));
 
         public enum AprilTagIDs{
             RedSpeakerCenter(4),
@@ -308,9 +309,12 @@ public class Constants {
             }
         }
 
-        public static final double visionP = 0.06;
+        public static final double visionP = 0.09;
         public static final double visionI = 0.0;
         public static final double visionD = 0.0;
+
+
+        // 
         
     }
 

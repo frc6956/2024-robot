@@ -13,6 +13,7 @@ import org.photonvision.proto.Photon;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -36,9 +37,7 @@ import frc.robot.commands.TeleopIntakeFeed;
 import frc.robot.commands.TeleopPhotonTurret;
 import frc.robot.commands.AutoCommands.AutoIntake;
 import frc.robot.commands.AutoCommands.AutoShoot;
-import frc.robot.subsystems.Wrist;
 import frc.robot.sensors.PhotonVision;
-import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
@@ -92,6 +91,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     registerAutonCommands();
+
+    CameraServer.startAutomaticCapture();
     
     try{
       photonVision = new PhotonVision();

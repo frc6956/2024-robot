@@ -6,10 +6,13 @@ package frc.robot.commands;
 
 import org.opencv.photo.Photo;
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.sensors.PhotonVision;
 import frc.robot.subsystems.Wrist;
 
@@ -32,13 +35,16 @@ public class AimWrist extends Command {
   @Override
   public void execute() {
     if (photonVision.hasAprilTag()){
-      if (photonVision.getLatestResult().hasTargets() && photonVision.bestTargetIsCenterSpeaker()){
+      PhotonPipelineResult result = photonVision.getLatestResult();
+      if (result.hasTargets() && photonVision.hasCenterSpeaker(result) && result != null){
+        PhotonTrackedTarget target = photonVision.getSpeakerCenterTarget(result);
         double distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(
           VisionConstants.CAMERA_HEIGHT_METERS, 
           VisionConstants.CENTER_SPEAKER_TOPTAG_HEIGHT, 
           VisionConstants.CAMERA_PITCH_RADIANS, 
-          Units.degreesToRadians(photonVision.getLatestResult().getBestTarget().getPitch())
+          Units.degreesToRadians(target.getPitch())
           );
+      System.out.println(distanceToTarget);
 
         double targetWrist = Math.toDegrees(
           Math.atan((
@@ -55,8 +61,8 @@ public class AimWrist extends Command {
   }
 
   public double getShootAngle(double angle){
-    double shootAngle = angle + 162;
-    System.out.println(shootAngle);
+    double shootAngle = angle + 156;
+    Math.min(shootAngle, WristConstants.SUBWOOFER);
     return shootAngle;
   }
 
