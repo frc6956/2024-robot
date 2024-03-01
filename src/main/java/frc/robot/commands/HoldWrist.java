@@ -16,7 +16,6 @@ public class HoldWrist extends Command {
   public HoldWrist(Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.wrist = wrist;
-    target = WristConstants.STOW;
     addRequirements(wrist);
   }
 
@@ -24,11 +23,13 @@ public class HoldWrist extends Command {
   @Override
   public void initialize() {
     target = wrist.getDegrees();
+    wrist.setTarget(target);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    target = wrist.getTarget();
     wrist.holdWrist(target);
   }
 }

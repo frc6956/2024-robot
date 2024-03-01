@@ -24,6 +24,8 @@ public class Wrist extends SubsystemBase {
   CANSparkMax rightMotor;
 
   PIDController angleController;
+  PIDController angleUpController;
+  PIDController angleUpGravController;
 
   double target = WristConstants.STOW;
 
@@ -39,6 +41,8 @@ public class Wrist extends SubsystemBase {
     rightMotor.enableVoltageCompensation(Constants.voltageComp);
 
     angleController = new PIDController(WristConstants.wristP, WristConstants.wristI, WristConstants.wristD);
+    angleUpController = new PIDController(WristConstants.wristPUP, WristConstants.wristI, WristConstants.wristD);
+    angleUpGravController = new PIDController(WristConstants.wristPUPGrav, WristConstants.wristI, WristConstants.wristD);
 
     rightMotor.setIdleMode(IdleMode.kBrake);
     leftMotor.setIdleMode(IdleMode.kBrake);
@@ -49,21 +53,6 @@ public class Wrist extends SubsystemBase {
     
   }
 
-  
-  public void setPosition(double rotation){
-
-    if (rotation < getDegrees() && getDegrees() < WristConstants.PICKUP) {
-            rotation = WristConstants.PICKUP;
-    } else if (rotation > getDegrees() && getDegrees() > WristConstants.STOW) {
-            rotation = WristConstants.STOW;
-    }
-    
-    target = rotation;
-    
-    
-    leftMotor.set(angleController.calculate(getDegrees(), rotation));
-    rightMotor.set(angleController.calculate(getDegrees(), rotation));
-  }
 
   public void setOutput(double output){
     leftMotor.set(output);
@@ -99,17 +88,32 @@ public class Wrist extends SubsystemBase {
 
 
   public void holdWrist(double setpoint){
-    double output = angleController.calculate(getDegrees(), setpoint);
-    if (Math.abs(output) > 0.1){
-      output = Math.copySign(0.05, output);
-    } else if (Math.abs(output) < 0.005){
-      output=0;
+    target = setpoint;
+    double output;
+    if (getDegrees() - setpoint < 0){
+      output = angleUpController.calculate(getDegrees(), setpoint);
+    } else {
+      output = angleController.calculate(getDegrees(), setpoint);
     }
-
+    
+    if (output > WristConstants.MaxRotateUpSpeed){
+      output = WristConstants.MaxRotateUpSpeed;
+    } else if (output < WristConstants.MaxRotateSpeed){
+      output = WristConstants.MaxRotateSpeed;
+    } else if (Math.abs(output) < 0.003){
+      output = 0;
+    }
     leftMotor.set(output);
     rightMotor.set(output); 
   }
 
+  public double getTarget(){
+    return target;
+  }
+
+  public void setTarget(double rotation){
+    this.target = rotation;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

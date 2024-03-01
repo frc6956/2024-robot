@@ -1,13 +1,17 @@
 package frc.robot;
 
+import java.net.CacheRequest;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 
 public class Constants {
 
@@ -37,13 +41,13 @@ public class Constants {
     }
 
     public static class OperatorConstants{
-        public static double stickDeadband = 0.15;
+        public static double stickDeadband = 0.1;
 
         public static int driverPort = 0;
         public static int operatorPort = 1;
 
         public static final double DirectionSlewRate = 1.2; // radians per second
-		public static final double MagnitudeSlewRate = 2.1; // 2.0; //1.8; // percent per second (1 = 100%)
+		public static final double MagnitudeSlewRate = 1.8; // 2.0; //1.8; // percent per second (1 = 100%)
 		public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
     }
     
@@ -56,7 +60,7 @@ public class Constants {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int encoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-53.1); 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-51.7); 
             //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // 
         }
 
@@ -104,8 +108,8 @@ public class Constants {
         public static final int GyroID = 0;
         public static final boolean GyroInvert = false;
 
-        public static final double TrackWidth = Units.inchesToMeters(21.75);
-        public static final double WheelBase = Units.inchesToMeters(21.75);
+        public static final double TrackWidth = Units.inchesToMeters(20.75);
+        public static final double WheelBase = Units.inchesToMeters(20.75);
         public static final double WheelDiameter = Units.inchesToMeters(4);
         public static final double WheelCircumference = WheelDiameter * Math.PI;
 
@@ -145,7 +149,7 @@ public class Constants {
 
         /* Speed */
         public static final double MaxSpeed = 4;
-        public static final double MaxAngularSpeed = 2 * Math.PI;
+        public static final double MaxAngularSpeed = Math.PI;
         /* Feed Forward */
         public static final double DriveKS = 0;
         public static final double DriveKV = 0;
@@ -188,8 +192,8 @@ public class Constants {
         public static final boolean upInvert = false;
 
         public static final double intakeSpeed = 0.15;
-        public static final double feedSpeed = 0.1;
-        public static final double ampSpeed = 0.15;
+        public static final double feedSpeed = -0.1;
+        public static final double ampSpeed = -0.2;
         public static final double extakeSpeed = -0.3;
         public static final double shootSpeed = -1;
 
@@ -201,6 +205,7 @@ public class Constants {
         public static final String doExtale = "EXTAKE";
         public static final String doShoot = "SHOOT";
         public static final String doNothing = "STOP";
+        public static final String doAmp = "AMP";
 
         public static final int intakeAngle = 200;
     }
@@ -212,15 +217,21 @@ public class Constants {
         public static final int wrist2ID = 13;
 
         public static final double wristP = 0.006;
+        public static final double wristPUP = 0.005;
+        public static final double wristPUPGrav = 0.005;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
         public static final double STOW = 200;
-        public static final double AMP = 190;
-        public static final double PICKUP = 95;
+        public static final double AMP = 196;
+        public static final double PICKUP = 92;
+        public static final double SUBWOOFER = 197;
 
         public static final boolean leftInvert = false;
         public static final boolean rightInvert = true;
+
+        public static final double MaxRotateSpeed = -0.1;
+        public static final double MaxRotateUpSpeed = 0.3;
     }
     
 
@@ -228,6 +239,7 @@ public class Constants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
         public static final double feedSpeed = -1;    
+        public static final double ampSpeed = -0.3;
         
         public static final boolean topInvert = true;
         public static final boolean bottomInvert = false;
@@ -266,9 +278,13 @@ public class Constants {
     }
 
     public static final class VisionConstants{
-        public static final String camName = "PhotonCamera";
-
-        public static final Transform3d RobotToCam = new Transform3d();
+        public static final String camName = "SpeakerCamera";
+        public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(28);
+        public static final double CAMERA_PITCH_RADIANS = Math.PI/20;
+        public static final double CENTER_SPEAKER_TOPTAG_HEIGHT = Units.inchesToMeters(60.375);
+        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(72+8);
+        public static final double WRIST_AXLE_HEIGHT = Units.inchesToMeters(11);
+        public static final Transform3d RobotToCam = new Transform3d(0, CAMERA_HEIGHT_METERS, 0, new Rotation3d(1, CAMERA_PITCH_RADIANS, 0));
 
         public enum AprilTagIDs{
             RedSpeakerCenter(4),
@@ -291,6 +307,10 @@ public class Constants {
                 return ID;
             }
         }
+
+        public static final double visionP = 0.06;
+        public static final double visionI = 0.0;
+        public static final double visionD = 0.0;
         
     }
 

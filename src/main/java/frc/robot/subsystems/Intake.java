@@ -9,8 +9,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
@@ -31,11 +33,15 @@ public class Intake extends SubsystemBase {
     upperIntakeMotor = new CANSparkFlex(IntakeConstants.upIntakeID, MotorType.kBrushless);
     upperIntakeMotor.restoreFactoryDefaults();
     upperIntakeMotor.setInverted(IntakeConstants.upInvert);
+    upperIntakeMotor.enableVoltageCompensation(Constants.voltageComp);
+    Timer.delay(0.5);
     upperIntakeMotor.burnFlash();
 
     lowerIntakeMotor = new CANSparkFlex(IntakeConstants.lowIntakeID, MotorType.kBrushless);
     lowerIntakeMotor.restoreFactoryDefaults();
+    lowerIntakeMotor.enableVoltageCompensation(Constants.voltageComp);
     lowerIntakeMotor.setInverted(IntakeConstants.lowInvert);
+    Timer.delay(0.5);
     lowerIntakeMotor.burnFlash();
 
     upperEncoder = upperIntakeMotor.getEncoder();

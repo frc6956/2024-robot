@@ -148,7 +148,7 @@ public class Swerve extends SubsystemBase {
             }, 
             this);
 
-        SwerveTable = NetworkTableInstance.getDefault().getTable("PhotonCamera");
+        SwerveTable = NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
         
         OdomentryPublisher = SwerveTable.getStructTopic("Odomentry", Pose2d.struct).publish();
 
@@ -336,6 +336,7 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getHeading(), getModulePositions(), pose);
+        PoseEstimator.resetPosition(getHeading(), getModulePositions(), pose);
     }
 
     public void resetModulesToAbsolute() {

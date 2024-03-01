@@ -18,6 +18,7 @@ public class SetPosition extends InstantCommand {
 
     this.wrist = wrist;
     this.rotation = rotation;
+    addRequirements(wrist);
     done = false;
   }
 

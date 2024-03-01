@@ -58,7 +58,7 @@ public class SwerveDrive extends Command {
 
         double xAxisSquared = xAxis * xAxis * Math.signum(xAxis);
         double yAxisSquared = yAxis * yAxis * Math.signum(yAxis);
-        double rAxisSquared = rAxis * rAxis * Math.signum(rAxis);
+        //double rAxisSquared = rAxis * rAxis * Math.signum(rAxis);
 
         double xAxisFiltered = m_xAxisLimiter.calculate(xAxisSquared);
         double yAxisFiltered = m_yAxisLimiter.calculate(yAxisSquared);
@@ -66,7 +66,7 @@ public class SwerveDrive extends Command {
         /* Drive */
         swerve.drive(
             new Translation2d(-xAxisFiltered, -yAxisFiltered).times(DriveConstants.MaxSpeed), 
-            rAxisSquared * DriveConstants.MaxAngularSpeed, 
+            rAxis * DriveConstants.MaxAngularSpeed, 
             !m_robotCentricSup.getAsBoolean(), 
             true,
             m_isEvading.getAsBoolean(),

@@ -51,6 +51,10 @@ public class TeleopIntakeFeed extends Command {
         }
         intake.setSpeed(IntakeConstants.shootSpeed);
         break;
+      case "AMP": 
+        intake.setSpeed(IntakeConstants.ampSpeed);
+        feeder.setSpeed(FeederConstants.ampSpeed);
+        break;
       case "STOP":
         intake.stop();
         feeder.stop();

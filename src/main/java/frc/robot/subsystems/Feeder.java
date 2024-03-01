@@ -27,6 +27,9 @@ public class Feeder extends SubsystemBase{
     topFeeder.setIdleMode(IdleMode.kCoast);
     bottomFeeder.setIdleMode(IdleMode.kCoast);
 
+    topFeeder.burnFlash();
+    bottomFeeder.burnFlash();
+
   }
 
   public void setSpeed(double speed){

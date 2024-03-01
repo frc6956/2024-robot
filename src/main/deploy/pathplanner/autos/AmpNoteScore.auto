@@ -12,21 +12,16 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AmpSideToAmpNote"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AmpNoteToSpeaker"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSideToAmpNote"
+                }
+              }
+            ]
           }
         }
       ]

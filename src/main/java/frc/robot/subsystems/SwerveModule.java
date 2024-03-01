@@ -92,7 +92,7 @@ public class SwerveModule {
     
 
     private void setAngle(SwerveModuleState desiredState){
-        Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.MaxSpeed * 0.02)) 
+        Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.MaxSpeed * 0.1)) 
         ? lastAngle 
         : desiredState.angle; //Prevent rotating module if speed is less then 2%. Prevents Jittering.
         

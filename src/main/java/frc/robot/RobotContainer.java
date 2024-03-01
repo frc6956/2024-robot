@@ -22,17 +22,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.commands.AimWrist;
 import frc.robot.commands.AlignToTagPhotonVision;
 import frc.robot.commands.HoldWrist;
 import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TeleopIntakeFeed;
+import frc.robot.commands.TeleopPhotonTurret;
+import frc.robot.commands.AutoCommands.AutoIntake;
+import frc.robot.commands.AutoCommands.AutoShoot;
 import frc.robot.subsystems.Wrist;
-import frc.robot.sensors.FancyLightVision;
+import frc.robot.sensors.PhotonVision;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.*;
 
@@ -51,14 +56,18 @@ public class RobotContainer {
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton isEvading = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton isLocked = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  //private final JoystickButton alignToTag = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton alignToTag = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final POVButton stow = new POVButton(operator, 0);
+  private final POVButton subwoofershoot = new POVButton(operator, 90);
+  private final POVButton pickup = new POVButton(operator, 180);
+  private final POVButton amp = new POVButton(operator, 270);
+  private final JoystickButton aimWrist = new JoystickButton(operator, XboxController.Button.kY.value);
 
-  private final JoystickButton pickup = new JoystickButton(operator, XboxController.Button.kY.value);
   private final JoystickButton rotateUp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
   private final JoystickButton rotateDown = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kA.value);
-  private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kX.value);
-  private final JoystickButton shoot = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+  private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+  private final JoystickButton ampButton = new JoystickButton(operator, XboxController.Button.kX.value);
   private final JoystickButton feed = new JoystickButton(operator, XboxController.Button.kB.value);
   private final JoystickButton climbOveride = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
 
@@ -71,7 +80,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Climber climber = new Climber();
   private final Wrist wrist = new Wrist();
-  private FancyLightVision photonVision;
+  private PhotonVision photonVision;
   private final Swerve swerve = new Swerve();
   private final Feeder feeder = new Feeder();
 
@@ -82,12 +91,15 @@ public class RobotContainer {
 
   public RobotContainer() {
 
+    registerAutonCommands();
+    
     try{
-      photonVision = new FancyLightVision(swerve::visionPose);
+      photonVision = new PhotonVision();
     }    
     catch(IOException e){
       DriverStation.reportWarning("Unable to Initialize vision", e.getStackTrace());
     }
+    
 
     swerve.setDefaultCommand(
       new SwerveDrive(
@@ -115,7 +127,7 @@ public class RobotContainer {
 
     climber.setDefaultCommand(
       new RunCommand(
-        () -> climber.setSpeed(operator.getLeftY()), 
+        () -> climber.setSpeed(-operator.getLeftY()), 
         climber)
     );
 
@@ -131,34 +143,92 @@ public class RobotContainer {
     configureBindings();
   }
 
+  private void registerAutonCommands(){
+    NamedCommands.registerCommand(
+      "Intake", 
+      new TeleopIntakeFeed(
+        intake, 
+        feeder, 
+        IntakeConstants.doIntake, 
+        getWrist()));
+  
+    NamedCommands.registerCommand(
+      "AutoIntake", 
+      new AutoIntake(
+        intake, 
+        feeder, 
+        wrist
+      ));
+    NamedCommands.registerCommand(
+      "AutoShoot", 
+      new AutoShoot(
+        intake, 
+        feeder, 
+        wrist
+      ));
+
+    NamedCommands.registerCommand(
+      "Shoot", 
+      new TeleopIntakeFeed(
+        intake, 
+        feeder, 
+        IntakeConstants.doShoot, 
+        getWrist()));
+
+    NamedCommands.registerCommand(
+      "Pickup", 
+      new SetPosition(
+        wrist, 
+        WristConstants.PICKUP));
+    
+    NamedCommands.registerCommand(
+      "Stow", 
+      new SetPosition(
+        wrist, 
+        WristConstants.STOW));
+
+    NamedCommands.registerCommand(
+      "Amp", 
+      new SetPosition(
+        wrist, 
+        WristConstants.AMP));
+  }
+
   private void configureBindings() {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
+    stow.onTrue(new SetPosition(wrist, WristConstants.STOW));    
+
     pickup.onTrue(new SetPosition(wrist, WristConstants.PICKUP));
 
+    subwoofershoot.onTrue(new SetPosition(wrist, WristConstants.SUBWOOFER));
 
+    amp.onTrue(new SetPosition(wrist, WristConstants.AMP));   
 
-    rotateUp.whileTrue(new RunCommand(() -> wrist.setSpeed(0.1), wrist));
+    aimWrist.whileTrue(new AimWrist(photonVision, wrist));
 
-    rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.05), wrist));
+    rotateUp.whileTrue(new RunCommand(() -> wrist.setSpeed(0.2), wrist));
 
-    //intakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.intakeSpeed), intake));
+    rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.1), wrist));
+
     intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
-    //intakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.intakeSpeed), feeder));
 
-    //extakeButton.whileTrue(new RunCommand(() -> intake.setSpeed(IntakeConstants.extakeSpeed), intake));
     extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale, getWrist()));
-    //extakeButton.whileTrue(new RunCommand(() -> feeder.setSpeed(IntakeConstants.extakeSpeed), feeder));
 
-    //shoot.whileTrue(new RunCommand(() -> intake.setSpeed(-1), intake));
+    ampButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doAmp, wrist));
+  
     feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
-    //feed.whileTrue(new RunCommand(() -> feeder.setSpeed(-1), feeder));
 
     climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
     
 
-    //alignToTag.whileTrue(new AlignToTagPhotonVision(swerve, photonVision));
+    alignToTag.whileTrue(
+      new TeleopPhotonTurret(
+        () -> driver.getRawAxis(translationAxis), 
+        () -> driver.getRawAxis(strafeAxis), 
+        swerve, 
+        photonVision));
 
 
   }
@@ -177,6 +247,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("IntakeRPM", intake.getRPM());
     //SmartDashboard.putNumber("Robot Pitch", swerve.getPitch());
     //SmartDashboard.putNumber("Robot Roll", swerve.getRoll());
+    // System.out.println(photonVision.hasAprilTag());
   }
 
   public Wrist getWrist(){
