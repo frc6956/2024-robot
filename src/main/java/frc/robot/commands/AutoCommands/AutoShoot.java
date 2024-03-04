@@ -7,6 +7,7 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
@@ -38,17 +39,18 @@ public class AutoShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Math.abs(190 - wrist.getDegrees()) < 5){
+    if(wrist.onTarget()){
       if (intake.getRPM() >= IntakeConstants.shootRPM){
           feeder.setSpeed(FeederConstants.feedSpeed);
           count++;
         }
-        intake.setSpeed(IntakeConstants.shootSpeed);
+        
     } else {
-      wrist.holdWrist(180);
-      intake.setSpeed(0);
+      wrist.holdWrist(WristConstants.SUBWOOFER);
       feeder.setSpeed(0);
     }
+    
+    intake.setSpeed(IntakeConstants.shootSpeed);
 
     if (count > 10){
       shotNote = true;

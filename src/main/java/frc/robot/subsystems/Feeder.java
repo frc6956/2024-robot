@@ -28,10 +28,8 @@ public class Feeder extends SubsystemBase{
     topFeeder.setIdleMode(IdleMode.kCoast);
     bottomFeeder.setIdleMode(IdleMode.kCoast);
 
-    Timer.delay(0.5);
-
-    topFeeder.burnFlash();
-    bottomFeeder.burnFlash();
+    topFeeder.setSmartCurrentLimit(40);
+    bottomFeeder.setSmartCurrentLimit(40);
 
   }
 
@@ -43,6 +41,8 @@ public class Feeder extends SubsystemBase{
   public void stop(){
     topFeeder.set(0);
     bottomFeeder.set(0);
+    topFeeder.setInverted(FeederConstants.topInvert);
+    bottomFeeder.setInverted(FeederConstants.bottomInvert);
   }
 
   @Override

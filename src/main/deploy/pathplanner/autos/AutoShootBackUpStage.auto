@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8497537279772075,
+      "y": 4.61590332433334
+    },
+    "rotation": 129.8602426210094
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ShootBackUpStage"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "ShootBackUpAutos",
+  "choreoAuto": false
+}

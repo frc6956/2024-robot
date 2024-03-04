@@ -145,7 +145,6 @@ public class SwerveModule {
         angleController.setD(DriveConstants.TurnD);
         angleController.setFF(DriveConstants.TurnF);
         m_angleMotor.enableVoltageCompensation(Constants.voltageComp);
-        m_angleMotor.burnFlash();
         Timer.delay(0.5); 
         resetToAbsolute();
     }
@@ -163,7 +162,6 @@ public class SwerveModule {
         driveController.setD(DriveConstants.DriveD);
         driveController.setFF(DriveConstants.DriveF);
         m_driveMotor.enableVoltageCompensation(Constants.voltageComp);
-        m_driveMotor.burnFlash();
         driveEncoder.setPosition(0.0);
     }
 

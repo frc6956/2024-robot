@@ -18,7 +18,7 @@ public class Constants {
     public static final boolean usingThriftyEncoder = true;
 
     /* Voltage Compensation */
-    public static final int voltageComp = 12;
+    public static final int voltageComp = 10;
 
     public static class CommandConstants{
         public static final double kXP = 0.1;
@@ -191,15 +191,15 @@ public class Constants {
         public static final boolean lowInvert = true;
         public static final boolean upInvert = false;
 
-        public static final double intakeSpeed = 0.15;
-        public static final double feedSpeed = -0.1;
-        public static final double ampSpeed = -0.2;
+        public static final double intakeSpeed = 0.3;
+        public static final double feedSpeed = -0.5;
+        public static final double ampSpeed = -0.3;
         public static final double extakeSpeed = -0.3;
-        public static final double shootSpeed = -1;
+        public static final double shootSpeed = -0.95;
 
         public static final int intakeBreakID = 1;
 
-        public static final int shootRPM = 5000;
+        public static final int shootRPM = 4400;
 
         public static final String doIntake = "INTAKE";
         public static final String doExtale = "EXTAKE";
@@ -238,7 +238,7 @@ public class Constants {
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = -1;    
+        public static final double feedSpeed = -0.5;    
         public static final double ampSpeed = -0.3;
         
         public static final boolean topInvert = true;
@@ -283,9 +283,10 @@ public class Constants {
         public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(19);
         public static final double Camera_ROLL_RADIANS = Units.degreesToRadians(-1);
         public static final double CENTER_SPEAKER_TOPTAG_HEIGHT = Units.inchesToMeters(60.375);
-        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(72+9);
+        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(78+4);
         public static final double WRIST_AXLE_HEIGHT = Units.inchesToMeters(11);
-        public static final Transform3d RobotToCam = new Transform3d(0, CAMERA_HEIGHT_METERS, 0, new Rotation3d(Camera_ROLL_RADIANS, CAMERA_PITCH_RADIANS, 0));
+        public static final double CAMERA_BACK_LENGTH = Units.inchesToMeters(-3.5);
+        public static final Transform3d RobotToCam = new Transform3d(CAMERA_BACK_LENGTH, CAMERA_HEIGHT_METERS, 0, new Rotation3d(Camera_ROLL_RADIANS, CAMERA_PITCH_RADIANS, 0));
 
         public enum AprilTagIDs{
             RedSpeakerCenter(4),
@@ -321,16 +322,4 @@ public class Constants {
     public static final class NeoMotorConstants {
 		public static final double FreeSpeedRPM = 5676;
 	}
-
-    public static final class LED_Constants{
-        public static final int panelWidth = 32;
-        public static final int panelHeight = 16;
-
-        public static final int frontUnderGlowLength = 14;
-        public static final int leftUnderGlowLength = 14;
-        public static final int backUnderGlowLength = 14;
-        public static final int rightUnderGlowLength = 14;
-
-        public static final int intakeGlow = 20;
-    }
 }

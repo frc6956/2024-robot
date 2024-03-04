@@ -47,6 +47,7 @@ public class Swerve extends SubsystemBase {
     StructArrayPublisher<SwerveModuleState> SwerveModuleStatePublisher;
     StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
     
+    private double gyroOffset;
 
     public Swerve() {
         gyro = new Pigeon2(DriveConstants.GyroID);
@@ -252,8 +253,8 @@ public class Swerve extends SubsystemBase {
 
     public double getYaw() {
         return (DriveConstants.GyroInvert) ?
-                180 - (gyro.getYaw().getValueAsDouble()) :
-                gyro.getYaw().getValueAsDouble();
+                180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
+                gyro.getYaw().getValueAsDouble() - gyroOffset;
     }
 
     public Rotation2d getHeading() {
@@ -323,7 +324,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        gyro.setYaw(0);
+        gyroOffset = gyro.getYaw().getValueAsDouble();
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {

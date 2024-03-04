@@ -36,8 +36,8 @@ public class AimWrist extends Command {
   public void execute() {
     if (photonVision.hasAprilTag()){
       PhotonPipelineResult result = photonVision.getLatestResult();
-      if (result.hasTargets() && photonVision.hasCenterSpeaker(result) && result != null){
-        PhotonTrackedTarget target = photonVision.getSpeakerCenterTarget(result);
+      if (result.hasTargets() /*&& photonVision.hasCenterSpeaker(result)*/ && result != null){
+        PhotonTrackedTarget target = photonVision.getBestTarget();//photonVision.getSpeakerCenterTarget(result);
         double distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(
           VisionConstants.CAMERA_HEIGHT_METERS, 
           VisionConstants.CENTER_SPEAKER_TOPTAG_HEIGHT, 
@@ -61,7 +61,7 @@ public class AimWrist extends Command {
   }
 
   public double getShootAngle(double angle){
-    double shootAngle = angle + 156;
+    double shootAngle = angle + 143;
     Math.min(shootAngle, WristConstants.SUBWOOFER);
     return shootAngle;
   }

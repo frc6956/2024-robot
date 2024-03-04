@@ -16,6 +16,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.AimWrist;
 import frc.robot.commands.AlignToTagPhotonVision;
 import frc.robot.commands.HoldWrist;
+import frc.robot.commands.LEDManager;
 import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TeleopIntakeFeed;
@@ -39,6 +41,7 @@ import frc.robot.commands.AutoCommands.AutoIntake;
 import frc.robot.commands.AutoCommands.AutoShoot;
 import frc.robot.sensors.PhotonVision;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.LEDs.LEDs;
 
 public class RobotContainer {
 
@@ -65,10 +68,10 @@ public class RobotContainer {
   private final JoystickButton rotateUp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
   private final JoystickButton rotateDown = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kA.value);
-  private final JoystickButton extakeButton = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+  private final JoystickButton manualFeed = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
   private final JoystickButton ampButton = new JoystickButton(operator, XboxController.Button.kX.value);
   private final JoystickButton feed = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton climbOveride = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+  private final JoystickButton climbOveride = new JoystickButton(operator, XboxController.Button.kRightStick.value);
 
   /* Operator Buttons */
 
@@ -82,6 +85,7 @@ public class RobotContainer {
   private PhotonVision photonVision;
   private final Swerve swerve = new Swerve();
   private final Feeder feeder = new Feeder();
+  private final LEDs leds = new LEDs();
 
 
 
@@ -92,7 +96,7 @@ public class RobotContainer {
 
     registerAutonCommands();
 
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
     
     try{
       photonVision = new PhotonVision();
@@ -101,6 +105,9 @@ public class RobotContainer {
       DriverStation.reportWarning("Unable to Initialize vision", e.getStackTrace());
     }
     
+    leds.setDefaultCommand(
+      new LEDManager(leds)
+    );
 
     swerve.setDefaultCommand(
       new SwerveDrive(
@@ -139,6 +146,8 @@ public class RobotContainer {
     /* Autos */
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    SmartDashboard.putData(new PowerDistribution());
 
 
     configureBindings();
@@ -215,13 +224,19 @@ public class RobotContainer {
 
     intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
 
-    extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale, getWrist()));
+    //extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doExtale, getWrist()));
+
+    //extakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, "YESSHOOT", getWrist()));
+
+    manualFeed.whileTrue(new TeleopIntakeFeed(intake, feeder, "MANUAL", wrist));
 
     ampButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doAmp, wrist));
   
     feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
 
     climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
+
+
     
 
     alignToTag.whileTrue(

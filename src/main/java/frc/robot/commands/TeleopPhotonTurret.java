@@ -68,9 +68,13 @@ public class TeleopPhotonTurret extends Command {
     if (photonVision.hasAprilTag()){
 
     PhotonPipelineResult result = photonVision.getLatestResult();
-      if (photonVision.hasCenterSpeaker(result) && result.hasTargets() && result != null){
-        PhotonTrackedTarget target = photonVision.getSpeakerCenterTarget(result);
-        System.out.println("has target");
+      if (/*photonVision.hasCenterSpeaker(result) &&*/ result.hasTargets() && result != null){
+        PhotonTrackedTarget target = photonVision.getBestTarget();//photonVision.getSpeakerCenterTarget(result);
+        /*if (target.getFiducialId() == 4 || target.getFiducialId() == 7){
+          
+        } else {
+          target = result.getMultiTagResult()
+        }*/
         PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI, VisionConstants.visionD);
         
         rotController.enableContinuousInput(-180, 180);

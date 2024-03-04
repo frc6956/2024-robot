@@ -34,15 +34,13 @@ public class Intake extends SubsystemBase {
     upperIntakeMotor.restoreFactoryDefaults();
     upperIntakeMotor.setInverted(IntakeConstants.upInvert);
     upperIntakeMotor.enableVoltageCompensation(Constants.voltageComp);
-    Timer.delay(0.5);
-    upperIntakeMotor.burnFlash();
+    upperIntakeMotor.setSmartCurrentLimit(60);
 
     lowerIntakeMotor = new CANSparkFlex(IntakeConstants.lowIntakeID, MotorType.kBrushless);
     lowerIntakeMotor.restoreFactoryDefaults();
     lowerIntakeMotor.enableVoltageCompensation(Constants.voltageComp);
     lowerIntakeMotor.setInverted(IntakeConstants.lowInvert);
-    Timer.delay(0.5);
-    lowerIntakeMotor.burnFlash();
+    lowerIntakeMotor.setSmartCurrentLimit(60);
 
     upperEncoder = upperIntakeMotor.getEncoder();
     lowerEncoder = lowerIntakeMotor.getEncoder();

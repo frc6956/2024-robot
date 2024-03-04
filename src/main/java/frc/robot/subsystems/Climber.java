@@ -34,9 +34,6 @@ public class Climber extends SubsystemBase {
     leftClimber.setIdleMode(IdleMode.kBrake);
     rightClimber.setIdleMode(IdleMode.kBrake);
 
-    leftClimber.burnFlash();
-    rightClimber.burnFlash();
-
     leftEncoder = leftClimber.getEncoder();
     rightEncoder = rightClimber.getEncoder();
 

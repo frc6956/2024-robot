@@ -44,6 +44,8 @@ public class Wrist extends SubsystemBase {
     angleUpController = new PIDController(WristConstants.wristPUP, WristConstants.wristI, WristConstants.wristD);
     angleUpGravController = new PIDController(WristConstants.wristPUPGrav, WristConstants.wristI, WristConstants.wristD);
 
+    angleController.setTolerance(3);
+
     rightMotor.setIdleMode(IdleMode.kBrake);
     leftMotor.setIdleMode(IdleMode.kBrake);
 
@@ -90,11 +92,11 @@ public class Wrist extends SubsystemBase {
   public void holdWrist(double setpoint){
     target = setpoint;
     double output;
-    if (getDegrees() - setpoint < 0){
+    /*if (getDegrees() - setpoint < 0){
       output = angleUpController.calculate(getDegrees(), setpoint);
-    } else {
+    } else {*/
       output = angleController.calculate(getDegrees(), setpoint);
-    }
+    //}
     
     if (output > WristConstants.MaxRotateUpSpeed){
       output = WristConstants.MaxRotateUpSpeed;
@@ -114,6 +116,11 @@ public class Wrist extends SubsystemBase {
   public void setTarget(double rotation){
     this.target = rotation;
   }
+
+  public boolean onTarget() {
+    return angleController.atSetpoint();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

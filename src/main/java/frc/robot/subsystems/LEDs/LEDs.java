@@ -7,40 +7,29 @@ package frc.robot.subsystems.LEDs;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.LED_Constants;
 
 public class LEDs extends SubsystemBase {
   /** Creates a new LEDs. */
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
 
-  private Panel panel = new Panel(LED_Constants.panelWidth, LED_Constants.panelHeight);
-
-  private Strip intakeGlow = new Strip(LED_Constants.intakeGlow);
-
-  private Strip frontGlow = new Strip(LED_Constants.frontUnderGlowLength);
-  private Strip backGlow = new Strip(LED_Constants.backUnderGlowLength);
-  private Strip leftGlow = new Strip(LED_Constants.leftUnderGlowLength);
-  private Strip rightGlow = new Strip(LED_Constants.rightUnderGlowLength);
-
-  Strip[] strips = new Strip[] {
-      frontGlow,
-      backGlow,
-      leftGlow,
-      rightGlow,
-      intakeGlow
-  };
+  private double m_rainbowFirstPixelHue = 0;
+  int count = 0;
+  boolean toggled = false;
+  
+  private Panel leftPanel = new Panel(0, LEDConstants.panelWidth, LEDConstants.panelHeight);
+  private Panel rightPanel = new Panel(leftPanel.getEnd(), LEDConstants.panelWidth, LEDConstants.panelHeight);
 
   public LEDs() {
     //PWM port 1 on the Rio
-    m_led = new AddressableLED(1);
+    m_led = new AddressableLED(0);
 
     //sets the length of the LEDs
     m_ledBuffer = new AddressableLEDBuffer(getLength());
 
     setUpLight();
 
-    
+    count = 0;    
   }
 
   public void setUpLight(){
@@ -53,11 +42,100 @@ public class LEDs extends SubsystemBase {
     m_led.start();
   }
 
-  //returns the length of the total amount of LEDs on the robot
-
   public int getLength(){
-    int length = panel.getLength();
-    return length;
+    return rightPanel.getEnd();
   }
 
+  public int[] getAllLEDs(){
+    return new int[] {0, getLength()};
+  }
+
+  public int[] getPanelsRange(){
+    return new int[] {getLeftPanelRange()[0], getRightPanelRange()[1]};
+  }
+
+  public int[] getLeftPanelRange(){
+    return new int[] {leftPanel.getStart(), leftPanel.getEnd()};
+  }
+
+  public int[] getRightPanelRange(){
+    return new int[] {rightPanel.getStart(), rightPanel.getEnd()};
+  }
+
+  public Panel getLeftPanel(){
+    return leftPanel;
+  }
+
+  public Panel getRightPanel(){
+    return rightPanel;
+  }
+
+  public void setAllColor(int[] color){
+    setAllPanelColor(color);
+  }
+
+  public void setAllPanelColor(int[] color){
+    setPanelColor(leftPanel, color);
+    setPanelColor(rightPanel, color);
+  }
+
+  public void setColor(int[] startEnd, int[] color){
+    for (int i = startEnd[0]; i < startEnd[1]; i++){
+      m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
+    }
+    m_led.setData(m_ledBuffer);
+  }
+
+  private void setPanelColor(Panel panel, int[] color){
+    m_led.setData(panel.setAllColor(m_ledBuffer, color));
+  }
+
+  public void setAllOff(){
+    setAllColor(new int[] {0, 0, 0});
+  }
+
+  public void setRainbow(int[] startEnd){
+    for (int i = startEnd[0]; i < startEnd[1]; i++){
+      final int hue = ((int)(m_rainbowFirstPixelHue + (i * 180 / startEnd[1]))) % 180;
+      m_ledBuffer.setHSV(i, hue, 200, 150);
+    }
+    m_rainbowFirstPixelHue += 0.75;
+
+    m_rainbowFirstPixelHue %= 180;
+    m_led.setData(m_ledBuffer);
+  }
+
+  public void setShape(Panel panel, int[][][] shape){
+    m_led.setData(panel.setShape(m_ledBuffer, shape));
+  }
+
+  public int[][][] getMirrored(int[][][] state){
+    int[][][] leds = state;
+    for (int row = 0; row < leds.length; row++){
+      for (int col = 0; col < leds[0].length; col++){
+        int[] tempColor = leds[row][col];
+        leds[row][col] = leds[row][leds[row].length - col - 1];
+        leds[row][leds[row].length - col - 1] = tempColor;
+      }
+    }
+    return leds;
+  }
+
+  public void togglePanel(Panel firstPanel, Panel secondPanel, int[][][] state){
+    count++;
+    if (count == 1){
+      if (toggled){
+        firstPanel.setShape(m_ledBuffer, state);
+        setPanelColor(secondPanel, LEDConstants.n);
+        toggled = false;
+      } else {
+        secondPanel.setShape(m_ledBuffer, state);
+        setPanelColor(firstPanel, LEDConstants.n);
+        toggled = true;
+      }
+      state = getMirrored(state);
+    } else if (count > 100){
+      count = 0;
+    }
+  }
 }

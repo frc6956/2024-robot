@@ -18,6 +18,7 @@ public class TeleopIntakeFeed extends Command {
   Feeder feeder;
   boolean hasNote;
   Wrist wrist;
+  int count = 0;
 
 
   public TeleopIntakeFeed(Intake intake, Feeder feeder,String status, Wrist wrist) {
@@ -27,6 +28,7 @@ public class TeleopIntakeFeed extends Command {
     this.status=status;
     this.wrist=wrist;
     addRequirements(intake, feeder);
+    count = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -59,6 +61,10 @@ public class TeleopIntakeFeed extends Command {
         intake.stop();
         feeder.stop();
         break;
+      case "MANUAL":
+        intake.setSpeed(IntakeConstants.shootSpeed);
+        feeder.setSpeed(FeederConstants.feedSpeed);
+        
       default:
         intake.stop();
         feeder.stop();
