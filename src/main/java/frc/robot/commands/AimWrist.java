@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/* 
 package frc.robot.commands;
 
 import org.opencv.photo.Photo;
@@ -17,7 +17,7 @@ import frc.robot.sensors.PhotonVision;
 import frc.robot.subsystems.Wrist;
 
 public class AimWrist extends Command {
-  /** Creates a new AimWrist. */
+  /** Creates a new AimWrist. 
   PhotonVision photonVision;
   Wrist wrist;
   public AimWrist(PhotonVision photonVision, Wrist wrist) {
@@ -36,7 +36,7 @@ public class AimWrist extends Command {
   public void execute() {
     if (photonVision.hasAprilTag()){
       PhotonPipelineResult result = photonVision.getLatestResult();
-      if (result.hasTargets() /*&& photonVision.hasCenterSpeaker(result)*/ && result != null){
+      if (result.hasTargets() /*&& photonVision.hasCenterSpeaker(result) && result != null){
         PhotonTrackedTarget target = photonVision.getBestTarget();//photonVision.getSpeakerCenterTarget(result);
         double distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(
           VisionConstants.CAMERA_HEIGHT_METERS, 
@@ -71,4 +71,4 @@ public class AimWrist extends Command {
   public void end(boolean interrupted) {
     wrist.stop();
   }
-}
+}*/

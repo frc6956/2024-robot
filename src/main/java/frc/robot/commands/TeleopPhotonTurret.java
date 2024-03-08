@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/* 
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
@@ -25,7 +25,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 
 public class TeleopPhotonTurret extends Command {
-  /** Creates a new TeleopPhotonTurret. */
+  /** Creates a new TeleopPhotonTurret. 
   Swerve swerve;
   PhotonVision photonVision;
   Wrist wrist;
@@ -68,13 +68,13 @@ public class TeleopPhotonTurret extends Command {
     if (photonVision.hasAprilTag()){
 
     PhotonPipelineResult result = photonVision.getLatestResult();
-      if (/*photonVision.hasCenterSpeaker(result) &&*/ result.hasTargets() && result != null){
+      if (/*photonVision.hasCenterSpeaker(result) && result.hasTargets() && result != null){
         PhotonTrackedTarget target = photonVision.getBestTarget();//photonVision.getSpeakerCenterTarget(result);
         /*if (target.getFiducialId() == 4 || target.getFiducialId() == 7){
           
         } else {
           target = result.getMultiTagResult()
-        }*/
+        }
         PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI, VisionConstants.visionD);
         
         rotController.enableContinuousInput(-180, 180);
@@ -110,3 +110,4 @@ public class TeleopPhotonTurret extends Command {
     return false;
   }
 }
+*/

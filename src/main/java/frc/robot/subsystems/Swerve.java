@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 
-import org.opencv.photo.Photo;
-
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -11,16 +9,17 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -35,18 +34,15 @@ public class Swerve extends SubsystemBase {
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
     final Field2d m_field = new Field2d();
+    public Pose3d visionPose3d;
 
-    SwerveDrivePoseEstimator PoseEstimator;
 
     private static final Translation2d[] WHEEL_POSITIONS =
         Arrays.copyOf(DriveConstants.moduleTranslations, DriveConstants.moduleTranslations.length);
 
     NetworkTable SwerveTable;
 
-    StructPublisher<Pose2d> OdomentryPublisher;
-    StructArrayPublisher<SwerveModuleState> SwerveModuleStatePublisher;
-    StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
-    
+    public SwerveDrivePoseEstimator poseEstimator;
     private double gyroOffset;
 
     public Swerve() {
@@ -97,22 +93,23 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
+        visionPose3d = new Pose3d();
+
         swerveOdometry = new SwerveDriveOdometry(
             DriveConstants.swerveKinematics,
             getHeading(),
             getModulePositions()
         );
 
-        PoseEstimator = new SwerveDrivePoseEstimator(
+        poseEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.swerveKinematics, 
             getHeading(), 
             getModulePositions(), 
-            new Pose2d()
-        );
+            swerveOdometry.getPoseMeters());
 
         AutoBuilder.configureHolonomic(
             this::getPose, 
-            this::resetOdometry, 
+            this::resetPose, 
             () -> DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates()),
             speeds -> {
                 // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -149,50 +146,32 @@ public class Swerve extends SubsystemBase {
             }, 
             this);
 
-        SwerveTable = NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
-        
-        OdomentryPublisher = SwerveTable.getStructTopic("Odomentry", Pose2d.struct).publish();
-
-        SwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("SwerveModuleStates", SwerveModuleState.struct).publish();
-
-        DesiredSwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("DesiredSwerveModuleStates", SwerveModuleState.struct).publish();
-
+       //SwerveTable = NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
     } // end of Swerve Contructor
 
     @Override
-
-    // Need to change getVisionPoseEstimationResult().isPresent() to BiConsumer Equivalent
-
     public void periodic() {
-
-        PoseEstimator.update(
-            getHeading(), 
-            getModulePositions());
 
         swerveOdometry.update(
             getHeading(), 
             getModulePositions());
 
-        m_field.setRobotPose(swerveOdometry.getPoseMeters());
+        poseEstimator.updateWithTime(
+            Timer.getFPGATimestamp(), 
+            getHeading(), 
+            getModulePositions());
 
-        OdomentryPublisher.set(getPose());
+        m_field.setRobotPose(poseEstimator.getEstimatedPosition());
 
-        SwerveModuleStatePublisher.set(getModuleStates());
-
-        DesiredSwerveModuleStatePublisher.set(getDesiredSwerveModuleStates());
-        
-        m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());//mod.getThriftyEncoder().getDegrees());
+            SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber(mod.name + " Integrated", mod.getPosition().angle.getDegrees());
-            //SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
-            //SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);
         }
+    
+        SmartDashboard.putString
+        ("Estimated Robot Pose", poseEstimator.getEstimatedPosition().toString());
     }
 
-    public void visionPose(Pose2d pose, double timestamp){
-        PoseEstimator.addVisionMeasurement(pose, timestamp);
-    }
 
     public Field2d getField2d() {
         return m_field;
@@ -251,6 +230,11 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void addVisionMeasurement(Pose3d pose, double timestamp, Matrix<N3, N1> cov){
+        visionPose3d = pose;
+        poseEstimator.addVisionMeasurement(pose.toPose2d(), timestamp);
+    }
+
     public double getYaw() {
         return (DriveConstants.GyroInvert) ?
                 180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
@@ -270,7 +254,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -335,15 +319,24 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(getHeading(), getModulePositions(), pose);
-        PoseEstimator.resetPosition(getHeading(), getModulePositions(), pose);
-    }
-
     public void resetModulesToAbsolute() {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
+    }
+
+    public void resetFieldOrientation(){
+        Rotation2d redOrBlueZero = new Rotation2d();
+        resetPose(new Pose2d(getPose().getTranslation(), redOrBlueZero));
+    }
+
+    public void resetPose(Pose2d pose){
+        swerveOdometry.resetPosition(getHeading(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getHeading(), getModulePositions(), pose);
+    }
+
+    private void resetPoseToVision(){
+        resetPose(visionPose3d.toPose2d());
     }
 
     // Rotates by a passed amount of degrees

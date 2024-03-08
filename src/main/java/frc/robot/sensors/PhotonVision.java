@@ -1,12 +1,5 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-//*****************************************************************IMPLEMENT NETWORKTABLES AND SMART DASHBOARD*************************************/
 package frc.robot.sensors;
-
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,143 +12,122 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Swerve;
 
 public class PhotonVision extends SubsystemBase {
-  /** Creates a new PhotonVision. */
-  PhotonCamera cam;
-  AprilTagFieldLayout aprilTagFieldLayout;
-  PhotonPoseEstimator poseEstimator;
+  private String camName;
+  private PhotonCamera cam;
+  private boolean hasTargets;
+  private AprilTagFieldLayout fieldLayout;
+  private PhotonPoseEstimator poseEstimator;
+  private List<PhotonTrackedTarget> targets;
+  private PhotonTrackedTarget bestTarget;
+  private int tagID = -1;
+  private Pose3d robotPose = new Pose3d();
+  private Swerve swerve;
+  private PhotonPipelineResult result;
 
-  public PhotonVision() throws IOException{
+  public PhotonVision (Swerve swerve) {
     cam = new PhotonCamera(VisionConstants.camName);
-    try{
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-    } catch(IOException IOE){
-      IOE.printStackTrace();
-    }
+    this.swerve = swerve;
+    hasTargets = false;
+
+    try {
+        fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+      } catch (IOException e) {
+    
+        e.printStackTrace();
+      }
 
     poseEstimator = new PhotonPoseEstimator(
-      aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, VisionConstants.RobotToCam);
+      fieldLayout, 
+      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, 
+      cam,
+      VisionConstants.RobotToCam);
   }
 
   @Override
-  public void periodic() {
-    
-  }
-
-  public PhotonPipelineResult getLatestResult(){
-    return cam.getLatestResult();
-  }
-
-  public PhotonTrackedTarget getSpeakerCenterTarget(PhotonPipelineResult result){
-    List<PhotonTrackedTarget> targets = getLatestResult().getTargets();
-    for (PhotonTrackedTarget target : targets){
-      if (target.getFiducialId() == 4 || target.getFiducialId() == 7){
-        return target;
-      }
+  public void periodic(){
+    result = cam.getLatestResult();
+    hasTargets = result.hasTargets();
+    if (hasTargets){
+      targets = result.getTargets();
+      bestTarget = result.getBestTarget();
+      tagID = bestTarget.getFiducialId();
+      
+    } else {
+      tagID = -1;
     }
-    return null;
+
+    Optional<EstimatedRobotPose> poseEstimated = poseEstimator.update(result);
+      
+    if (poseEstimated.isPresent()){
+      filterAndAddVisionPose(poseEstimated.get());
+    }
   }
 
-  public Optional<EstimatedRobotPose> getVisionPoseEstimationResult(){
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimation){
+    poseEstimator.setReferencePose(prevEstimation);
     return poseEstimator.update();
   }
 
-  public EstimatedRobotPose ifExistGetEstimatedPose(){
-    if (getVisionPoseEstimationResult().isPresent()){
-      return getVisionPoseEstimationResult().get();
-    } else return null;
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
+    return poseEstimator.update();
   }
 
-
-  //double check this
-  public PhotonTrackedTarget getBestTarget(){
-    return getLatestResult().getBestTarget();
-  }
-
-  public Transform3d getCamToTarget(){
-    return getBestTarget().getBestCameraToTarget();
-  }
-
-  public List<Integer> getAprilTagIDs(){
-    List<PhotonTrackedTarget> targets = getLatestResult().getTargets();
-    List<Integer> tagIDs = new ArrayList<>();
-    targets.forEach(target -> tagIDs.add(target.getFiducialId()));
-
-    return tagIDs;
-  }
-
-
-
-  public boolean hasCenterSpeaker(PhotonPipelineResult result){
-    if (result.getBestTarget().getFiducialId() == 4 || result.getBestTarget().getFiducialId() == 7){
-      return true;
-    } 
-    return false;
-      
-  }
-
-  public boolean containsID(Integer ID){
-    return getAprilTagIDs().contains(ID);
-  }
-
-  public boolean hasAprilTag(){
-    for (Integer id : getAprilTagIDs()) {
-      if (containsID(id)){
-        return true;
-      }
+  public void filterAndAddVisionPose(EstimatedRobotPose pose){
+    Matrix<N3, N1> cov = new Matrix<>(Nat.N3(), Nat.N1());
+    /* 
+    double distance = 0;
+    for (var target : pose.targetsUsed){
+      distance += target.getBestCameraToTarget().getTranslation().getNorm() / pose.targetsUsed.size();
     }
-    return false;
+
+    if (pose.targetsUsed.size() > 1){
+      // multi tag
+      double distance2 = Math.max(Math.pow(distance * 0.4, 2), 0.7);
+      cov = VecBuilder.fill(distance2, distance2, 0.9);
+    } else {
+      double distance2 = Math.pow(distance * 1.2, 2);
+      cov = VecBuilder.fill(distance2, distance2, 100);
+    }
+
+    if (!DriverStation.isDisabled()){
+      if (pose.targetsUsed.size() == 1){
+        if (Math.abs(pose.estimatedPose.getZ()) > 1.0 
+        || pose.estimatedPose.minus(new Pose3d(
+          swerve.getPose()))
+          .getTranslation()
+          .getNorm() > 1.0 
+        || distance > 7.0){
+          return;
+        }
+      }
+    }*/
+    swerve.addVisionMeasurement(pose.estimatedPose, pose.timestampSeconds, cov);
   }
 
-  public boolean containsSource(){
-    return
-    containsID(VisionConstants.AprilTagIDs.BlueSourceDriverStationClose.getID()) ||
-    containsID(VisionConstants.AprilTagIDs.BlueSourceDriverStationFar.getID()) ||
-    containsID(VisionConstants.AprilTagIDs.RedSourceDriverStationClose.getID()) ||
-    containsID(VisionConstants.AprilTagIDs.RedSourceDriverStationFar.getID());
+  public boolean hasTarget(){
+    return hasTargets;
   }
 
-  public boolean containsAmp(){
-    return
-    containsID(VisionConstants.AprilTagIDs.RedAmp.getID()) ||
-    containsID(VisionConstants.AprilTagIDs.BlueAmp.getID());
+  public int getTagID(){
+    return tagID;
   }
 
-  public boolean containsSpeakerCenter(){
-    return
-    containsID(VisionConstants.AprilTagIDs.RedSpeakerCenter.getID()) ||
-    containsID(VisionConstants.AprilTagIDs.BlueSpeakerCenter.getID());
+  public Pose3d getRobotPose(){
+    return robotPose;
   }
 
-  public boolean bestTargetIsSpeaker(){
-    return
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueSpeakerCenter.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueSpeakerSide.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedSpeakerCenter.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedSpeakerSide.getID();
-  }
 
-  public boolean bestTargetIsCenterSpeaker(){
-    return 
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueSpeakerCenter.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedSpeakerCenter.getID();
-  }
-
-  public boolean bestTargetIsSource(){
-    return
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueSourceDriverStationClose.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueSourceDriverStationFar.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedSourceDriverStationClose.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedSourceDriverStationFar.getID();
-  }
-
-  public boolean bestTargetIsAmp(){
-    return
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.BlueAmp.getID() ||
-    getBestTarget().getFiducialId() == VisionConstants.AprilTagIDs.RedAmp.getID();
-  }
 }
