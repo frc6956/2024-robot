@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
@@ -29,13 +30,14 @@ public class PhotonVision extends SubsystemBase {
   private PhotonCamera cam;
   private boolean hasTargets;
   private AprilTagFieldLayout fieldLayout;
-  private PhotonPoseEstimator poseEstimator;
+  private PhotonPoseEstimator photonEstimator;
   private List<PhotonTrackedTarget> targets;
   private PhotonTrackedTarget bestTarget;
   private int tagID = -1;
   private Pose3d robotPose = new Pose3d();
   private Swerve swerve;
   private PhotonPipelineResult result;
+  private double lastEstTimestamp = 0;
 
   public PhotonVision (Swerve swerve) {
     cam = new PhotonCamera(VisionConstants.camName);
@@ -49,11 +51,12 @@ public class PhotonVision extends SubsystemBase {
         e.printStackTrace();
       }
 
-    poseEstimator = new PhotonPoseEstimator(
+    photonEstimator = new PhotonPoseEstimator(
       fieldLayout, 
-      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, 
+      PoseStrategy.AVERAGE_BEST_TARGETS, 
       cam,
       VisionConstants.RobotToCam);
+    //photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
 
   @Override
@@ -69,53 +72,55 @@ public class PhotonVision extends SubsystemBase {
       tagID = -1;
     }
 
-    Optional<EstimatedRobotPose> poseEstimated = poseEstimator.update(result);
-      
-    if (poseEstimated.isPresent()){
-      filterAndAddVisionPose(poseEstimated.get());
-    }
-  }
-
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimation){
-    poseEstimator.setReferencePose(prevEstimation);
-    return poseEstimator.update();
+    var visionEst = getEstimatedGlobalPose();
+    SmartDashboard.putBoolean("Estimator is Present", visionEst.isPresent());
+    visionEst.ifPresent(
+      est -> {
+        var estPose = est.estimatedPose.toPose2d();
+        var estStdDevs = getEstimatedStdDevs(estPose);
+        swerve.addVisionMeasurement(est.estimatedPose, est.timestampSeconds, estStdDevs);
+      }
+    );
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    return poseEstimator.update();
+    var visionEstimation = photonEstimator.update();
+    double latesttimeStamp = cam.getLatestResult().getTimestampSeconds();
+    boolean newResult = Math.abs(latesttimeStamp - lastEstTimestamp) > 1e-6;
+    if (newResult){lastEstTimestamp = latesttimeStamp;}
+    return visionEstimation;
   }
 
-  public void filterAndAddVisionPose(EstimatedRobotPose pose){
-    Matrix<N3, N1> cov = new Matrix<>(Nat.N3(), Nat.N1());
-    /* 
-    double distance = 0;
-    for (var target : pose.targetsUsed){
-      distance += target.getBestCameraToTarget().getTranslation().getNorm() / pose.targetsUsed.size();
-    }
-
-    if (pose.targetsUsed.size() > 1){
-      // multi tag
-      double distance2 = Math.max(Math.pow(distance * 0.4, 2), 0.7);
-      cov = VecBuilder.fill(distance2, distance2, 0.9);
-    } else {
-      double distance2 = Math.pow(distance * 1.2, 2);
-      cov = VecBuilder.fill(distance2, distance2, 100);
-    }
-
-    if (!DriverStation.isDisabled()){
-      if (pose.targetsUsed.size() == 1){
-        if (Math.abs(pose.estimatedPose.getZ()) > 1.0 
-        || pose.estimatedPose.minus(new Pose3d(
-          swerve.getPose()))
-          .getTranslation()
-          .getNorm() > 1.0 
-        || distance > 7.0){
-          return;
-        }
+  public Matrix<N3, N1> getEstimatedStdDevs(Pose2d estimatedPose){
+    var estStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
+    var t = cam.getLatestResult().getTargets();
+    int numTags = 0;
+    double avgDistance = 0;
+    for (var tar : t){
+      var tagPose = photonEstimator.getFieldTags().getTagPose(tar.getFiducialId());
+      if (tagPose.isEmpty()){
+        continue;
       }
-    }*/
-    swerve.addVisionMeasurement(pose.estimatedPose, pose.timestampSeconds, cov);
+      numTags++;
+      avgDistance +=
+        tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
+    }
+
+    if (numTags == 0){
+      return estStdDevs;
+    }
+
+    avgDistance /= numTags;
+    if (numTags > 1){
+      estStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
+    }
+    if (numTags == 1 && avgDistance > 4){
+      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    } else estStdDevs = estStdDevs.times(1 + (avgDistance * avgDistance / 30));
+
+    return estStdDevs;
   }
+
 
   public boolean hasTarget(){
     return hasTargets;

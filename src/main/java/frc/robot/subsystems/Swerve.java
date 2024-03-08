@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -98,14 +99,20 @@ public class Swerve extends SubsystemBase {
         swerveOdometry = new SwerveDriveOdometry(
             DriveConstants.swerveKinematics,
             getHeading(),
-            getModulePositions()
+            getModulePositions(),
+            new Pose2d(0.0, 0.0, new Rotation2d(0.0, 0.0))
         );
+
+        var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+        var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
         poseEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.swerveKinematics, 
             getHeading(), 
             getModulePositions(), 
-            swerveOdometry.getPoseMeters());
+            swerveOdometry.getPoseMeters(), 
+            stateStdDevs, 
+            visionStdDevs);
 
         AutoBuilder.configureHolonomic(
             this::getPose, 
@@ -156,8 +163,7 @@ public class Swerve extends SubsystemBase {
             getHeading(), 
             getModulePositions());
 
-        poseEstimator.updateWithTime(
-            Timer.getFPGATimestamp(), 
+        poseEstimator.update( 
             getHeading(), 
             getModulePositions());
 
