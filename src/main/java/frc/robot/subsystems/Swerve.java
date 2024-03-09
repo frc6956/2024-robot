@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 
-import org.opencv.photo.Photo;
-
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,15 +10,12 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -29,31 +24,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.geometry.Translation2dPlus;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ModuleConstants.*;
-import frc.robot.sensors.FancyLightVision;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] mSwerveMods;
-    private final Pigeon2 gyro;
-    private final FancyLightVision photonVision;
+    private final WPI_PigeonIMU gyro;
     final Field2d m_field = new Field2d();
-
-    SwerveDrivePoseEstimator PoseEstimator;
 
     private static final Translation2d[] WHEEL_POSITIONS =
         Arrays.copyOf(DriveConstants.moduleTranslations, DriveConstants.moduleTranslations.length);
 
     NetworkTable SwerveTable;
 
-    StructPublisher<Pose2d> OdomentryPublisher;
-    StructArrayPublisher<SwerveModuleState> SwerveModuleStatePublisher;
-    StructArrayPublisher<SwerveModuleState> DesiredSwerveModuleStatePublisher;
     
 
-    public Swerve(FancyLightVision photonVision) {
-        this.photonVision = photonVision;
-        gyro = new Pigeon2(DriveConstants.GyroID);
-        gyro.getConfigurator().apply(new Pigeon2Configuration());
+    public Swerve() {
+        gyro = new WPI_PigeonIMU(DriveConstants.GyroID);
+        //gyro.getConfigurator().apply(new Pigeon2Configuration());
         zeroGyro();
 
         mSwerveMods = new SwerveModule[] {
@@ -105,13 +93,6 @@ public class Swerve extends SubsystemBase {
             getModulePositions()
         );
 
-        PoseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.swerveKinematics, 
-            getHeading(), 
-            getModulePositions(), 
-            new Pose2d()
-        );
-
         AutoBuilder.configureHolonomic(
             this::getPose, 
             this::resetOdometry, 
@@ -147,12 +128,6 @@ public class Swerve extends SubsystemBase {
                 this);
 
         SwerveTable = NetworkTableInstance.getDefault().getTable("PhotonCamera");
-        
-        OdomentryPublisher = SwerveTable.getStructTopic("Odomentry", Pose2d.struct).publish();
-
-        SwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("SwerveModuleStates", SwerveModuleState.struct).publish();
-
-        DesiredSwerveModuleStatePublisher = SwerveTable.getStructArrayTopic("DesiredSwerveModuleStates", SwerveModuleState.struct).publish();
 
     } // end of Swerve Contructor
 
@@ -162,29 +137,10 @@ public class Swerve extends SubsystemBase {
 
     public void periodic() {
 
-        // The code commented below I believe is already accounted for in the FancyLightVision code
-
-        // System.out.println(photonVision.getVisionPoseEstimationResult().isPresent());;
-        // if (photonVision.posePresent){
-        //     System.out.println("hasTarget");
-        //     PoseEstimator.addVisionMeasurement(
-        //         photonVision.getVisionPoseEstimationResult().get().estimatedPose.toPose2d(), 
-        //         Timer.getFPGATimestamp());
-        // }
-
-        PoseEstimator.update(
-            getHeading(), 
-            getModulePositions());
-
         swerveOdometry.update(
             getHeading(), 
             getModulePositions());
 
-        OdomentryPublisher.set(getPose());
-
-        SwerveModuleStatePublisher.set(getModuleStates());
-
-        DesiredSwerveModuleStatePublisher.set(getDesiredSwerveModuleStates());
         
         m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
@@ -193,10 +149,6 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber(mod.name + " Velocity", mod.getState().speedMetersPerSecond);
             SmartDashboard.putNumber(mod.name + " Position", mod.getPosition().distanceMeters);
         }
-    }
-
-    public void visionPose(Pose2d pose, double timestamp){
-        PoseEstimator.addVisionMeasurement(pose, timestamp);
     }
 
     public Field2d getField2d() {
@@ -266,7 +218,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getYaw() {
-        return gyro.getYaw().getValueAsDouble();
+        return gyro.getYaw();
     }
 
     public Rotation2d getHeading() {
@@ -274,11 +226,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getPitch() {
-        return gyro.getPitch().getValueAsDouble();
+        return gyro.getPitch();
     }
 
     public double getRoll() {
-        return gyro.getRoll().getValueAsDouble();
+        return gyro.getRoll();
     }
 
     public Pose2d getPose() {

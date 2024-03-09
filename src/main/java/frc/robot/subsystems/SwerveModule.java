@@ -117,7 +117,9 @@ public class SwerveModule {
 
     public void resetToAbsolute(){
         //double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
+        integratedAngleEncoder.setPosition(0);
         double absolutePosition = getThriftyEncoder().getDegrees() - angleOffset.getDegrees();
+        Timer.delay(1);
         integratedAngleEncoder.setPosition(absolutePosition);
     }
 
@@ -144,6 +146,7 @@ public class SwerveModule {
         angleController.setD(DriveConstants.TurnD);
         angleController.setFF(DriveConstants.TurnF);
         m_angleMotor.enableVoltageCompensation(Constants.voltageComp);
+        Timer.delay(1);
         m_angleMotor.burnFlash();
         Timer.delay(1.0); 
         resetToAbsolute();

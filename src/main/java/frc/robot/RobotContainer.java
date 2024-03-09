@@ -5,16 +5,7 @@
 package frc.robot;
 
 
-import java.io.IOException;
-import java.util.function.BiConsumer;
-
-import org.photonvision.proto.Photon;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,10 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlignToTagPhotonVision;
 import frc.robot.commands.SwerveDrive;
-import frc.robot.subsystems.Wrist;
-import frc.robot.sensors.FancyLightVision;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -51,25 +39,13 @@ public class RobotContainer {
   
 
   /* Subsystems */
-
-  
-
-  private FancyLightVision photonVision;
-  private final Swerve swerve = new Swerve(photonVision);
-  //private final Wrist wrist = new Wrist();
+  private final Swerve swerve = new Swerve();
 
 
   /* Auton Chooser */
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-
-    try{
-      photonVision = new FancyLightVision(swerve::visionPose);
-    }    
-    catch(IOException e){
-      DriverStation.reportWarning("Unable to Initialize vision", e.getStackTrace());
-    }
 
     swerve.setDefaultCommand(
       new SwerveDrive(
@@ -98,8 +74,6 @@ public class RobotContainer {
   private void configureBindings() {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-
-    //alignToTag.whileTrue(new AlignToTagPhotonVision(swerve, photonVision));
 
 
   }
