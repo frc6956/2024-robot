@@ -23,13 +23,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Swerve;
 
 public class TeleopPhotonTurret extends Command {
   /** Creates a new AimToSpeaker. */
   private Swerve swerve;
+  private PhotonVision photonVision;
   private boolean isBlue;
-  private AprilTagFieldLayout fieldLayout;
   private boolean isDone = false;
   private PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI, VisionConstants.visionD);
 
@@ -41,16 +42,10 @@ public class TeleopPhotonTurret extends Command {
   private SlewRateLimiter m_yAxisLimiter;
 
 
-  public TeleopPhotonTurret(DoubleSupplier translationSup, DoubleSupplier strafeSup, Swerve swerve) {
+  public TeleopPhotonTurret(DoubleSupplier translationSup, DoubleSupplier strafeSup, Swerve swerve, PhotonVision photonVision) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
-    try {
-        fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-      } catch (IOException e) {
-    
-        e.printStackTrace();
-      }
-
+    this.photonVision = photonVision;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
@@ -84,9 +79,9 @@ public class TeleopPhotonTurret extends Command {
 
     Pose2d targetPose;
     if (isBlue){
-      targetPose = fieldLayout.getTagPose(7).get().toPose2d();
+      targetPose = photonVision.getTagPose(7).get().toPose2d();
     } else {
-      targetPose = fieldLayout.getTagPose(4).get().toPose2d();
+      targetPose = photonVision.getTagPose(4).get().toPose2d();
     }
 
     double yawError = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getDegrees();

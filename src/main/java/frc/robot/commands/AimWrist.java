@@ -20,27 +20,23 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.WristConstants;
-import frc.robot.sensors.PhotonVision;
+import frc.robot.sensors.PhotonCam;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 
 public class AimWrist extends Command {
   /** Creates a new AimWrist. */
-  Wrist wrist;
-  Swerve swerve;
+  private Wrist wrist;
+  private Swerve swerve;
+  private PhotonVision photonVision;
   private boolean isBlue;
-  private AprilTagFieldLayout fieldLayout;
-  public AimWrist(Wrist wrist, Swerve swerve) {
+  public AimWrist(Wrist wrist, Swerve swerve, PhotonVision photonVision) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.wrist = wrist;
+    this.photonVision = photonVision;
     this.swerve = swerve;
     addRequirements(wrist);
-    try {
-        fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-      } catch (IOException e) {
-    
-        e.printStackTrace();
-      }
   }
 
   // Called when the command is initially scheduled.
@@ -56,9 +52,9 @@ public class AimWrist extends Command {
   public void execute() {
     Pose2d targetPose;
     if (isBlue){
-      targetPose = fieldLayout.getTagPose(7).get().toPose2d();
+      targetPose = photonVision.getTagPose(7).get().toPose2d();
     } else {
-      targetPose = fieldLayout.getTagPose(4).get().toPose2d();
+      targetPose = photonVision.getTagPose(4).get().toPose2d();
     }
     double distanceToTarget = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
 

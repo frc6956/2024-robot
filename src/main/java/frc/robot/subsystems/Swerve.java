@@ -104,7 +104,7 @@ public class Swerve extends SubsystemBase {
         );
 
         var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
-        var visionStdDevs = VecBuilder.fill(0.5, 0.5, 0.5);
+        var visionStdDevs = VecBuilder.fill(0.5, 0.5, 0.8);
 
         poseEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.swerveKinematics, 

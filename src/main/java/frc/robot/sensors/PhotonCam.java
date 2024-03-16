@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 
-public class PhotonVision extends SubsystemBase {
+public class PhotonCam extends SubsystemBase {
   private String camName;
   private PhotonCamera cam;
   private boolean hasTargets;
@@ -39,19 +39,13 @@ public class PhotonVision extends SubsystemBase {
   private double lastEstTimestamp = 0;
   private Transform3d robotToCam;
 
-  public PhotonVision (String camName, Transform3d RobotToCam, Swerve swerve) {
+  public PhotonCam (String camName, Transform3d RobotToCam, Swerve swerve, AprilTagFieldLayout fieldLayout) {
     this.camName = camName;
+    this.fieldLayout = fieldLayout;
     cam = new PhotonCamera(camName);
     this.swerve = swerve;
     hasTargets = false;
     this.robotToCam = RobotToCam;
-    try {
-        fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-      } catch (IOException e) {
-    
-        e.printStackTrace();
-      }
-      
 
     photonEstimator = new PhotonPoseEstimator(
       fieldLayout, 

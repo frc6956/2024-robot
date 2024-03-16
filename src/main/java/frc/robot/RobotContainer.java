@@ -27,10 +27,9 @@ import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TeleopIntakeFeed;
 import frc.robot.commands.TeleopPhotonTurret;
-import frc.robot.commands.AutoCommands.AimToSpeaker;
 import frc.robot.commands.AutoCommands.AutoIntake;
 import frc.robot.commands.AutoCommands.AutoShoot;
-import frc.robot.sensors.PhotonVision;
+import frc.robot.sensors.PhotonCam;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDs.LEDs;
 
@@ -76,9 +75,7 @@ public class RobotContainer {
   private final Swerve swerve = new Swerve();
   private final Feeder feeder = new Feeder();
   private final LEDs leds = new LEDs();
-  private final PhotonVision frontPhoton = new PhotonVision(VisionConstants.frontCamName, VisionConstants.frontRobotToCam, swerve);
-  private final PhotonVision rightPhoton = new PhotonVision(VisionConstants.rightCamName, VisionConstants.rightRobotToCam, swerve);
-  private final PhotonVision leftPhoton = new PhotonVision(VisionConstants.leftCamName, VisionConstants.rightRobotToCam, swerve);
+  private final PhotonVision photonVision = new PhotonVision(swerve);
 
 
   /* Auton Chooser */
@@ -187,7 +184,7 @@ public class RobotContainer {
         WristConstants.AMP));
     NamedCommands.registerCommand(
       "AimToSpeaker", 
-      new AimToSpeaker(swerve));
+      new TeleopPhotonTurret(() -> 0, () -> 0, swerve, photonVision));
   }
 
   private void configureBindings() {
@@ -198,7 +195,7 @@ public class RobotContainer {
       new TeleopPhotonTurret(
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        swerve)
+        swerve, photonVision)
     );
 
     stow.onTrue(new SetPosition(wrist, WristConstants.STOW));    
@@ -237,7 +234,6 @@ public class RobotContainer {
     SmartDashboard.putString("Robot Pose2d Rotation", swerve.getPose().getRotation().toString());
     SmartDashboard.putNumber("Robot Yaw", swerve.getYaw());
     SmartDashboard.putNumber("IntakeRPM", intake.getRPM());
-    
     //SmartDashboard.putBoolean("Has Target", photonVision.hasTarget());
     
   }
