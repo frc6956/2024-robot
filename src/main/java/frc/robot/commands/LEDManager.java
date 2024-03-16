@@ -25,7 +25,11 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leds.setRainbow(leds.getAllLEDs());
+    count++;
+    if (count > 8){
+      leds.dimRainbow();
+      count = 0;
+    }
   }
 
   public void controlLEDs(){

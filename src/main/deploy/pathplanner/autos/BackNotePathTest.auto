@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5119508293583617,
-      "y": 7.040713298508448
+      "x": 1.463259866021512,
+      "y": 6.232443307116744
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -16,25 +16,25 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "AmpSideToAmpNote"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "Pickup"
+                        "pathName": "Back1"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "AutoIntake"
+                        "pathName": "Back2"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Back3"
                       }
                     }
                   ]
@@ -46,7 +46,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoShoot"
+            "name": "AimToSpeaker"
           }
         }
       ]

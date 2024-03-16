@@ -8,23 +8,23 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8782852832881245,
-        "y": 6.506859629495342
+        "x": 2.368911784086914,
+        "y": 5.560508013068222
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.922725031200699,
+        "x": 2.388388169421654,
         "y": 5.55076982040085
       },
       "prevControl": {
-        "x": 1.115844267311945,
-        "y": 5.201309944604622
+        "x": 2.380715620357405,
+        "y": 5.549285910617416
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "LineToMiddleNoteEnd"
     }
   ],
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 175.6932418918978,
     "velocity": 0
   },
   "useDefaultConstraints": true

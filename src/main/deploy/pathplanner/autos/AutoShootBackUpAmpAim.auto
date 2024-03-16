@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8400155353098376,
+      "y": 6.446683545798883
+    },
+    "rotation": -122.66091272167381
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ShootBackUpAmp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimToSpeaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "ShootBackUpAutos",
+  "choreoAuto": false
+}

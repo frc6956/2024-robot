@@ -104,7 +104,7 @@ public class Swerve extends SubsystemBase {
         );
 
         var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
-        var visionStdDevs = VecBuilder.fill(1, 1, 1);
+        var visionStdDevs = VecBuilder.fill(0.5, 0.5, 0.5);
 
         poseEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.swerveKinematics, 
@@ -168,6 +168,8 @@ public class Swerve extends SubsystemBase {
             getModulePositions());
 
         m_field.setRobotPose(poseEstimator.getEstimatedPosition());
+
+        SmartDashboard.putData(m_field);
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());

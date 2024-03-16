@@ -97,11 +97,30 @@ public class LEDs extends SubsystemBase {
   public void setRainbow(int[] startEnd){
     for (int i = startEnd[0]; i < startEnd[1]; i++){
       final int hue = ((int)(m_rainbowFirstPixelHue + (i * 180 / startEnd[1]))) % 180;
-      m_ledBuffer.setHSV(i, hue, 200, 150);
+      m_ledBuffer.setHSV(i, hue, 150, 200);
     }
-    m_rainbowFirstPixelHue += 0.75;
+    m_rainbowFirstPixelHue += 0.5;
 
     m_rainbowFirstPixelHue %= 180;
+    m_led.setData(m_ledBuffer);
+  }
+
+  public void dimRainbow(){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++){
+      final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
+      if (i %2 == 0){
+        
+        m_ledBuffer.setHSV(i, hue, 250, 10);
+      } else {
+        m_ledBuffer.setHSV(i, hue, 250, 140);
+      }
+
+      m_rainbowFirstPixelHue += 0.015;
+
+      m_rainbowFirstPixelHue %= 180;
+
+    }
+
     m_led.setData(m_ledBuffer);
   }
 

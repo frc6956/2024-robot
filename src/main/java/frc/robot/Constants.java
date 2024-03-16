@@ -192,9 +192,9 @@ public class Constants {
         public static final boolean upInvert = false;
 
         public static final double intakeSpeed = 0.3;
-        public static final double feedSpeed = -0.5;
-        public static final double ampSpeed = -0.3;
-        public static final double extakeSpeed = -0.3;
+        public static final double feedSpeed = -0.6;
+        public static final double ampSpeed = -0.5;
+        public static final double extakeSpeed = -0.5;
         public static final double shootSpeed = -0.95;
 
         public static final int intakeBreakID = 1;
@@ -216,30 +216,31 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.0065;
-        public static final double wristPUP = 0.006;
-        public static final double wristPUPGrav = 0.006;
+        public static final double wristP = 0.002;
+        public static final double wristPUP = 0.0015;
+        public static final double wristPUPGrav = 0.0015;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
-        public static final double STOW = 200;
-        public static final double AMP = 196;
-        public static final double PICKUP = 92;
-        public static final double SUBWOOFER = 197;
+        public static final double STOW = 143;
+        public static final double AMP = 139;
+        public static final double PICKUP = 26; // Decrease Value from 46
+        public static final double SUBWOOFER = 140;
+        public static final double INTAKEGOOD = 90;
 
         public static final boolean leftInvert = false;
         public static final boolean rightInvert = true;
 
-        public static final double MaxRotateSpeed = -0.2;
-        public static final double MaxRotateUpSpeed = 0.3;
+        public static final double MaxRotateSpeed = -0.2; // increase speed value from -0.2
+        public static final double MaxRotateUpSpeed = 0.3; // increase speed value from 0.3
     }
     
 
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = -0.5;    
-        public static final double ampSpeed = -0.3;
+        public static final double feedSpeed = -0.7;    
+        public static final double ampSpeed = -0.5;
         
         public static final boolean topInvert = true;
         public static final boolean bottomInvert = false;
@@ -278,15 +279,44 @@ public class Constants {
     }
 
     public static final class VisionConstants{
-        public static final String camName = "SpeakerCamera";
-        public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(25.75);
-        public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(19);
-        public static final double Camera_ROLL_RADIANS = Units.degreesToRadians(-1);
         public static final double CENTER_SPEAKER_TOPTAG_HEIGHT = Units.inchesToMeters(60.375);
         public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(78+4);
         public static final double WRIST_AXLE_HEIGHT = Units.inchesToMeters(11);
-        public static final double CAMERA_BACK_LENGTH = Units.inchesToMeters(-3.5);
-        public static final Transform3d RobotToCam = new Transform3d(CAMERA_BACK_LENGTH, CAMERA_HEIGHT_METERS, 0, new Rotation3d(Camera_ROLL_RADIANS, CAMERA_PITCH_RADIANS, 0));
+
+        public static final double FRONT_HEIGHT = Units.inchesToMeters(25);
+        public static final double FRONT_FORBACK = Units.inchesToMeters(-4);
+        public static final double FRONT_LEFTRIGHT = Units.inchesToMeters(-0.5);
+        public static final double FRONT_PITCH = Units.degreesToRadians(0);
+        public static final double FRONT_YAW = Units.degreesToRadians(0);
+        public static final double FRONT_ROLL = Units.degreesToRadians(0);
+        public static final String frontCamName = "SpeakerCamera";
+        public static final Transform3d frontRobotToCam = new Transform3d(
+            FRONT_FORBACK, FRONT_LEFTRIGHT, FRONT_HEIGHT,
+            new Rotation3d(FRONT_ROLL, FRONT_PITCH, FRONT_YAW));
+        
+        public static final double LEFT_HEIGHT = Units.inchesToMeters(25);
+        public static final double LEFT_FORBACK = Units.inchesToMeters(-7.5);
+        public static final double LEFT_LEFTRIGHT = Units.inchesToMeters(-3);
+        public static final double LEFT_PITCH = Units.degreesToRadians(0);
+        public static final double LEFT_YAW = Units.degreesToRadians(120);
+        public static final double LEFT_ROLL = Units.degreesToRadians(0);
+        public static final String leftCamName = "LeftCamera";
+        public static final Transform3d leftRobotToCam = new Transform3d(
+            LEFT_FORBACK, LEFT_LEFTRIGHT, LEFT_HEIGHT,
+            new Rotation3d(LEFT_ROLL, LEFT_PITCH, LEFT_YAW));
+
+        public static final double RIGHT_HEIGHT = Units.inchesToMeters(25);
+        public static final double RIGHT_FORBACK = Units.inchesToMeters(-7.5);
+        public static final double RIGHT_LEFTRIGHT = Units.inchesToMeters(1);
+        public static final double RIGHT_PITCH = Units.degreesToRadians(0);
+        public static final double RIGHT_YAW = Units.degreesToRadians(-120);
+        public static final double RIGHT_ROLL = Units.degreesToRadians(0);
+        public static final String rightCamName = "RightCamera";
+        public static final Transform3d rightRobotToCam = new Transform3d(
+            RIGHT_FORBACK, RIGHT_LEFTRIGHT, RIGHT_HEIGHT,
+            new Rotation3d(RIGHT_ROLL, RIGHT_PITCH, RIGHT_YAW));
+
+        
 
         public enum AprilTagIDs{
             RedSpeakerCenter(4),
@@ -310,7 +340,7 @@ public class Constants {
             }
         }
 
-        public static final double visionP = 0.09;
+        public static final double visionP = 0.0055;
         public static final double visionI = 0.0;
         public static final double visionD = 0.0;
 
