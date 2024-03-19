@@ -86,7 +86,7 @@ public class RobotContainer {
     registerAutonCommands();
     
     leds.setDefaultCommand(
-      new LEDManager(leds)
+      new LEDManager(leds, intake.hasNote())
     );
 
     swerve.setDefaultCommand(
@@ -234,7 +234,6 @@ public class RobotContainer {
     SmartDashboard.putString("Robot Pose2d Rotation", swerve.getPose().getRotation().toString());
     SmartDashboard.putNumber("Robot Yaw", swerve.getYaw());
     SmartDashboard.putNumber("IntakeRPM", intake.getRPM());
-    //SmartDashboard.putBoolean("Has Target", photonVision.hasTarget());
     
   }
 

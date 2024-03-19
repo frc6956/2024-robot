@@ -110,9 +110,10 @@ public class Swerve extends SubsystemBase {
             DriveConstants.swerveKinematics, 
             getHeading(), 
             getModulePositions(), 
-            swerveOdometry.getPoseMeters(), 
-            stateStdDevs, 
-            visionStdDevs);
+            swerveOdometry.getPoseMeters()//, 
+            //stateStdDevs, 
+            //visionStdDevs
+        );
 
         AutoBuilder.configureHolonomic(
             this::getPose, 
@@ -240,13 +241,13 @@ public class Swerve extends SubsystemBase {
 
     public void addVisionMeasurement(Pose3d pose, double timestamp, Matrix<N3, N1> cov){
         visionPose3d = pose;
-        poseEstimator.addVisionMeasurement(pose.toPose2d(), timestamp);
+        poseEstimator.addVisionMeasurement(pose.toPose2d(), timestamp, cov);
     }
 
     public double getYaw() {
         return (DriveConstants.GyroInvert) ?
-                180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
-                gyro.getYaw().getValueAsDouble() - gyroOffset;
+            180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
+            gyro.getYaw().getValueAsDouble() - gyroOffset;
     }
 
     public Rotation2d getHeading() {

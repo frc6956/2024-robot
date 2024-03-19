@@ -4,10 +4,7 @@
 
 package frc.robot.commands;
 
-import java.sql.Driver;
-
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LEDs.LEDConstants;
 import frc.robot.subsystems.LEDs.LEDs;
@@ -16,8 +13,10 @@ public class LEDManager extends Command {
   /** Creates a new LEDManager. */
   int count = 0;
   private LEDs leds;
-  public LEDManager(LEDs leds) {
+  private boolean hasNote = false;
+  public LEDManager(LEDs leds, boolean hasNote) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.hasNote = hasNote;
     this.leds = leds;
     addRequirements(leds);
   }
@@ -25,17 +24,17 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    count++;
-    if (count > 8){
-      leds.dimRainbow();
-      count = 0;
-    }
+    controlLEDs();
   }
 
   public void controlLEDs(){
     switch (getState()) {
       case "DISABLED":
-        leds.setRainbow(leds.getPanelsRange());
+        count++;
+        if (count > 8){
+          leds.dimRainbow();
+          count = 0;
+        }
         break;
       case "AUTONRED":
         leds.setAllPanelColor(LEDConstants.red);
@@ -44,10 +43,21 @@ public class LEDManager extends Command {
         leds.setAllPanelColor(LEDConstants.blue);
         break;
       case "TELEOP":
-        leds.togglePanel(leds.getRightPanel(), leds.getLeftPanel(), LEDConstants.shamrock);
+        leds.togglePanel(leds.getRightPanel(), leds.getLeftPanel(), LEDConstants.shamrock.get());
         break;
       case "SETGREEN":
         leds.setAllColor(LEDConstants.green);
+        break;
+      case "BLINKGREEN":
+        count++;
+        if (count < 20){
+          leds.setAllColor(LEDConstants.green);
+        } else if (count >= 20){
+          leds.setAllOff();
+        }
+        if (count > 40){
+          count = 0;
+        }
         break;
       case "OFF":
         leds.setAllOff();
@@ -59,24 +69,21 @@ public class LEDManager extends Command {
   }
 
   private String getState(){
-    if (DriverStation.isDSAttached()){
-      if (DriverStation.isDisabled()){
+      if (!DriverStation.isDSAttached()){
+        return "OFF";
+      } else if (DriverStation.isDisabled()){
         return "DISABLED";
-      } else { 
-        /* 
-        if (DriverStation.isAutonomous()){
-          if (DriverStation.getAlliance().get() == Alliance.Blue){
-            return "AUTONBLUE";
-          } else if (DriverStation.getAlliance().get() == Alliance.Red){
-            return "AUTONRED";
-          } else {
-            return "SETGREEN";
-          }
-        }
-        */
-        return "TELEOP";
+      } else if (DriverStation.isAutonomous()){
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+          return "AUTONBLUE";
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+          return "AUTONRED";
+        } else return "SETGREEN";
+      } else {
+        /*if (hasNote){
+          return "BLINKGREEN";
+        } else */return "TELEOP";
       }
-    } else return "OFF";
   }
 
   @Override 

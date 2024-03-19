@@ -62,7 +62,11 @@ public class Panel extends SubsystemBase {
   }
 
   public AddressableLEDBuffer setShape(AddressableLEDBuffer m_ledBuffer, int[][][] shape){
-    leds = shape;
+    for (int i = 0; i < shape.length; i++){
+      for (int j = 0; j < shape[0].length; j++){
+        leds[i][j] = shape[i][j];
+      }
+    }
     return writeLEDs(m_ledBuffer);
   }
 

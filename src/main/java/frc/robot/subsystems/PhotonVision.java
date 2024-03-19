@@ -56,8 +56,8 @@ public class PhotonVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    frontPhoton.periodic();
-    rightPhoton.periodic();
-    leftPhoton.periodic();
+    frontPhoton.update();
+    rightPhoton.update();
+    leftPhoton.update();
   }
 }

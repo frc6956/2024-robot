@@ -216,9 +216,9 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.002;
-        public static final double wristPUP = 0.0015;
-        public static final double wristPUPGrav = 0.0015;
+        public static final double wristP = 0.001;
+        public static final double wristPUP = 0.001;
+        public static final double wristPUPGrav = 0.001;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
@@ -244,6 +244,8 @@ public class Constants {
         
         public static final boolean topInvert = true;
         public static final boolean bottomInvert = false;
+
+        public static final int feedBrakeID = 2;
     } 
 
     public static class ClimberConstants {

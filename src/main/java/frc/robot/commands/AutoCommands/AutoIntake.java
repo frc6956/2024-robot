@@ -38,24 +38,33 @@ public class AutoIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(wrist.getDegrees() > 180 && intake.hasNote()){ 
+    if(wrist.getDegrees() >= WristConstants.INTAKEGOOD && intake.hasNote()){ 
       intake.setSpeed(IntakeConstants.intakeSpeed);
       feeder.setSpeed(IntakeConstants.intakeSpeed);
-      wrist.setOutput(0);
-    } else if (wrist.getDegrees() < 180 && intake.hasNote()){
+      wrist.stop();
+    } else if (wrist.getDegrees() < WristConstants.INTAKEGOOD && intake.hasNote()){
       wrist.holdWrist(WristConstants.STOW);
-      intake.setSpeed(0);
-      feeder.setSpeed(0);
+      intake.stop();
+      feeder.stop();
       gotNote = true;
-    } else if (wrist.getDegrees() < 180 && !intake.hasNote() && !gotNote){ 
+    } else if (wrist.getDegrees() < WristConstants.INTAKEGOOD && !intake.hasNote() && !gotNote){ 
       wrist.holdWrist(WristConstants.PICKUP);
       intake.setSpeed(IntakeConstants.intakeSpeed);
-      feeder.setSpeed(0);
-    } else {
-      intake.setSpeed(0);
-      wrist.setSpeed(0);
-      feeder.setSpeed(0);
-      noteSecured = true;
+      feeder.stop();
+    } else if (wrist.getDegrees() >= WristConstants.INTAKEGOOD){
+      if (feeder.holdingNote()){
+        
+        noteSecured = true;
+      } else {
+        intake.setSpeed(IntakeConstants.intakeSpeed);
+        feeder.setSpeed(IntakeConstants.intakeSpeed);
+        wrist.stop();
+      }
+    }
+    else {
+      intake.stop();
+      wrist.stop();
+      feeder.stop();
     }
 
   }

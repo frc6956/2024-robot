@@ -1,5 +1,4 @@
 package frc.robot.sensors;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +11,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,7 +20,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 
 public class PhotonCam extends SubsystemBase {
@@ -55,8 +52,7 @@ public class PhotonCam extends SubsystemBase {
     photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
 
-  @Override
-  public void periodic(){
+  public void update(){
     result = cam.getLatestResult();
     var visionEst = getEstimatedGlobalPose();
     SmartDashboard.putBoolean("Estimator is Present", visionEst.isPresent());
@@ -73,7 +69,8 @@ public class PhotonCam extends SubsystemBase {
         var estStdDevs = getEstimatedStdDevs(estPose);
         SmartDashboard.putString("Vision Estimated Pose", estPose.toString());
         SmartDashboard.putString("Test Pose", robotPose.toPose2d().toString());
-        swerve.addVisionMeasurement(est.estimatedPose, est.timestampSeconds, estStdDevs);
+
+        filterAndAddVisionPose(est);
       }
     );
   }
@@ -114,6 +111,33 @@ public class PhotonCam extends SubsystemBase {
     } else estStdDevs = estStdDevs.times(1 + (avgDistance * avgDistance / 30));
 
     return estStdDevs;
+  }
+
+  public void filterAndAddVisionPose(EstimatedRobotPose pose){
+    Matrix<N3, N1> cov = VecBuilder.fill(0.4, 0.4, 0.4);
+    /* 
+    double distance = 0;
+    for (var t : pose.targetsUsed){
+      distance += t.getBestCameraToTarget().getTranslation().getNorm() / pose.targetsUsed.size();
+    }
+    if (pose.targetsUsed.size() > 1){
+      // has multiple tags
+      double distance2 = Math.max(Math.pow(distance * 0.4, 2), 0.7);
+      cov = VecBuilder.fill(distance2, distance2, 100);
+    }
+    if (!DriverStation.isDisabled()){
+      if (pose.targetsUsed.size() == 1){
+        if (Math.abs(pose.estimatedPose.getZ()) > 1.0 
+          || pose.estimatedPose
+            .minus(new Pose3d(swerve.getPose()))
+            .getTranslation()
+            .getNorm()
+          > 1.0
+          || distance > 7.0) {
+        return;}
+      }
+    }*/
+    swerve.addVisionMeasurement(pose.estimatedPose, pose.timestampSeconds, cov);
   }
 
 

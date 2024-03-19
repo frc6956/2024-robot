@@ -125,8 +125,8 @@ public class LEDs extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public void setShape(Panel panel, int[][][] shape){
-    m_led.setData(panel.setShape(m_ledBuffer, shape));
+  public void setShape(Panel panel, Shape shape){
+    m_led.setData(panel.setShape(m_ledBuffer, shape.get()));
   }
 
   public int[][][] getMirrored(int[][][] state){

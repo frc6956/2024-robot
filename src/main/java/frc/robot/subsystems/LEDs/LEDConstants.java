@@ -23,7 +23,7 @@ public class LEDConstants {
     public static final int[] n = {0, 0, 0};
     public static final int[] G = green;
 
-    public static final int[][][] shamrock = {
+    public static final Shape shamrock = new Shape(new int[][][]{
         {n, n, n, n, n, G, G, n, n, G, G, n, n, n, n, n}, // 1
         {n, n, n, n, G, G, G, G, G, G, G, G, n, n, n, n}, // 2
         {n, n, n, n, G, G, G, G, G, G, G, G, n, n, n, n}, // 3
@@ -40,5 +40,6 @@ public class LEDConstants {
         {n, n, n, n, n, n, n, n, G, G, n, n, n, n, n, n}, // 14
         {n, n, n, n, n, n, n, n, n, G, G, n, n, n, n, n}, // 15
         {n, n, n, n, n, n, n, n, n, n, n, G, n, n, n, n}  // 16
-    };
+    });
+
 }

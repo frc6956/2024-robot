@@ -4,13 +4,10 @@
 
 package frc.robot.commands;
 
-import java.io.IOException;
 import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonUtils;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
