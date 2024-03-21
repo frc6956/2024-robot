@@ -31,7 +31,7 @@ public class LEDManager extends Command {
     switch (getState()) {
       case "DISABLED":
         count++;
-        if (count > 8){
+        if (count > 10){
           leds.dimRainbow();
           count = 0;
         }
@@ -73,16 +73,16 @@ public class LEDManager extends Command {
         return "OFF";
       } else if (DriverStation.isDisabled()){
         return "DISABLED";
-      } else if (DriverStation.isAutonomous()){
+      /* } else if (hasNote){
+        return "BLINKGREEN";*/
+      }else if (DriverStation.isAutonomous()){
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
           return "AUTONBLUE";
         } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
           return "AUTONRED";
         } else return "SETGREEN";
       } else {
-        /*if (hasNote){
-          return "BLINKGREEN";
-        } else */return "TELEOP";
+        return "TELEOP";
       }
   }
 

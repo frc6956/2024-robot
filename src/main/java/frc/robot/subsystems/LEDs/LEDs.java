@@ -22,8 +22,8 @@ public class LEDs extends SubsystemBase {
   private Panel rightPanel = new Panel(leftPanel.getEnd(), LEDConstants.panelWidth, LEDConstants.panelHeight);
 
   public LEDs() {
-    //PWM port 1 on the Rio
-    m_led = new AddressableLED(0);
+    //PWM port 2 on the Rio
+    m_led = new AddressableLED(2);
 
     //sets the length of the LEDs
     m_ledBuffer = new AddressableLEDBuffer(getLength());
@@ -97,10 +97,14 @@ public class LEDs extends SubsystemBase {
 
   public void setRainbow(int[] startEnd){
     for (int i = startEnd[0]; i < startEnd[1]; i++){
+      m_ledBuffer.setRGB(i, 0, 0, 0);
+    }
+
+    for (int i = startEnd[0]; i < startEnd[1]; i++){
       final int hue = ((int)(m_rainbowFirstPixelHue + (i * 180 / startEnd[1]))) % 180;
       m_ledBuffer.setHSV(i, hue, 150, 200);
     }
-    m_rainbowFirstPixelHue += 0.5;
+    m_rainbowFirstPixelHue += 0.005;
 
     m_rainbowFirstPixelHue %= 180;
     m_led.setData(m_ledBuffer);
@@ -111,7 +115,7 @@ public class LEDs extends SubsystemBase {
       final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
       if (i %2 == 0){
         
-        m_ledBuffer.setHSV(i, hue, 250, 10);
+        m_ledBuffer.setHSV(i, 0, 0, 0);
       } else {
         m_ledBuffer.setHSV(i, hue, 250, 140);
       }

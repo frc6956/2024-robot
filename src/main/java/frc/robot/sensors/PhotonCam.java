@@ -115,12 +115,23 @@ public class PhotonCam extends SubsystemBase {
 
   public void filterAndAddVisionPose(EstimatedRobotPose pose){
     Matrix<N3, N1> cov = VecBuilder.fill(0.4, 0.4, 0.4);
-    /* 
+
+    double ambiguity = 0;
     double distance = 0;
     for (var t : pose.targetsUsed){
+      ambiguity += t.getPoseAmbiguity() / pose.targetsUsed.size();
       distance += t.getBestCameraToTarget().getTranslation().getNorm() / pose.targetsUsed.size();
     }
-    if (pose.targetsUsed.size() > 1){
+    SmartDashboard.putNumber("Ambiguity", ambiguity);
+    SmartDashboard.putNumber("Distance", distance);
+    if (ambiguity > 0.25 || distance > 10){
+      System.out.println(ambiguity + " Too High");
+      System.out.println(distance + " DistooHigh");
+      return;
+    }
+
+
+    /*if (pose.targetsUsed.size() > 1){
       // has multiple tags
       double distance2 = Math.max(Math.pow(distance * 0.4, 2), 0.7);
       cov = VecBuilder.fill(distance2, distance2, 100);

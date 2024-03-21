@@ -5,6 +5,7 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.subsystems.Feeder;
@@ -38,10 +39,14 @@ public class AutoIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(intake.hasNote()) {
+      gotNote = true;
+    }
+
     if(wrist.getDegrees() >= WristConstants.INTAKEGOOD && intake.hasNote()){ 
       intake.setSpeed(IntakeConstants.intakeSpeed);
-      feeder.setSpeed(IntakeConstants.intakeSpeed);
-      wrist.stop();
+      feeder.setSpeed(FeederConstants.intakeSpeed);
+      wrist.holdWrist(WristConstants.STOW);
     } else if (wrist.getDegrees() < WristConstants.INTAKEGOOD && intake.hasNote()){
       wrist.holdWrist(WristConstants.STOW);
       intake.stop();
@@ -53,17 +58,20 @@ public class AutoIntake extends Command {
       feeder.stop();
     } else if (wrist.getDegrees() >= WristConstants.INTAKEGOOD){
       if (feeder.holdingNote()){
-        
         noteSecured = true;
       } else {
         intake.setSpeed(IntakeConstants.intakeSpeed);
-        feeder.setSpeed(IntakeConstants.intakeSpeed);
-        wrist.stop();
+        feeder.setSpeed(FeederConstants.intakeSpeed);
+        if(gotNote) {
+          wrist.holdWrist(WristConstants.STOW);
+        } else {
+          wrist.holdWrist(WristConstants.PICKUP);
+        }
       }
     }
     else {
       intake.stop();
-      wrist.stop();
+      wrist.holdWrist(WristConstants.STOW);
       feeder.stop();
     }
 
@@ -71,7 +79,9 @@ public class AutoIntake extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    wrist.holdWrist(WristConstants.STOW);
+  }
 
   // Returns true when the command should end.
   @Override

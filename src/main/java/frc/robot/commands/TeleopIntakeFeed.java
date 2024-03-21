@@ -44,12 +44,9 @@ public class TeleopIntakeFeed extends Command {
         } else intake.stop();
 
         if (feeder.holdingNote()){
-          count++;
-          if (count > 2){
             feeder.stop();
-          }
         } else {
-          feeder.setSpeed(IntakeConstants.intakeSpeed);
+          feeder.setSpeed(FeederConstants.intakeSpeed);
           count = 0;
         }
         break;

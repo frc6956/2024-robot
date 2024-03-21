@@ -191,7 +191,7 @@ public class Constants {
         public static final boolean lowInvert = true;
         public static final boolean upInvert = false;
 
-        public static final double intakeSpeed = 0.3;
+        public static final double intakeSpeed = 0.2;
         public static final double feedSpeed = -0.6;
         public static final double ampSpeed = -0.5;
         public static final double extakeSpeed = -0.5;
@@ -216,23 +216,24 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.001;
+        public static final double wristP = 0.005;
         public static final double wristPUP = 0.001;
         public static final double wristPUPGrav = 0.001;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
-        public static final double STOW = 143;
+        public static final double STOW = 145;
         public static final double AMP = 139;
         public static final double PICKUP = 26; // Decrease Value from 46
-        public static final double SUBWOOFER = 140;
+        public static final double SUBWOOFER = 134;
         public static final double INTAKEGOOD = 90;
+        public static final double PODIUM = 115;
 
         public static final boolean leftInvert = false;
         public static final boolean rightInvert = true;
 
-        public static final double MaxRotateSpeed = -0.2; // increase speed value from -0.2
-        public static final double MaxRotateUpSpeed = 0.3; // increase speed value from 0.3
+        public static final double MaxRotateSpeed = -0.4; // increase speed value from -0.2
+        public static final double MaxRotateUpSpeed = 0.5; // increase speed value from 0.3
     }
     
 
@@ -246,6 +247,8 @@ public class Constants {
         public static final boolean bottomInvert = false;
 
         public static final int feedBrakeID = 2;
+
+        public static final double intakeSpeed = 0.05;
     } 
 
     public static class ClimberConstants {
@@ -291,7 +294,7 @@ public class Constants {
         public static final double FRONT_PITCH = Units.degreesToRadians(0);
         public static final double FRONT_YAW = Units.degreesToRadians(0);
         public static final double FRONT_ROLL = Units.degreesToRadians(0);
-        public static final String frontCamName = "SpeakerCamera";
+        public static final String frontCamName = "FrontCamera";
         public static final Transform3d frontRobotToCam = new Transform3d(
             FRONT_FORBACK, FRONT_LEFTRIGHT, FRONT_HEIGHT,
             new Rotation3d(FRONT_ROLL, FRONT_PITCH, FRONT_YAW));
@@ -300,7 +303,7 @@ public class Constants {
         public static final double LEFT_FORBACK = Units.inchesToMeters(-7.5);
         public static final double LEFT_LEFTRIGHT = Units.inchesToMeters(-3);
         public static final double LEFT_PITCH = Units.degreesToRadians(0);
-        public static final double LEFT_YAW = Units.degreesToRadians(120);
+        public static final double LEFT_YAW = Units.degreesToRadians(-120);
         public static final double LEFT_ROLL = Units.degreesToRadians(0);
         public static final String leftCamName = "LeftCamera";
         public static final Transform3d leftRobotToCam = new Transform3d(
@@ -311,7 +314,7 @@ public class Constants {
         public static final double RIGHT_FORBACK = Units.inchesToMeters(-7.5);
         public static final double RIGHT_LEFTRIGHT = Units.inchesToMeters(1);
         public static final double RIGHT_PITCH = Units.degreesToRadians(0);
-        public static final double RIGHT_YAW = Units.degreesToRadians(-120);
+        public static final double RIGHT_YAW = Units.degreesToRadians(120);
         public static final double RIGHT_ROLL = Units.degreesToRadians(0);
         public static final String rightCamName = "RightCamera";
         public static final Transform3d rightRobotToCam = new Transform3d(

@@ -71,9 +71,10 @@ public class Wrist extends SubsystemBase {
       stop();
     } else if (speed < 0 && getDegrees() < WristConstants.PICKUP){
       stop();
+    } else {
+      leftMotor.set(speed);
+      rightMotor.set(speed);
     }
-    leftMotor.set(speed);
-    rightMotor.set(speed);
   }
 
 
@@ -90,6 +91,10 @@ public class Wrist extends SubsystemBase {
 
 
   public void holdWrist(double setpoint){
+    
+    if (setpoint > WristConstants.STOW){
+      setpoint = WristConstants.STOW;
+    }
     target = setpoint;
     double output;
     /*if (getDegrees() - setpoint < 0){

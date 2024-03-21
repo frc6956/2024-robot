@@ -21,6 +21,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.commands.AimWrist;
 import frc.robot.commands.HoldWrist;
 import frc.robot.commands.LEDManager;
 import frc.robot.commands.SetPosition;
@@ -52,7 +53,7 @@ public class RobotContainer {
   private final POVButton stow = new POVButton(operator, 0);
   private final POVButton subwoofershoot = new POVButton(operator, 90);
   private final POVButton pickup = new POVButton(operator, 180);
-  private final POVButton amp = new POVButton(operator, 270);
+  private final POVButton podium = new POVButton(operator, 270);
   private final JoystickButton aimWrist = new JoystickButton(operator, XboxController.Button.kY.value);
 
   private final JoystickButton rotateUp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
@@ -204,15 +205,18 @@ public class RobotContainer {
 
     subwoofershoot.onTrue(new SetPosition(wrist, WristConstants.SUBWOOFER));
 
-    amp.onTrue(new SetPosition(wrist, WristConstants.AMP));   
+    podium.onTrue(new SetPosition(wrist, WristConstants.PODIUM));   
 
-    rotateUp.whileTrue(new RunCommand(() -> wrist.setSpeed(0.2), wrist));
+    rotateUp.whileTrue(new RunCommand(() -> wrist.setSpeed(0.3), wrist));
 
-    rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.1), wrist));
+    rotateDown.whileTrue(new RunCommand(() -> wrist.setSpeed(-0.2), wrist));
 
     intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
 
-    manualFeed.whileTrue(new TeleopIntakeFeed(intake, feeder, "MANUAL", wrist));
+    aimWrist.whileTrue(new AimWrist(wrist, swerve, photonVision));
+
+    //manualFeed.whileTrue(new TeleopIntakeFeed(intake, feeder, "MANUAL", wrist));
+    manualFeed.whileTrue(new AutoIntake(intake, feeder, wrist));
 
     ampButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doAmp, wrist));
   
