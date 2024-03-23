@@ -55,8 +55,8 @@ public class RobotContainer {
   private final POVButton subwoofershoot = new POVButton(operator, 90);
   private final POVButton pickup = new POVButton(operator, 180);
   private final POVButton podium = new POVButton(operator, 270);
-  private final JoystickButton aimWrist = new JoystickButton(operator, XboxController.Button.kY.value);
-
+  //private final JoystickButton aimWrist = new JoystickButton(operator, XboxController.Button.kY.value);
+  private final JoystickButton climb = new JoystickButton(operator, XboxController.Button.kY.value);
   private final JoystickButton rotateUp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
   private final JoystickButton rotateDown = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -118,7 +118,7 @@ public class RobotContainer {
 
     climber.setDefaultCommand(
       new RunCommand(
-        () -> climber.setSpeed(-operator.getLeftY()), 
+        () -> climber.stop(), 
         climber)
     );
 
@@ -217,7 +217,10 @@ public class RobotContainer {
 
     intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
 
-    aimWrist.whileTrue(new AimWrist(wrist, swerve, photonVision));
+    //aimWrist.whileTrue(new AimWrist(wrist, swerve, photonVision));
+    climb.whileTrue(new RunCommand(
+        () -> climber.setSpeed(-operator.getLeftY()), 
+        climber));
 
     //manualFeed.whileTrue(new TeleopIntakeFeed(intake, feeder, "MANUAL", wrist));
     manualFeed.whileTrue(new AutoIntake(intake, feeder, wrist));
