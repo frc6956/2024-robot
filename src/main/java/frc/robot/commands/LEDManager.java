@@ -30,6 +30,7 @@ public class LEDManager extends Command {
       count = 0;
       leds.setAllColor(LEDConstants.green);
     }
+    leds.update();
   }
 
   public void controlLEDs(){

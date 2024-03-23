@@ -30,23 +30,26 @@ public class Shape extends SubsystemBase {
     shape[14] = fifteen;
 
     //reverse the rows then rotate the image 90 degrees.
+    shape = rotateShape(shape);
     
-    //rotate 90 degrees clockwise
-    /* 
-    int N = shape.length;
-    for (int j = 0; j < N / 2; j++) {
-      for (int i = j; i < N - j - 1; i++) {
-
-          // Swap elements of each cycle
-          // in clockwise direction
-          int[] temp = shape[i][j];
-          shape[i][j] = shape[N - 1 - j][i];
-          shape[N - 1 - j][i] = shape[N - 1 - i][N - 1 - j];
-          shape[N - 1 - i][N - 1 - j] = shape[j][N - 1 - i];
-          shape[j][N - 1 - i] = temp;
-      }
-    }*/
     return shape;
+  }
+
+  public static int[][][] rotateShape(int[][][] shape){
+    int numRows = shape.length;
+    int numCols = shape[0].length;
+    // create a new 3d array to store the rotated values
+    int[][][] rotatedShape = new int[numRows][numCols][shape[0][0].length];
+    // rotate the shape by 90 degrees clockwise
+
+    for (int i = 0; i < numCols; i++){
+      for (int j = 0; j < numRows; j++){
+        rotatedShape[i][j] = shape[numRows - j - 1][i];
+      }
+    }
+
+    //return the rotated shape
+    return rotatedShape;
   }
 
   

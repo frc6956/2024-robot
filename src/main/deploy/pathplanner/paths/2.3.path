@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 34.82448915695685,
+    "rotation": -178.64034032091894,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ShootBackUpShoot",
+  "folder": "2",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

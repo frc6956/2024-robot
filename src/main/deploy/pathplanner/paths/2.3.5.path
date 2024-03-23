@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4170387594314446,
-        "y": 6.603359410065024
+        "x": 2.242315279411105,
+        "y": 6.621971013811542
       },
       "isLocked": false,
       "linkedName": "2.3"
     },
     {
       "anchor": {
-        "x": 2.9136113870683342,
-        "y": 6.930886036804249
+        "x": 2.446817325425873,
+        "y": 6.9141167938326396
       },
       "prevControl": {
-        "x": 2.8185230115633977,
-        "y": 6.983712912084769
+        "x": 2.3517289499209366,
+        "y": 6.96694366911316
+      },
+      "nextControl": {
+        "x": 2.5419057009308097,
+        "y": 6.861289918552119
+      },
+      "isLocked": false,
+      "linkedName": "2.3.5"
+    },
+    {
+      "anchor": {
+        "x": 3.011632500133328,
+        "y": 7.0894042618452975
+      },
+      "prevControl": {
+        "x": 3.068914022498553,
+        "y": 7.077593950766568
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2.3.5"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.23483398157468,
+    "rotation": -143.42696902148066,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ShootBackUpShoot",
+  "folder": "2",
   "previewStartingState": {
-    "rotation": 33.02386755579681,
+    "rotation": 179.43821508156117,
     "velocity": 0
   },
   "useDefaultConstraints": true

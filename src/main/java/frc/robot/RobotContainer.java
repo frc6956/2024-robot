@@ -28,6 +28,7 @@ import frc.robot.commands.SetPosition;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TeleopIntakeFeed;
 import frc.robot.commands.TeleopPhotonTurret;
+import frc.robot.commands.TurnAround;
 import frc.robot.commands.AutoCommands.AutoIntake;
 import frc.robot.commands.AutoCommands.AutoShoot;
 import frc.robot.sensors.PhotonCam;
@@ -62,7 +63,8 @@ public class RobotContainer {
   private final JoystickButton manualFeed = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
   private final JoystickButton ampButton = new JoystickButton(operator, XboxController.Button.kX.value);
   private final JoystickButton feed = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton climbOveride = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+  private final JoystickButton autoShoot = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+  private final JoystickButton climbOveride = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
 
   /* Operator Buttons */
 
@@ -184,6 +186,10 @@ public class RobotContainer {
     NamedCommands.registerCommand(
       "AimToSpeaker", 
       new TeleopPhotonTurret(() -> 0, () -> 0, swerve, photonVision));
+
+    NamedCommands.registerCommand(
+      "flip", 
+      new TurnAround(swerve));
   }
 
   private void configureBindings() {
@@ -220,9 +226,9 @@ public class RobotContainer {
   
     feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
 
-    //climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
+    climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
 
-    climbOveride.whileTrue(new AutoShoot(intake, feeder, wrist));
+    autoShoot.whileTrue(new AutoShoot(intake, feeder, wrist));
 
   }
 

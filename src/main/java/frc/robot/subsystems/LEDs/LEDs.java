@@ -43,6 +43,10 @@ public class LEDs extends SubsystemBase {
     m_led.start();
   }
 
+  public void update() {
+    m_led.setData(m_ledBuffer);
+  }
+
   public int getLength(){
     return rightPanel.getEnd();
   }
@@ -84,11 +88,10 @@ public class LEDs extends SubsystemBase {
     for (int i = startEnd[0]; i < startEnd[1]; i++){
       m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
     }
-    m_led.setData(m_ledBuffer);
   }
 
   private void setPanelColor(Panel panel, int[] color){
-    m_led.setData(panel.setAllColor(m_ledBuffer, color));
+    panel.setAllColor(m_ledBuffer, color);
   }
 
   public void setAllOff(){
@@ -107,7 +110,6 @@ public class LEDs extends SubsystemBase {
     m_rainbowFirstPixelHue += 0.005;
 
     m_rainbowFirstPixelHue %= 180;
-    m_led.setData(m_ledBuffer);
   }
 
   public void dimRainbow(){
@@ -125,12 +127,10 @@ public class LEDs extends SubsystemBase {
       m_rainbowFirstPixelHue %= 180;
 
     }
-
-    m_led.setData(m_ledBuffer);
   }
 
   public void setShape(Panel panel, Shape shape){
-    m_led.setData(panel.setShape(m_ledBuffer, shape.get()));
+    panel.setShape(m_ledBuffer, shape.get());
   }
 
   public int[][][] getMirrored(int[][][] state){
@@ -162,5 +162,22 @@ public class LEDs extends SubsystemBase {
       count = 0;
     }
   }
+
+  /* 
+  public void displayGIF(Panel[] panels, Shape[] gif){
+    count++;
+    int fpi = 10;
+    int numFrame = 0;
+    if (numFrame > gif.length){
+      numFrame = 0;
+    }
+    if (count > fpi){
+      count = 0;
+      numFrame++;
+      for (Panel panel : panels){
+        panel.setShape(m_ledBuffer, gif[numFrame].get());
+      }
+    }
+  }*/
 
 }
