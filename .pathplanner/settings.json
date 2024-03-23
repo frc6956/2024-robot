@@ -6,10 +6,11 @@
     "AmpNoteScore",
     "AmpToLine",
     "BackUpGetNotes",
-    "New Folder",
+    "ShootBackUpShoot",
     "ShootBackUp"
   ],
   "autoFolders": [
+    "ShootBackUpShoot",
     "ShootBackUpAutos"
   ],
   "defaultMaxVel": 3.0,

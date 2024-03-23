@@ -24,7 +24,12 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    controlLEDs();
+    //controlLEDs();
+    count++;
+    if (count > 20){
+      count = 0;
+      leds.setAllColor(LEDConstants.green);
+    }
   }
 
   public void controlLEDs(){
@@ -72,9 +77,9 @@ public class LEDManager extends Command {
       if (!DriverStation.isDSAttached()){
         return "OFF";
       } else if (DriverStation.isDisabled()){
-        return "DISABLED";
-      /* } else if (hasNote){
-        return "BLINKGREEN";*/
+        return "SETGREEN";
+      } else if (hasNote){
+        return "BLINKGREEN";
       }else if (DriverStation.isAutonomous()){
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
           return "AUTONBLUE";

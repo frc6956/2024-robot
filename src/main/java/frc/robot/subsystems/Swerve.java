@@ -116,7 +116,7 @@ public class Swerve extends SubsystemBase {
         );
 
         AutoBuilder.configureHolonomic(
-            this::getPose, 
+            this::getOdomPose, 
             this::resetPose, 
             () -> DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates()),
             speeds -> {
@@ -264,6 +264,10 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
+    }
+
+    public Pose2d getOdomPose(){
+        return swerveOdometry.getPoseMeters();
     }
 
     public SwerveModuleState[] getModuleStates() {

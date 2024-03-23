@@ -19,6 +19,7 @@ public class AutoShoot extends Command {
   Wrist wrist;
 
   int count = 0;
+  int feedRan = 0;
   boolean shotNote = false;
 
   public AutoShoot(Intake intake, Feeder feeder, Wrist wrist) {
@@ -34,33 +35,42 @@ public class AutoShoot extends Command {
   public void initialize() {
     shotNote = false;
     count = 0;
+    feedRan = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(wrist.onTarget()){
+    if(Math.abs(WristConstants.SUBWOOFER - wrist.getDegrees()) < 1.5){
       if (intake.getRPM() >= IntakeConstants.shootRPM){
           feeder.setSpeed(FeederConstants.feedSpeed);
-          count++;
+          feedRan++;
         }
-        
+      intake.setSpeed(IntakeConstants.shootSpeed);
+      wrist.holdWrist(WristConstants.SUBWOOFER);
     } else {
       wrist.holdWrist(WristConstants.SUBWOOFER);
       feeder.setSpeed(0);
+      intake.setSpeed(IntakeConstants.shootSpeed);
     }
-    
-    intake.setSpeed(IntakeConstants.shootSpeed);
+  
 
-    if (count > 10){
+    /*if (feeder.holdingNote() == false){
+      count++;
+    }*/
+
+    if (feedRan > 15 && !feeder.holdingNote()){
       shotNote = true;
     }
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    wrist.stop();;
+    feeder.stop();
+    intake.stop();
+  }
 
   // Returns true when the command should end.
   @Override

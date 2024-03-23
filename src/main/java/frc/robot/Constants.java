@@ -193,7 +193,7 @@ public class Constants {
 
         public static final double intakeSpeed = 0.2;
         public static final double feedSpeed = -0.6;
-        public static final double ampSpeed = -0.5;
+        public static final double ampSpeed = -0.4;
         public static final double extakeSpeed = -0.5;
         public static final double shootSpeed = -0.95;
 
@@ -216,9 +216,7 @@ public class Constants {
         public static final int wristID = 15;
         public static final int wrist2ID = 13;
 
-        public static final double wristP = 0.005;
-        public static final double wristPUP = 0.001;
-        public static final double wristPUPGrav = 0.001;
+        public static final double wristP = 0.0065;
         public static final double wristI = 0.0;
         public static final double wristD = 0.0;
 
@@ -240,7 +238,7 @@ public class Constants {
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = -0.7;    
+        public static final double feedSpeed = -0.8;    
         public static final double ampSpeed = -0.5;
         
         public static final boolean topInvert = true;

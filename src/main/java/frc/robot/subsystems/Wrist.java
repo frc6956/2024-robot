@@ -24,8 +24,7 @@ public class Wrist extends SubsystemBase {
   CANSparkMax rightMotor;
 
   PIDController angleController;
-  PIDController angleUpController;
-  PIDController angleUpGravController;
+  PIDController angleControllerHigh;
 
   double target = WristConstants.STOW;
 
@@ -40,9 +39,8 @@ public class Wrist extends SubsystemBase {
     rightMotor.restoreFactoryDefaults();
     rightMotor.enableVoltageCompensation(Constants.voltageComp);
 
+    angleControllerHigh = new PIDController(0.0085, 0, 0);
     angleController = new PIDController(WristConstants.wristP, WristConstants.wristI, WristConstants.wristD);
-    angleUpController = new PIDController(WristConstants.wristPUP, WristConstants.wristI, WristConstants.wristD);
-    angleUpGravController = new PIDController(WristConstants.wristPUPGrav, WristConstants.wristI, WristConstants.wristD);
 
     angleController.setTolerance(3);
 
@@ -100,16 +98,20 @@ public class Wrist extends SubsystemBase {
     /*if (getDegrees() - setpoint < 0){
       output = angleUpController.calculate(getDegrees(), setpoint);
     } else {*/
-      output = angleController.calculate(getDegrees(), setpoint);
+      if (getDegrees() > 120){
+        output = angleControllerHigh.calculate(getDegrees(), setpoint);
+      } else {
+        output = angleController.calculate(getDegrees(), setpoint);
+      }
+      
     //}
     
     if (output > WristConstants.MaxRotateUpSpeed){
       output = WristConstants.MaxRotateUpSpeed;
     } else if (output < WristConstants.MaxRotateSpeed){
       output = WristConstants.MaxRotateSpeed;
-    } else if (Math.abs(output) < 0.003){
-      output = 0;
     }
+
     leftMotor.set(output);
     rightMotor.set(output); 
   }

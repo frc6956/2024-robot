@@ -145,11 +145,8 @@ public class RobotContainer {
   
     NamedCommands.registerCommand(
       "AutoIntake", 
-      new AutoIntake(
-        intake, 
-        feeder, 
-        wrist
-      ));
+      new AutoIntake(intake, feeder, wrist));
+
     NamedCommands.registerCommand(
       "AutoShoot", 
       new AutoShoot(
@@ -183,6 +180,7 @@ public class RobotContainer {
       new SetPosition(
         wrist, 
         WristConstants.AMP));
+
     NamedCommands.registerCommand(
       "AimToSpeaker", 
       new TeleopPhotonTurret(() -> 0, () -> 0, swerve, photonVision));
@@ -222,7 +220,9 @@ public class RobotContainer {
   
     feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
 
-    climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
+    //climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
+
+    climbOveride.whileTrue(new AutoShoot(intake, feeder, wrist));
 
   }
 
