@@ -23,7 +23,7 @@ public class LEDs extends SubsystemBase {
 
   public LEDs() {
     //PWM port 2 on the Rio
-    m_led = new AddressableLED(2);
+    m_led = new AddressableLED(3);
 
     //sets the length of the LEDs
     m_ledBuffer = new AddressableLEDBuffer(getLength());
@@ -31,6 +31,14 @@ public class LEDs extends SubsystemBase {
     setUpLight();
 
     count = 0;    
+  }
+
+  public void setGreen(){
+    for (int i = 0; i < m_ledBuffer.getLength(); i++){
+      m_ledBuffer.setRGB(i, 0, 100, 0);
+    }
+
+    m_led.setData(m_ledBuffer);
   }
 
   public void setUpLight(){

@@ -134,7 +134,7 @@ public class Constants {
 		public static final double DriveFreeSpinRPS = NeoMotorConstants.FreeSpeedRPM / 60;
 		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
 		//public static final double DriveMotorReduction = (45.0 * 17 * 50) / (kDrivingMotorPinionTeeth * 15 * 27);
-        public static final double DriveMotorReduction = 8.14 / 1.0;
+        public static final double DriveMotorReduction = 6.75 / 1.0;
 		public static final double DriveFreeWheelSpeedRPS = (DriveFreeSpinRPS * WheelCircumference)	/ DriveMotorReduction;
 
         public static final double TurnMotorReduction = 150.0 / 7.0 / 1.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
@@ -256,7 +256,7 @@ public class Constants {
         public static final boolean leftInvert = false;
         public static final boolean rightInvert = false;
 
-        public static final double climbSpeed = 0.5;
+        public static final double climbSpeed = 0.8;
     }
 
 

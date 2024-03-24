@@ -125,9 +125,10 @@ public class PhotonCam extends SubsystemBase {
     SmartDashboard.putNumber("Ambiguity", ambiguity);
     SmartDashboard.putNumber("Distance", distance);
     if (ambiguity > 0.25 || distance > 10){
-      System.out.println(ambiguity + " Too High");
-      System.out.println(distance + " DistooHigh");
       return;
+    } else {
+      System.out.println(ambiguity + " Excellent, Excellent");
+      System.out.println(distance + " Disisgood");
     }
 
 

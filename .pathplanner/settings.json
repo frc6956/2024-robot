@@ -3,15 +3,17 @@
   "robotLength": 0.53,
   "holonomicMode": true,
   "pathFolders": [
+    "2",
     "AmpNoteScore",
     "AmpToLine",
     "BackUpGetNotes",
-    "ShootBackUp",
-    "2"
+    "Double",
+    "ShootBackUp"
   ],
   "autoFolders": [
     "1Note",
-    "3Note"
+    "3Note",
+    "2Note"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
