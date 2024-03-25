@@ -73,7 +73,7 @@ public class RobotContainer {
   /* Subsystems */
 
   private final Intake intake = new Intake();
-  private final Climber climber = new Climber();
+  //private final Climber climber = new Climber();
   private final Wrist wrist = new Wrist();
   private final Swerve swerve = new Swerve();
   private final Feeder feeder = new Feeder();
@@ -116,11 +116,11 @@ public class RobotContainer {
         wrist)
     );
 
-    climber.setDefaultCommand(
+/*    climber.setDefaultCommand(
       new RunCommand(
         () -> climber.stop(), 
         climber)
-    );
+    ); */
 
     /* Pathplanner Named Commands */
       //NamedCommands.registerCommand("Intake", new IntakeNote(m_intake, m_robotState));
@@ -218,9 +218,9 @@ public class RobotContainer {
     intakeButton.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));
 
     //aimWrist.whileTrue(new AimWrist(wrist, swerve, photonVision));
-    climb.whileTrue(new RunCommand(
+    /*climb.whileTrue(new RunCommand(
         () -> climber.setSpeed(-operator.getLeftY()), 
-        climber));
+        climber));*/
 
     //manualFeed.whileTrue(new TeleopIntakeFeed(intake, feeder, "MANUAL", wrist));
     manualFeed.whileTrue(new AutoIntake(intake, feeder, wrist));
@@ -229,7 +229,7 @@ public class RobotContainer {
   
     feed.whileTrue(new TeleopIntakeFeed(intake, feeder, IntakeConstants.doShoot, getWrist()));
 
-    climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
+    //climbOveride.whileTrue(new RunCommand(() -> climber.overideDown(), climber));
 
     autoShoot.whileTrue(new AutoShoot(intake, feeder, wrist));
 

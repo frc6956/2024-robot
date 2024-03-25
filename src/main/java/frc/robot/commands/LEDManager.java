@@ -24,11 +24,9 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    count++;
-    if (count > 500){
-      count = 0;
-      //leds.setGreen();
-    }
+    
+      leds.setGreen();
+      //leds.setAllColor(LEDConstants.blue);
     //controlLEDs();
     /* 
     count++;
@@ -38,7 +36,7 @@ public class LEDManager extends Command {
     }
     leds.update();*/
   }
-
+/* 
   public void controlLEDs(){
     switch (getState()) {
       case "DISABLED":
@@ -78,7 +76,7 @@ public class LEDManager extends Command {
         leds.setAllOff();
         break;
     }
-  }
+  }*/
 
   private String getState(){
       if (!DriverStation.isDSAttached()){
