@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
     id 'com.diffplug.spotless' version '6.20.0'
+    id 'org.ajoberstar.grgit' version '5.2.2'
 }
 
 java {
@@ -148,5 +149,16 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+tasks.register("autoCommit") {
+    doFirst {
+        grgit.add(patterns: ['.'])
+        grgit.commit(message: "Automatic Commit: " + new Date().format('MMMM d, yyyy, h:mm:ss a'))
+    }
+    dependsOn 'spotlessApply'
+}
+
 // Configure build to run spotless
 build.dependsOn 'spotlessApply'
+
+// Configure deploy to automatically commit
+discoverroborio.dependsOn 'autoCommit'
