@@ -4,6 +4,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel;
 
 /** Sets motor usage for a Spark Max motor controller */
+/**
+ * The CANSparkMaxUtil class provides utility methods for adjusting the CAN bus usage of CANSparkMax motors.
+ */
 public class CANSparkMaxUtil {
   public enum Usage {
     kAll,
@@ -63,6 +66,12 @@ public class CANSparkMaxUtil {
    * @param motor The motor to adjust the status frame periods on.
    * @param usage The status frame feedack to enable. kAll is the default when a CANSparkMax is
    *     constructed.
+   */
+  /**
+   * Sets the CANSparkMax bus usage for a given motor.
+   * 
+   * @param motor The CANSparkMax motor to set the bus usage for.
+   * @param usage The desired bus usage for the motor.
    */
   public static void setCANSparkMaxBusUsage(CANSparkMax motor, Usage usage) {
     setCANSparkMaxBusUsage(motor, usage, false);

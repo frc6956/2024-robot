@@ -8,10 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Wrist;
 
 public class HoldWrist extends Command {
-  /** Creates a new HoldIntake. */
-  
+  /**
+   * Creates a new HoldWrist command.
+   * 
+   * @param wrist the Wrist subsystem to be used by the command
+   */
+
   double target;
   Wrist wrist;
+
   public HoldWrist(Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.wrist = wrist;
@@ -19,6 +24,10 @@ public class HoldWrist extends Command {
   }
 
   // Called when the command is initially scheduled.
+  /**
+   * Initializes the HoldWrist command.
+   * Sets the target position of the wrist to the current position.
+   */
   @Override
   public void initialize() {
     target = wrist.getDegrees();
@@ -26,6 +35,11 @@ public class HoldWrist extends Command {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+  /**
+   * Executes the HoldWrist command.
+   * Retrieves the target position for the wrist and holds the wrist at that
+   * position.
+   */
   @Override
   public void execute() {
     target = wrist.getTarget();

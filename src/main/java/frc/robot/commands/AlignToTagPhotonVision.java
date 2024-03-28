@@ -23,6 +23,11 @@ public class AlignToTagPhotonVision extends Command {
   boolean yFinished;
   boolean thetaFinished;
 
+  /**
+   * Constructs a new AlignToTagPhotonVision command.
+   *
+   * @param swerve the Swerve subsystem to align with the tag
+   */
   public AlignToTagPhotonVision(Swerve swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
@@ -30,10 +35,23 @@ public class AlignToTagPhotonVision extends Command {
   }
 
   // Called when the command is initially scheduled.
+  /**
+   * Initializes the AlignToTagPhotonVision command.
+   */
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
+  /**
+   * Executes the alignment to tag PhotonVision command.
+   * Calculates the errors in x, y, and theta based on the camera's position
+   * relative to the target.
+   * Drives the swerve drive system to align with the target based on the
+   * calculated errors.
+   * Updates the status of xFinished, yFinished, and thetaFinished based on error
+   * tolerances.
+   */
   @Override
   public void execute() {
     // camToTarget = vision.getCameraToTarget();
@@ -42,26 +60,41 @@ public class AlignToTagPhotonVision extends Command {
     // thetaError = camToTarget.getRotation().getAngle();
 
     swerve.drive(
-      new Translation2d(-xError, -yError).times(DriveConstants.MaxSpeed), 
-      thetaError, 
-      false, true, false, false);
+        new Translation2d(-xError, -yError).times(DriveConstants.MaxSpeed),
+        thetaError,
+        false, true, false, false);
 
-    if (Math.abs(xError) < CommandConstants.errorTolerence){
+    if (Math.abs(xError) < CommandConstants.errorTolerence) {
       xFinished = true;
-    } else xFinished = false;
-    if (Math.abs(yError) < CommandConstants.errorTolerence){
+    } else
+      xFinished = false;
+    if (Math.abs(yError) < CommandConstants.errorTolerence) {
       yFinished = true;
-    } else yFinished = false;
-    if (Math.abs(thetaError) < CommandConstants.errorTolerence){
+    } else
+      yFinished = false;
+    if (Math.abs(thetaError) < CommandConstants.errorTolerence) {
       thetaFinished = true;
-    } else thetaFinished = false;
+    } else
+      thetaFinished = false;
   }
 
   // Called once the command ends or is interrupted.
+  /**
+   * Called when the command ends, either by finishing successfully or being
+   * interrupted.
+   * 
+   * @param interrupted true if the command was interrupted, false otherwise
+   */
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
+  /**
+   * Checks if the alignment to the target is finished.
+   * 
+   * @return true if the alignment is finished, false otherwise.
+   */
   @Override
   public boolean isFinished() {
     return xFinished && yFinished && thetaFinished;

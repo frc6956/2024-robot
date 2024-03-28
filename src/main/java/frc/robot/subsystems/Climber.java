@@ -21,6 +21,12 @@ public class Climber extends SubsystemBase {
   RelativeEncoder leftEncoder;
   RelativeEncoder rightEncoder;
 
+  /**
+   * The Climber class represents the subsystem responsible for controlling the
+   * climber mechanism of the robot.
+   * It initializes and configures the motors, encoders, and other settings for
+   * the climber.
+   */
   public Climber() {
     leftClimber = new CANSparkMax(ClimberConstants.leftMotorID, MotorType.kBrushless);
     rightClimber = new CANSparkMax(ClimberConstants.rightMotorID, MotorType.kBrushless);
@@ -40,51 +46,94 @@ public class Climber extends SubsystemBase {
     resetPostion();
   }
 
-  public void resetPostion(){
+  /**
+   * Resets the position of the climber's left and right encoders to zero.
+   */
+  public void resetPostion() {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
   }
 
-  public void stop(){
+  /**
+   * Stops the climber motors.
+   */
+  public void stop() {
     leftClimber.set(0);
     rightClimber.set(0);
   }
 
-  public void extend(){
-    if (getAverageEncoderPosition() < 280){
+  /**
+   * Extends the climber mechanism until a certain encoder position is reached.
+   * If the average encoder position is less than 280, the left and right climber
+   * motors are set to climbSpeed.
+   * Otherwise, the climber motors are stopped.
+   */
+  public void extend() {
+    if (getAverageEncoderPosition() < 280) {
       leftClimber.set(ClimberConstants.climbSpeed);
       rightClimber.set(ClimberConstants.climbSpeed);
-    } else stop();
+    } else
+      stop();
   }
 
-  public void retract(){
-    if (getAverageEncoderPosition() > 10){
+  /**
+   * Retracts the climber mechanism.
+   * If the average encoder position is greater than 10, the left and right
+   * climber motors are set to negative climb speed.
+   * Otherwise, the climber motors are stopped.
+   */
+  public void retract() {
+    if (getAverageEncoderPosition() > 10) {
       leftClimber.set(-ClimberConstants.climbSpeed);
       rightClimber.set(-ClimberConstants.climbSpeed);
-    } else stop();
-    
+    } else
+      stop();
+
   }
 
-  public void overideDown(){
-    if (getAverageEncoderPosition() < 0){
+  /**
+   * Overrides the downward movement of the climber subsystem.
+   * If the average encoder position is less than 0, the position is reset.
+   * The left and right climber motors are set to the negative climb speed.
+   */
+  public void overideDown() {
+    if (getAverageEncoderPosition() < 0) {
       resetPostion();
     }
     leftClimber.set(-ClimberConstants.climbSpeed);
     rightClimber.set(-ClimberConstants.climbSpeed);
   }
 
-  public void setSpeed(double speed){
-    if (speed > .1){
+  /**
+   * Sets the speed of the climber.
+   * If the speed is greater than 0.1, the climber will extend.
+   * If the speed is less than -0.1, the climber will retract.
+   * If the speed is between -0.1 and 0.1, the climber will stop.
+   * 
+   * @param speed the speed at which to set the climber
+   */
+  public void setSpeed(double speed) {
+    if (speed > .1) {
       extend();
-    } else if (speed < -0.1){
+    } else if (speed < -0.1) {
       retract();
-    } else stop();
+    } else
+      stop();
   }
 
-  public double getAverageEncoderPosition(){
-    return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
+  /**
+   * Returns the average position of the left and right encoders.
+   * 
+   * @return the average encoder position
+   */
+  public double getAverageEncoderPosition() {
+    return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
   }
 
+  /**
+   * This method is called periodically by the scheduler.
+   * It updates the SmartDashboard with the average climb value.
+   */
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

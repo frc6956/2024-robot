@@ -21,30 +21,52 @@ public class TeleopIntakeFeed extends Command {
   Wrist wrist;
   int count = 0;
 
-
-  public TeleopIntakeFeed(Intake intake, Feeder feeder,String status, Wrist wrist) {
+  /**
+   * Represents a command for teleoperated intake feeding.
+   * This command is responsible for controlling the intake, feeder, and wrist
+   * subsystems.
+   * 
+   * @param intake The intake subsystem.
+   * @param feeder The feeder subsystem.
+   * @param status The status of the command.
+   * @param wrist  The wrist subsystem.
+   */
+  public TeleopIntakeFeed(Intake intake, Feeder feeder, String status, Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.intake=intake;
-    this.feeder=feeder;
-    this.status=status;
-    this.wrist=wrist;
+    this.intake = intake;
+    this.feeder = feeder;
+    this.status = status;
+    this.wrist = wrist;
     addRequirements(intake, feeder);
     count = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+  /**
+   * Executes the teleop intake feed command based on the current status.
+   * The status determines the behavior of the intake and feeder subsystems.
+   * 
+   * Possible status values:
+   * - "INTAKE": Intakes power cells into the robot.
+   * - "EXTAKE": Extakes power cells out of the robot.
+   * - "SHOOT": Shoots power cells from the robot.
+   * - "AMP": Activates the intake and feeder at amp speed.
+   * - "STOP": Stops the intake and feeder.
+   * - "MANUAL": Sets the intake and feeder to manual control mode.
+   */
   @Override
   public void execute() {
     switch (status) {
       case "INTAKE":
-        if(wrist.getDegrees() > WristConstants.INTAKEGOOD){
+        if (wrist.getDegrees() > WristConstants.INTAKEGOOD) {
           intake.setSpeed(IntakeConstants.intakeSpeed);
-        } else if (!intake.hasNote()){
+        } else if (!intake.hasNote()) {
           intake.setSpeed(IntakeConstants.intakeSpeed);
-        } else intake.stop();
+        } else
+          intake.stop();
 
-        if (feeder.holdingNote()){
-            feeder.stop();
+        if (feeder.holdingNote()) {
+          feeder.stop();
         } else {
           feeder.setSpeed(FeederConstants.intakeSpeed);
           count = 0;
@@ -55,12 +77,12 @@ public class TeleopIntakeFeed extends Command {
         feeder.setSpeed(IntakeConstants.extakeSpeed);
         break;
       case "SHOOT":
-        if (intake.getRPM() >= IntakeConstants.shootRPM){
+        if (intake.getRPM() >= IntakeConstants.shootRPM) {
           feeder.setSpeed(FeederConstants.feedSpeed);
         }
         intake.setSpeed(IntakeConstants.shootSpeed);
         break;
-      case "AMP": 
+      case "AMP":
         intake.setSpeed(IntakeConstants.ampSpeed);
         feeder.setSpeed(FeederConstants.ampSpeed);
         break;
@@ -71,7 +93,7 @@ public class TeleopIntakeFeed extends Command {
       case "MANUAL":
         intake.setSpeed(IntakeConstants.shootSpeed);
         feeder.setSpeed(FeederConstants.feedSpeed);
-        
+
       default:
         intake.stop();
         feeder.stop();
@@ -80,6 +102,12 @@ public class TeleopIntakeFeed extends Command {
   }
 
   // Called once the command ends or is interrupted.
+  /**
+   * This method is called when the command ends.
+   * It stops the intake and feeder subsystems.
+   *
+   * @param interrupted true if the command was interrupted, false otherwise
+   */
   @Override
   public void end(boolean interrupted) {
     intake.stop();

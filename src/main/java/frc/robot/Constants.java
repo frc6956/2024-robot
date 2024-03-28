@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.net.CacheRequest;
-
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,7 +9,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 
 public class Constants {
 
@@ -20,7 +17,7 @@ public class Constants {
     /* Voltage Compensation */
     public static final int voltageComp = 10;
 
-    public static class CommandConstants{
+    public static class CommandConstants {
         public static final double kXP = 0.1;
         public static final double kXI = 0;
         public static final double kxD = 0;
@@ -40,28 +37,34 @@ public class Constants {
         public static final double errorTolerence = 0.3;
     }
 
-    public static class OperatorConstants{
+    /**
+     * Constants related to operator controls.
+     */
+    public static class OperatorConstants {
         public static double stickDeadband = 0.1;
 
         public static int driverPort = 0;
         public static int operatorPort = 1;
 
         public static final double DirectionSlewRate = 1.2; // radians per second
-		public static final double MagnitudeSlewRate = 1.8; // 2.0; //1.8; // percent per second (1 = 100%)
-		public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
+        public static final double MagnitudeSlewRate = 1.8; // 2.0; //1.8; // percent per second (1 = 100%)
+        public static final double RotationalSlewRate = 2.0; // 20.0; //2.0; // percent per second (1 = 100%)
     }
-    
-    public static class ModuleConstants{
+
+    /**
+     * Constants related to the robot modules.
+     */
+    public static class ModuleConstants {
 
         /* Front Left Module */
-        public static final class ModFL { 
+        public static final class ModFL {
             public static final String name = "Front Left Module1";
             public static final int moduleNumber = 3;
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int encoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-51.7); 
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-51.7);
+            // public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
 
         /* Front Right Module */
@@ -71,10 +74,10 @@ public class Constants {
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
             public static final int encoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-121.3); 
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); // 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-121.3);
+            // public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
-        
+
         /* Back Left Module */
         public static final class ModBL {
             public static final String name = "Back Left Module1";
@@ -83,7 +86,7 @@ public class Constants {
             public static final int angleMotorID = 3;
             public static final int encoderID = 3;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(72.0); //
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
+            // public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
 
         /* Back Right Module */
@@ -93,14 +96,15 @@ public class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 2;
             public static final int encoderID = 4;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(95.3); // 
-            //public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(95.3); //
+            // public static final Rotation2d angleOffset = Rotation2d.fromRadians(0); //
         }
     }
 
-
-
-    public static class DriveConstants{
+    /**
+     * Constants related to the drive system.
+     */
+    public static class DriveConstants {
 
         public static final double MinAngle = -180;
         public static final double MaxAngle = 180;
@@ -113,39 +117,43 @@ public class Constants {
         public static final double WheelDiameter = Units.inchesToMeters(4);
         public static final double WheelCircumference = WheelDiameter * Math.PI;
 
-        public static final double CenterToWheel =
-                Math.sqrt(Math.pow(WheelBase / 2.0, 2) + Math.pow(TrackWidth / 2.0, 2));
+        public static final double CenterToWheel = Math
+                .sqrt(Math.pow(WheelBase / 2.0, 2) + Math.pow(TrackWidth / 2.0, 2));
 
-        public static final Translation2d[] moduleTranslations = new Translation2d[]{
-            new Translation2d(WheelBase / 2.0, TrackWidth / 2.0),
-            new Translation2d(WheelBase / 2.0, -TrackWidth / 2.0),
-            new Translation2d(-WheelBase / 2.0, TrackWidth / 2.0),
-            new Translation2d(-WheelBase / 2.0, -TrackWidth / 2.0)
+        public static final Translation2d[] moduleTranslations = new Translation2d[] {
+                new Translation2d(WheelBase / 2.0, TrackWidth / 2.0),
+                new Translation2d(WheelBase / 2.0, -TrackWidth / 2.0),
+                new Translation2d(-WheelBase / 2.0, TrackWidth / 2.0),
+                new Translation2d(-WheelBase / 2.0, -TrackWidth / 2.0)
         };
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(moduleTranslations);
-
 
         /* Conversion Factors */
 
         public static final int kDrivingMotorPinionTeeth = 14;
 
         // Calculations required for driving motor conversion factors and feed forward
-		public static final double DriveFreeSpinRPS = NeoMotorConstants.FreeSpeedRPM / 60;
-		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-		//public static final double DriveMotorReduction = (45.0 * 17 * 50) / (kDrivingMotorPinionTeeth * 15 * 27);
+        public static final double DriveFreeSpinRPS = NeoMotorConstants.FreeSpeedRPM / 60;
+        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+        // teeth on the bevel pinion
+        // public static final double DriveMotorReduction = (45.0 * 17 * 50) /
+        // (kDrivingMotorPinionTeeth * 15 * 27);
         public static final double DriveMotorReduction = 6.75 / 1.0;
-		public static final double DriveFreeWheelSpeedRPS = (DriveFreeSpinRPS * WheelCircumference)	/ DriveMotorReduction;
+        public static final double DriveFreeWheelSpeedRPS = (DriveFreeSpinRPS * WheelCircumference)
+                / DriveMotorReduction;
 
-        public static final double TurnMotorReduction = 150.0 / 7.0 / 1.0; // ratio between internal relative encoder and Through Bore (or Thrifty in our case) absolute encoder - 150.0 / 7.0
-
+        public static final double TurnMotorReduction = 150.0 / 7.0 / 1.0; // ratio between internal relative encoder
+                                                                           // and Through Bore (or Thrifty in our case)
+                                                                           // absolute encoder - 150.0 / 7.0
 
         public static final double DriveConversionFactor = (WheelDiameter * Math.PI) / DriveMotorReduction;
-        public static final double AngleConversionFactor = 360 / TurnMotorReduction;//(2 * Math.PI) / TurnMotorReduction;
+        public static final double AngleConversionFactor = 360 / TurnMotorReduction;// (2 * Math.PI) /
+                                                                                    // TurnMotorReduction;
 
-        public static final double DriveVelocityConversionFactor = ((WheelDiameter * Math.PI) / DriveMotorReduction) / 60.0; // meters per second, per RPM
+        public static final double DriveVelocityConversionFactor = ((WheelDiameter * Math.PI) / DriveMotorReduction)
+                / 60.0; // meters per second, per RPM
         public static final double AngleVelocityConversionFactor = (2 * Math.PI) / TurnMotorReduction / 60;
-
 
         /* Speed */
         public static final double MaxSpeed = 4;
@@ -154,7 +162,6 @@ public class Constants {
         public static final double DriveKS = 0;
         public static final double DriveKV = 0;
         public static final double DriveKA = 0;
-
 
         /* Drive PID */
         public static final double DriveP = 0.04;
@@ -182,9 +189,7 @@ public class Constants {
 
     }
 
-
-
-    public static class IntakeConstants{
+    public static class IntakeConstants {
         public static final int upIntakeID = 9;
         public static final int lowIntakeID = 10;
 
@@ -210,7 +215,7 @@ public class Constants {
         public static final int intakeAngle = 200;
     }
 
-    public static class WristConstants{
+    public static class WristConstants {
         public static final int wristPort = 0;
         public static final double offset = 0.0;
         public static final int wristID = 15;
@@ -233,21 +238,20 @@ public class Constants {
         public static final double MaxRotateSpeed = -0.4; // increase speed value from -0.2
         public static final double MaxRotateUpSpeed = 0.5; // increase speed value from 0.3
     }
-    
 
     public static class FeederConstants {
         public static final int topFeederID = 11;
         public static final int bottomFeederID = 12;
-        public static final double feedSpeed = -0.8;    
+        public static final double feedSpeed = -0.8;
         public static final double ampSpeed = -0.5;
-        
+
         public static final boolean topInvert = true;
         public static final boolean bottomInvert = false;
 
         public static final int feedBrakeID = 2;
 
         public static final double intakeSpeed = 0.05;
-    } 
+    }
 
     public static class ClimberConstants {
         public static final int leftMotorID = 16;
@@ -259,8 +263,7 @@ public class Constants {
         public static final double climbSpeed = 0.8;
     }
 
-
-    public static class Auto{
+    public static class Auto {
 
         public static final double MaxSpeed = 5;
         public static final double MaxAcceleration = 5;
@@ -268,7 +271,7 @@ public class Constants {
         public static final double MaxAngularAcceleration = Math.PI;
 
         public static final TrapezoidProfile.Constraints ThetaControllerContraints = new TrapezoidProfile.Constraints(
-            MaxAngularSpeed, MaxAngularAcceleration);
+                MaxAngularSpeed, MaxAngularAcceleration);
 
         /* PID */
         public static final double AutoTurnP = 0.0;
@@ -281,9 +284,12 @@ public class Constants {
 
     }
 
-    public static final class VisionConstants{
+    /**
+     * Constants related to vision processing.
+     */
+    public static final class VisionConstants {
         public static final double CENTER_SPEAKER_TOPTAG_HEIGHT = Units.inchesToMeters(60.375);
-        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(78+4);
+        public static final double SPEAKER_SCORE_HEIGHT = Units.inchesToMeters(78 + 4);
         public static final double WRIST_AXLE_HEIGHT = Units.inchesToMeters(11);
 
         public static final double FRONT_HEIGHT = Units.inchesToMeters(25);
@@ -294,9 +300,9 @@ public class Constants {
         public static final double FRONT_ROLL = Units.degreesToRadians(0);
         public static final String frontCamName = "FrontCamera";
         public static final Transform3d frontRobotToCam = new Transform3d(
-            FRONT_FORBACK, FRONT_LEFTRIGHT, FRONT_HEIGHT,
-            new Rotation3d(FRONT_ROLL, FRONT_PITCH, FRONT_YAW));
-        
+                FRONT_FORBACK, FRONT_LEFTRIGHT, FRONT_HEIGHT,
+                new Rotation3d(FRONT_ROLL, FRONT_PITCH, FRONT_YAW));
+
         public static final double LEFT_HEIGHT = Units.inchesToMeters(25);
         public static final double LEFT_FORBACK = Units.inchesToMeters(-7.5);
         public static final double LEFT_LEFTRIGHT = Units.inchesToMeters(-3);
@@ -305,8 +311,8 @@ public class Constants {
         public static final double LEFT_ROLL = Units.degreesToRadians(0);
         public static final String leftCamName = "LeftCamera";
         public static final Transform3d leftRobotToCam = new Transform3d(
-            LEFT_FORBACK, LEFT_LEFTRIGHT, LEFT_HEIGHT,
-            new Rotation3d(LEFT_ROLL, LEFT_PITCH, LEFT_YAW));
+                LEFT_FORBACK, LEFT_LEFTRIGHT, LEFT_HEIGHT,
+                new Rotation3d(LEFT_ROLL, LEFT_PITCH, LEFT_YAW));
 
         public static final double RIGHT_HEIGHT = Units.inchesToMeters(25);
         public static final double RIGHT_FORBACK = Units.inchesToMeters(-7.5);
@@ -316,12 +322,10 @@ public class Constants {
         public static final double RIGHT_ROLL = Units.degreesToRadians(0);
         public static final String rightCamName = "RightCamera";
         public static final Transform3d rightRobotToCam = new Transform3d(
-            RIGHT_FORBACK, RIGHT_LEFTRIGHT, RIGHT_HEIGHT,
-            new Rotation3d(RIGHT_ROLL, RIGHT_PITCH, RIGHT_YAW));
+                RIGHT_FORBACK, RIGHT_LEFTRIGHT, RIGHT_HEIGHT,
+                new Rotation3d(RIGHT_ROLL, RIGHT_PITCH, RIGHT_YAW));
 
-        
-
-        public enum AprilTagIDs{
+        public enum AprilTagIDs {
             RedSpeakerCenter(4),
             RedSpeakerSide(3),
             BlueSpeakerCenter(7),
@@ -335,10 +339,11 @@ public class Constants {
 
             private final int ID;
 
-            AprilTagIDs(int ID){
+            AprilTagIDs(int ID) {
                 this.ID = ID;
             }
-            public int getID(){
+
+            public int getID() {
                 return ID;
             }
         }
@@ -347,12 +352,14 @@ public class Constants {
         public static final double visionI = 0.0;
         public static final double visionD = 0.0;
 
+        //
 
-        // 
-        
     }
 
+    /**
+     * Constants related to the NeoMotor.
+     */
     public static final class NeoMotorConstants {
-		public static final double FreeSpeedRPM = 5676;
-	}
+        public static final double FreeSpeedRPM = 5676;
+    }
 }

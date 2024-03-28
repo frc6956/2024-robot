@@ -15,6 +15,12 @@ public class Strip extends SubsystemBase {
 
   private int[][] leds;
 
+  /**
+   * Constructs a new Strip object with the specified start index and length.
+   *
+   * @param start  The starting index of the LED strip.
+   * @param length The length of the LED strip.
+   */
   public Strip(int start, int length) {
     this.length = length;
     leds = new int[length][3];
@@ -22,28 +28,61 @@ public class Strip extends SubsystemBase {
     this.end = start + getLength();
   }
 
-  public int getLength(){
+  /**
+   * Returns the length of the LED strip.
+   *
+   * @return The length of the LED strip.
+   */
+  public int getLength() {
     return length;
   }
 
-  public int getStart(){
+  /**
+   * Returns the starting index of the LED strip.
+   *
+   * @return The starting index of the LED strip.
+   */
+  public int getStart() {
     return start;
   }
 
-  public int getEnd(){
+  /**
+   * Returns the end value of the LED strip.
+   *
+   * @return The end value of the LED strip.
+   */
+  public int getEnd() {
     return end;
   }
 
-  public int[][] getLEDs(){
+  /**
+   * Returns the 2D array representing the LEDs.
+   *
+   * @return The 2D array of LEDs.
+   */
+  public int[][] getLEDs() {
     return leds;
   }
 
-  public int getIndex(int index){
+  /**
+   * Returns the adjusted index based on the starting index.
+   *
+   * @param index The original index.
+   * @return The adjusted index.
+   */
+  public int getIndex(int index) {
     return index + start;
   }
 
-  public AddressableLEDBuffer setAllColor(AddressableLEDBuffer m_ledBuffer, int[] color){
-    for (int i = 0; i < getLength(); i++){
+  /**
+   * Sets the color of all LEDs in the strip to the specified color.
+   *
+   * @param m_ledBuffer The addressable LED buffer.
+   * @param color       The color to set (an array of RGB values).
+   * @return The updated addressable LED buffer.
+   */
+  public AddressableLEDBuffer setAllColor(AddressableLEDBuffer m_ledBuffer, int[] color) {
+    for (int i = 0; i < getLength(); i++) {
       leds[i] = color;
       m_ledBuffer.setRGB(getIndex(i), color[0], color[1], color[2]);
     }

@@ -10,7 +10,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -32,7 +31,8 @@ import frc.robot.Constants.ModuleConstants.*;
 
 /**
  * The Swerve subsystem controls the swerve drive system of the robot.
- * It handles the odometry, pose estimation, module control, and field-centric driving.
+ * It handles the odometry, pose estimation, module control, and field-centric
+ * driving.
  */
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
@@ -41,15 +41,15 @@ public class Swerve extends SubsystemBase {
     final Field2d m_field = new Field2d();
     public Pose3d visionPose3d;
 
-
     /**
      * The positions of the swerve drive wheels on the robot.
      */
-    private static final Translation2d[] WHEEL_POSITIONS =
-        Arrays.copyOf(DriveConstants.moduleTranslations, DriveConstants.moduleTranslations.length);
+    private static final Translation2d[] WHEEL_POSITIONS = Arrays.copyOf(DriveConstants.moduleTranslations,
+            DriveConstants.moduleTranslations.length);
 
     /**
-     * Represents a network table used for communication between the robot and the driver station.
+     * Represents a network table used for communication between the robot and the
+     * driver station.
      */
     NetworkTable SwerveTable;
 
@@ -64,8 +64,10 @@ public class Swerve extends SubsystemBase {
 
     /**
      * Represents a swerve drive subsystem.
-     * This class initializes and configures the swerve modules, gyro, odometry, pose estimator, and path follower.
-     * It provides methods for controlling the swerve drive system and accessing its state.
+     * This class initializes and configures the swerve modules, gyro, odometry,
+     * pose estimator, and path follower.
+     * It provides methods for controlling the swerve drive system and accessing its
+     * state.
      */
 
     public Swerve() {
@@ -74,38 +76,38 @@ public class Swerve extends SubsystemBase {
         zeroGyro();
 
         mSwerveMods = new SwerveModule[] {
-            new SwerveModule(
-                ModFL.moduleNumber, 
-                ModFL.name,
-                ModFL.driveMotorID, 
-                ModFL.angleMotorID, 
-                ModFL.encoderID, 
-                ModFL.angleOffset,
-                false),
-            new SwerveModule(
-                ModFR.moduleNumber, 
-                ModFR.name,
-                ModFR.driveMotorID, 
-                ModFR.angleMotorID, 
-                ModFR.encoderID, 
-                ModFR.angleOffset,
-                false),
-            new SwerveModule(
-                ModBL.moduleNumber, 
-                ModBL.name,
-                ModBL.driveMotorID, 
-                ModBL.angleMotorID, 
-                ModBL.encoderID, 
-                ModBL.angleOffset,
-                false),
-            new SwerveModule(
-                ModBR.moduleNumber, 
-                ModBR.name,
-                ModBR.driveMotorID, 
-                ModBR.angleMotorID, 
-                ModBR.encoderID, 
-                ModBR.angleOffset,
-                false),
+                new SwerveModule(
+                        ModFL.moduleNumber,
+                        ModFL.name,
+                        ModFL.driveMotorID,
+                        ModFL.angleMotorID,
+                        ModFL.encoderID,
+                        ModFL.angleOffset,
+                        false),
+                new SwerveModule(
+                        ModFR.moduleNumber,
+                        ModFR.name,
+                        ModFR.driveMotorID,
+                        ModFR.angleMotorID,
+                        ModFR.encoderID,
+                        ModFR.angleOffset,
+                        false),
+                new SwerveModule(
+                        ModBL.moduleNumber,
+                        ModBL.name,
+                        ModBL.driveMotorID,
+                        ModBL.angleMotorID,
+                        ModBL.encoderID,
+                        ModBL.angleOffset,
+                        false),
+                new SwerveModule(
+                        ModBR.moduleNumber,
+                        ModBR.name,
+                        ModBR.driveMotorID,
+                        ModBR.angleMotorID,
+                        ModBR.encoderID,
+                        ModBR.angleOffset,
+                        false),
         };
 
         /*
@@ -119,68 +121,66 @@ public class Swerve extends SubsystemBase {
         visionPose3d = new Pose3d();
 
         swerveOdometry = new SwerveDriveOdometry(
-            DriveConstants.swerveKinematics,
-            getHeading(),
-            getModulePositions(),
-            new Pose2d(0.0, 0.0, new Rotation2d(0.0, 0.0))
-        );
-
-        var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
-        var visionStdDevs = VecBuilder.fill(0.5, 0.5, 0.8);
+                DriveConstants.swerveKinematics,
+                getHeading(),
+                getModulePositions(),
+                new Pose2d(0.0, 0.0, new Rotation2d(0.0, 0.0)));
 
         poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.swerveKinematics, 
-            getHeading(), 
-            getModulePositions(), 
-            swerveOdometry.getPoseMeters()//, 
-            //stateStdDevs, 
-            //visionStdDevs
+                DriveConstants.swerveKinematics,
+                getHeading(),
+                getModulePositions(),
+                swerveOdometry.getPoseMeters()// ,
+        // stateStdDevs,
+        // visionStdDevs
         );
 
         AutoBuilder.configureHolonomic(
-            this::getOdomPose, 
-            this::resetPose, 
-            () -> DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates()),
-            speeds -> {
-                // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                SwerveModuleState[] swerveModuleStates =
-                    DriveConstants.swerveKinematics.toSwerveModuleStates(speeds);
-                setModuleStates(swerveModuleStates);
-            },
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                // Constants class
-                new PIDConstants( // Translation PID constants
-                    Auto.AutoDriveP,
-                    Auto.AutoDriveI,
-                    Auto.AutoDriveD
+                this::getOdomPose,
+                this::resetPose,
+                () -> DriveConstants.swerveKinematics.toChassisSpeeds(getModuleStates()),
+                speeds -> {
+                    // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                    SwerveModuleState[] swerveModuleStates = DriveConstants.swerveKinematics
+                            .toSwerveModuleStates(speeds);
+                    setModuleStates(swerveModuleStates);
+                },
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
+                        // Constants class
+                        new PIDConstants( // Translation PID constants
+                                Auto.AutoDriveP,
+                                Auto.AutoDriveI,
+                                Auto.AutoDriveD),
+                        new PIDConstants( // Rotation PID constants
+                                Auto.AutoTurnP,
+                                Auto.AutoTurnI,
+                                Auto.AutoTurnD),
+                        Auto.MaxSpeed, // Max module speed, in m/s
+                        DriveConstants.CenterToWheel, // Drive base radius in meters. Distance from robot center to
+                                                      // furthest module.
+                        new ReplanningConfig(true, true) // Default path replanning config. See the API for the options
+                                                         // here
                 ),
-                new PIDConstants( // Rotation PID constants
-                    Auto.AutoTurnP,
-                    Auto.AutoTurnI,
-                    Auto.AutoTurnD
-                ),
-                Auto.MaxSpeed, // Max module speed, in m/s
-                DriveConstants.CenterToWheel, // Drive base radius in meters. Distance from robot center to
-                                                  // furthest module.
-                new ReplanningConfig(true, true) // Default path replanning config. See the API for the options here
-            ), 
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            }, 
-            this);
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this);
 
-       //SwerveTable = NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
+        // SwerveTable =
+        // NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
     } // end of Swerve Contructor
 
     /**
-     * This method is called periodically to update the state of the Swerve subsystem.
+     * This method is called periodically to update the state of the Swerve
+     * subsystem.
      * It updates the swerve odometry, pose estimator, robot pose on the field, and
      * displays relevant data on the SmartDashboard.
      */
@@ -188,12 +188,12 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
 
         swerveOdometry.update(
-            getHeading(), 
-            getModulePositions());
+                getHeading(),
+                getModulePositions());
 
-        poseEstimator.update( 
-            getHeading(), 
-            getModulePositions());
+        poseEstimator.update(
+                getHeading(),
+                getModulePositions());
 
         m_field.setRobotPose(poseEstimator.getEstimatedPosition());
 
@@ -203,11 +203,9 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber(mod.name + " Encoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber(mod.name + " Integrated", mod.getPosition().angle.getDegrees());
         }
-    
-        SmartDashboard.putString
-        ("Estimated Robot Pose", poseEstimator.getEstimatedPosition().toString());
-    }
 
+        SmartDashboard.putString("Estimated Robot Pose", poseEstimator.getEstimatedPosition().toString());
+    }
 
     /**
      * Returns the Field2d object associated with this Swerve subsystem.
@@ -221,24 +219,30 @@ public class Swerve extends SubsystemBase {
     /**
      * Drives the swerve robot based on the given translation and rotation values.
      * 
-     * @param translation     The translation vector representing the robot's desired movement in the field coordinate system.
-     * @param rotation        The robot's desired rotation in radians per second.
-     * @param fieldRelative   Specifies whether the translation and rotation values are relative to the field coordinate system.
-     * @param isOpenLoop      Specifies whether the robot should be driven in open loop control mode.
-     * @param isEvading       Specifies whether the robot is currently evading an obstacle.
-     * @param isLocked        Specifies whether the swerve modules should be locked in place.
+     * @param translation   The translation vector representing the robot's desired
+     *                      movement in the field coordinate system.
+     * @param rotation      The robot's desired rotation in radians per second.
+     * @param fieldRelative Specifies whether the translation and rotation values
+     *                      are relative to the field coordinate system.
+     * @param isOpenLoop    Specifies whether the robot should be driven in open
+     *                      loop control mode.
+     * @param isEvading     Specifies whether the robot is currently evading an
+     *                      obstacle.
+     * @param isLocked      Specifies whether the swerve modules should be locked in
+     *                      place.
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean isEvading, boolean isLocked) {
-        if(isLocked) {
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop,
+            boolean isEvading, boolean isLocked) {
+        if (isLocked) {
 
             final SwerveModuleState[] swerveModuleStates = new SwerveModuleState[] {
-                new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
-                new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
-                new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
-                new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
             };
 
-            for(SwerveModule mod : mSwerveMods){
+            for (SwerveModule mod : mSwerveMods) {
                 mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
             }
 
@@ -246,35 +250,35 @@ public class Swerve extends SubsystemBase {
 
             final Translation2d centerOfRotation;
 
-            if(isEvading && fieldRelative) {
+            if (isEvading && fieldRelative) {
                 centerOfRotation = getCenterOfRotation(translation.getAngle(), rotation);
             } else {
                 centerOfRotation = new Translation2d();
             }
 
             final ChassisSpeeds chassisSpeeds;
-        
-            if(fieldRelative) {
+
+            if (fieldRelative) {
 
                 chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), 
-                    translation.getY(), 
-                    rotation, 
-                    getHeading()
-                    );
+                        translation.getX(),
+                        translation.getY(),
+                        rotation,
+                        getHeading());
 
             } else {
 
                 chassisSpeeds = new ChassisSpeeds(
-                    translation.getX(), 
-                    translation.getY(), 
-                    rotation);
-            } 
+                        translation.getX(),
+                        translation.getY(),
+                        rotation);
+            }
 
-            final var swerveModuleStates = DriveConstants.swerveKinematics.toSwerveModuleStates(chassisSpeeds, centerOfRotation);
+            final var swerveModuleStates = DriveConstants.swerveKinematics.toSwerveModuleStates(chassisSpeeds,
+                    centerOfRotation);
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.MaxSpeed);
 
-            for(SwerveModule mod : mSwerveMods){
+            for (SwerveModule mod : mSwerveMods) {
                 mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
             }
 
@@ -284,11 +288,11 @@ public class Swerve extends SubsystemBase {
     /**
      * Adds a vision measurement to the pose estimator.
      * 
-     * @param pose The pose measurement from vision.
+     * @param pose      The pose measurement from vision.
      * @param timestamp The timestamp of the measurement.
-     * @param cov The covariance matrix of the measurement.
+     * @param cov       The covariance matrix of the measurement.
      */
-    public void addVisionMeasurement(Pose3d pose, double timestamp, Matrix<N3, N1> cov){
+    public void addVisionMeasurement(Pose3d pose, double timestamp, Matrix<N3, N1> cov) {
         visionPose3d = pose;
         poseEstimator.addVisionMeasurement(pose.toPose2d(), timestamp, cov);
     }
@@ -299,9 +303,8 @@ public class Swerve extends SubsystemBase {
      * @return The yaw angle in degrees.
      */
     public double getYaw() {
-        return (DriveConstants.GyroInvert) ?
-            180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
-            gyro.getYaw().getValueAsDouble() - gyroOffset;
+        return (DriveConstants.GyroInvert) ? 180 - (gyro.getYaw().getValueAsDouble() - gyroOffset)
+                : gyro.getYaw().getValueAsDouble() - gyroOffset;
     }
 
     /**
@@ -341,18 +344,20 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Returns the current pose of the swerve subsystem in the field coordinate system.
+     * Returns the current pose of the swerve subsystem in the field coordinate
+     * system.
      *
      * @return the current pose of the swerve subsystem
      */
-    public Pose2d getOdomPose(){
+    public Pose2d getOdomPose() {
         return swerveOdometry.getPoseMeters();
     }
 
     /**
      * Retrieves the current state of all swerve modules.
      *
-     * @return an array of SwerveModuleState objects representing the state of each swerve module
+     * @return an array of SwerveModuleState objects representing the state of each
+     *         swerve module
      */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
@@ -365,7 +370,8 @@ public class Swerve extends SubsystemBase {
     /**
      * Returns an array of the desired SwerveModuleState for each swerve module.
      *
-     * @return an array of SwerveModuleState representing the desired state for each swerve module
+     * @return an array of SwerveModuleState representing the desired state for each
+     *         swerve module
      */
     public SwerveModuleState[] getDesiredSwerveModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
@@ -378,7 +384,8 @@ public class Swerve extends SubsystemBase {
     /**
      * Retrieves the positions of all swerve modules.
      *
-     * @return An array of SwerveModulePosition objects representing the positions of each swerve module.
+     * @return An array of SwerveModulePosition objects representing the positions
+     *         of each swerve module.
      */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
@@ -390,7 +397,8 @@ public class Swerve extends SubsystemBase {
 
     /**
      * Represents a 2D translation in the Cartesian coordinate system.
-     * The Translation2d class is used to store and manipulate the x and y coordinates of a point in 2D space.
+     * The Translation2d class is used to store and manipulate the x and y
+     * coordinates of a point in 2D space.
      */
     private Translation2d getCenterOfRotation(final Rotation2d direction, final double rotation) {
         final var here = new Translation2dPlus(1.0, direction.minus(getHeading()));
@@ -428,10 +436,13 @@ public class Swerve extends SubsystemBase {
     /**
      * Sets the desired states for each swerve module.
      * The desired states are provided as an array of SwerveModuleState objects.
-     * The wheel speeds are desaturated to ensure they do not exceed the maximum speed defined in DriveConstants.
-     * Each swerve module's desired state is set using the corresponding element from the desiredStates array.
+     * The wheel speeds are desaturated to ensure they do not exceed the maximum
+     * speed defined in DriveConstants.
+     * Each swerve module's desired state is set using the corresponding element
+     * from the desiredStates array.
      * 
-     * @param desiredStates An array of SwerveModuleState objects representing the desired states for each swerve module.
+     * @param desiredStates An array of SwerveModuleState objects representing the
+     *                      desired states for each swerve module.
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MaxSpeed);
@@ -454,7 +465,7 @@ public class Swerve extends SubsystemBase {
      * Resets the field orientation of the swerve subsystem.
      * This method sets the field orientation to the default value (zero rotation).
      */
-    public void resetFieldOrientation(){
+    public void resetFieldOrientation() {
         Rotation2d redOrBlueZero = new Rotation2d();
         resetPose(new Pose2d(getPose().getTranslation(), redOrBlueZero));
     }
@@ -465,32 +476,24 @@ public class Swerve extends SubsystemBase {
      *
      * @param pose The new pose to set for the swerve subsystem.
      */
-    public void resetPose(Pose2d pose){
+    public void resetPose(Pose2d pose) {
         swerveOdometry.resetPosition(getHeading(), getModulePositions(), pose);
         poseEstimator.resetPosition(getHeading(), getModulePositions(), pose);
     }
 
-    /**
-     * Resets the pose of the Swerve subsystem to the pose obtained from vision.
-     */
-    private void resetPoseToVision(){
-        resetPose(visionPose3d.toPose2d());
-    }
-
     // Rotates by a passed amount of degrees
     /**
-     * Rotates the robot by the specified target angle in degrees using a PID controller.
+     * Rotates the robot by the specified target angle in degrees using a PID
+     * controller.
      * 
      * @param target The target angle in degrees to rotate the robot.
      */
     public void rotateDegrees(double target) {
         try (
-            PIDController rotController = new PIDController(
-                DriveConstants.TurnP,
-                DriveConstants.TurnI,
-                DriveConstants.TurnD
-            )
-        ) {
+                PIDController rotController = new PIDController(
+                        DriveConstants.TurnP,
+                        DriveConstants.TurnI,
+                        DriveConstants.TurnD)) {
             rotController.enableContinuousInput(DriveConstants.MinAngle, DriveConstants.MaxAngle);
 
             double rotate = rotController.calculate(getYaw(), getYaw() + target);

@@ -23,13 +23,21 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Swerve;
 
+/**
+ * Represents a command for controlling the turret in teleop mode using
+ * PhotonVision.
+ * This command takes input from DoubleSuppliers for translation and strafe
+ * values,
+ * and controls the turret using a Swerve subsystem and PhotonVision object.
+ */
 public class TeleopPhotonTurret extends Command {
   /** Creates a new AimToSpeaker. */
   private Swerve swerve;
   private PhotonVision photonVision;
   private boolean isBlue;
   private boolean isDone = false;
-  private PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI, VisionConstants.visionD);
+  private PIDController rotController = new PIDController(VisionConstants.visionP, VisionConstants.visionI,
+      VisionConstants.visionD);
 
   DoubleSupplier translationSup;
   DoubleSupplier strafeSup;
@@ -38,14 +46,20 @@ public class TeleopPhotonTurret extends Command {
   private SlewRateLimiter m_xAxisLimiter;
   private SlewRateLimiter m_yAxisLimiter;
 
-
-  public TeleopPhotonTurret(DoubleSupplier translationSup, DoubleSupplier strafeSup, Swerve swerve, PhotonVision photonVision) {
+  /**
+   * Represents a command for controlling the turret in teleop mode using
+   * PhotonVision.
+   * This command takes input from DoubleSuppliers for translation and strafe
+   * values,
+   * and controls the turret using a Swerve subsystem and PhotonVision object.
+   */
+  public TeleopPhotonTurret(DoubleSupplier translationSup, DoubleSupplier strafeSup, Swerve swerve,
+      PhotonVision photonVision) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     this.photonVision = photonVision;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
-    this.rotationSup = rotationSup;
     addRequirements(swerve);
 
     m_xAxisLimiter = new SlewRateLimiter(OperatorConstants.MagnitudeSlewRate);
@@ -53,15 +67,30 @@ public class TeleopPhotonTurret extends Command {
   }
 
   // Called when the command is initially scheduled.
+  /**
+   * Initializes the TeleopPhotonTurret command.
+   * Sets the 'isBlue' flag based on the alliance color.
+   * Sets the 'isDone' flag to false.
+   */
   @Override
   public void initialize() {
-    if (DriverStation.getAlliance().get() == Alliance.Blue){
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
       isBlue = true;
-    } else isBlue = false;
+    } else
+      isBlue = false;
     isDone = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+  /**
+   * Executes the teleop photon turret command.
+   * This method calculates the joystick inputs, filters them, and calculates the
+   * rotation error.
+   * It then uses the filtered inputs and rotation error to drive the swerve drive
+   * system.
+   * The yaw error, target pose rotation, and bot pose rotation are displayed on
+   * the SmartDashboard.
+   */
   @Override
   public void execute() {
 
@@ -75,34 +104,41 @@ public class TeleopPhotonTurret extends Command {
     double yAxisFiltered = m_yAxisLimiter.calculate(yAxisSquared);
 
     Pose2d targetPose;
-    if (isBlue){
+    if (isBlue) {
       targetPose = photonVision.getTagPose(7).get().toPose2d();
     } else {
       targetPose = photonVision.getTagPose(4).get().toPose2d();
     }
 
     double yawError = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getDegrees();
-    
-    //double rotate = rotController.calculate(swerve.getPose().getRotation().getDegrees(), targetPose.getRotation().getDegrees());
+
+    // double rotate =
+    // rotController.calculate(swerve.getPose().getRotation().getDegrees(),
+    // targetPose.getRotation().getDegrees());
     double rotate = rotController.calculate(
-      swerve.getYaw(),
-      swerve.getYaw() + yawError
-    );
+        swerve.getYaw(),
+        swerve.getYaw() + yawError);
     System.out.println(rotate);
     swerve.drive(
-            new Translation2d(-xAxisFiltered, -yAxisFiltered).times(DriveConstants.MaxSpeed), 
-            rotate, true, true, false, false);
+        new Translation2d(-xAxisFiltered, -yAxisFiltered).times(DriveConstants.MaxSpeed),
+        rotate, true, true, false, false);
 
     SmartDashboard.putNumber("Yaw Error", yawError);
-    SmartDashboard.putNumber("TargetPoseRotation",  targetPose.getRotation().getDegrees());
+    SmartDashboard.putNumber("TargetPoseRotation", targetPose.getRotation().getDegrees());
     SmartDashboard.putNumber("BotPoseRotation", swerve.getPose().getRotation().getDegrees());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
+  /**
+   * Checks if the command is finished.
+   * 
+   * @return true if the command is finished, false otherwise
+   */
   @Override
   public boolean isFinished() {
     return isDone;
