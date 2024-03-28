@@ -137,7 +137,9 @@ public class RobotContainer {
     configureBindings();
   }
 
-  /** Registers autonomous commands. */
+/**
+ * Registers autonomous commands.
+ */
   private void registerAutonCommands() {
     NamedCommands.registerCommand(
         "Intake", new TeleopIntakeFeed(intake, feeder, IntakeConstants.doIntake, getWrist()));

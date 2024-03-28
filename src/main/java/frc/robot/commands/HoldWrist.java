@@ -17,6 +17,10 @@ public class HoldWrist extends Command {
 
   Wrist wrist;
 
+  /**
+   * A command that holds the wrist in its current position.
+   * This command requires the Wrist subsystem.
+   */
   public HoldWrist(Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.wrist = wrist;

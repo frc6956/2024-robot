@@ -27,8 +27,25 @@ public class Wrist extends SubsystemBase {
   double target = WristConstants.STOW;
 
   /**
-   * The Wrist class represents the wrist subsystem of the robot. It controls the angle of the wrist
-   * using PID controllers and manages the motors and encoders associated with the wrist.
+   * The Wrist() constructor initiates the wrist subsystem of the robot.
+   * This method is responsible for the control of the wrist angle and the management of the motors and encoders associated with the wrist.
+   *
+   * Key Components:
+   * DutyCycleEncoder: It reads PWM signals and outputs the duty cycle as a percentage. Here, it's being used as an encoder for the wrist angle.
+   *
+   * CANSparkMax: These are types of motor controllers with built-in encoders. There are two of these, leftMotor and rightMotor, controlling the two motors on the wrist respectively.
+   *
+   * PIDController: These are used to control the wrist angles. Two PID controllers, angleControllerHigh and angleController, are defined here.
+   *
+   * Functionality includes:
+   * - Initializes angleEncoder using the PWM port defined in WristConstants.
+   * - Configures two motors with the defined motor type - brushless.
+   * - Restores motors to factory default settings.
+   * - Enables voltage compensation on the motors.
+   * - Initializes two PID controllers with their respective coefficients.
+   * - Sets the tolerance for the PID controllers.
+   * - Configures the motors' idle modes to brake.
+   * - Sets the inversion state of motors, this decides the direction of rotations when a positive input is given.
    */
   public Wrist() {
     angleEncoder = new DutyCycleEncoder(WristConstants.wristPort);
@@ -55,9 +72,10 @@ public class Wrist extends SubsystemBase {
   }
 
   /**
-   * Sets the output value for the wrist motors.
+   * Sets the output for the leftMotor and rightMotor on the wrist subsystem.
+   * This method applies a given output value to both motors.
    *
-   * @param output the desired output value for the wrist motors
+   * @param output the desired output power ratio for the wrist motors in range from -1.0 (full reverse) to 1.0 (full forwards)
    */
   public void setOutput(double output) {
     leftMotor.set(output);
