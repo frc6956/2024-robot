@@ -15,6 +15,7 @@ import frc.robot.subsystems.Wrist;
 public class AutoIntake extends Command {
   /** Creates a new AutoIntake. */
   Intake intake;
+
   Feeder feeder;
   Wrist wrist;
 
@@ -22,8 +23,8 @@ public class AutoIntake extends Command {
   boolean gotNote = false;
 
   /**
-   * A command that controls the intake subsystem, feeder subsystem, and wrist
-   * subsystem during autonomous mode.
+   * A command that controls the intake subsystem, feeder subsystem, and wrist subsystem during
+   * autonomous mode.
    */
   public AutoIntake(Intake intake, Feeder feeder, Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,10 +35,7 @@ public class AutoIntake extends Command {
   }
 
   // Called when the command is initially scheduled.
-  /**
-   * Initializes the AutoIntake command.
-   * Sets the noteSecured and gotNote variables to false.
-   */
+  /** Initializes the AutoIntake command. Sets the noteSecured and gotNote variables to false. */
   @Override
   public void initialize() {
     noteSecured = false;
@@ -46,12 +44,10 @@ public class AutoIntake extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   /**
-   * Executes the AutoIntake command.
-   * This method controls the intake, wrist, and feeder subsystems based on the
-   * current state and conditions.
-   * It checks if the intake has a note, the wrist angle, and the status of the
-   * note being secured.
-   * The intake speed, feeder speed, and wrist position are adjusted accordingly.
+   * Executes the AutoIntake command. This method controls the intake, wrist, and feeder subsystems
+   * based on the current state and conditions. It checks if the intake has a note, the wrist angle,
+   * and the status of the note being secured. The intake speed, feeder speed, and wrist position
+   * are adjusted accordingly.
    */
   @Override
   public void execute() {
@@ -89,13 +85,11 @@ public class AutoIntake extends Command {
       wrist.holdWrist(WristConstants.STOW);
       feeder.stop();
     }
-
   }
 
   // Called once the command ends or is interrupted.
   /**
-   * This method is called when the command ends.
-   * It stops the wrist, intake, and feeder subsystems.
+   * This method is called when the command ends. It stops the wrist, intake, and feeder subsystems.
    *
    * @param interrupted true if the command was interrupted, false otherwise
    */
@@ -109,7 +103,7 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   /**
    * Determines if the AutoIntake command is finished.
-   * 
+   *
    * @return true if the command is finished, false otherwise
    */
   @Override

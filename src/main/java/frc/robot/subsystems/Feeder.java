@@ -1,9 +1,8 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,9 +16,8 @@ public class Feeder extends SubsystemBase {
   DigitalInput feedBreak;
 
   /**
-   * The Feeder class represents the subsystem responsible for controlling the
-   * feeder mechanism of the robot.
-   * It initializes and configures the motors and sensors used by the feeder.
+   * The Feeder class represents the subsystem responsible for controlling the feeder mechanism of
+   * the robot. It initializes and configures the motors and sensors used by the feeder.
    */
   public Feeder() {
     feedBreak = new DigitalInput(FeederConstants.feedBrakeID);
@@ -38,12 +36,11 @@ public class Feeder extends SubsystemBase {
 
     topFeeder.setSmartCurrentLimit(40);
     bottomFeeder.setSmartCurrentLimit(40);
-
   }
 
   /**
    * Sets the speed of the feeder motors.
-   * 
+   *
    * @param speed the speed at which the feeder motors should run
    */
   public void setSpeed(double speed) {
@@ -51,9 +48,7 @@ public class Feeder extends SubsystemBase {
     bottomFeeder.set(speed);
   }
 
-  /**
-   * Stops the feeder motors.
-   */
+  /** Stops the feeder motors. */
   public void stop() {
     topFeeder.set(0);
     bottomFeeder.set(0);
@@ -62,8 +57,8 @@ public class Feeder extends SubsystemBase {
   }
 
   /**
-   * This method is called periodically by the scheduler.
-   * It updates the SmartDashboard with the status of the holding note.
+   * This method is called periodically by the scheduler. It updates the SmartDashboard with the
+   * status of the holding note.
    */
   @Override
   public void periodic() {
@@ -73,11 +68,10 @@ public class Feeder extends SubsystemBase {
 
   /**
    * Checks if the feeder is currently holding a note.
-   * 
+   *
    * @return true if the feeder is holding a note, false otherwise
    */
   public boolean holdingNote() {
     return feedBreak.get();
   }
-
 }

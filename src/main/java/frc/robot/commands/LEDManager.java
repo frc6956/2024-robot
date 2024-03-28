@@ -6,12 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LEDs.LEDConstants;
 import frc.robot.subsystems.LEDs.LEDs;
 
 public class LEDManager extends Command {
   /** Creates a new LEDManager. */
   int count = 0;
+
   private LEDs leds;
   private boolean hasNote = false;
 
@@ -38,6 +38,7 @@ public class LEDManager extends Command {
      * leds.update();
      */
   }
+
   /*
    * public void controlLEDs(){
    * switch (getState()) {
@@ -94,8 +95,7 @@ public class LEDManager extends Command {
         return "AUTONBLUE";
       } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
         return "AUTONRED";
-      } else
-        return "SETGREEN";
+      } else return "SETGREEN";
     } else {
       return "TELEOP";
     }

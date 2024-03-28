@@ -15,6 +15,7 @@ import frc.robot.subsystems.Wrist;
 public class TeleopIntakeFeed extends Command {
   /** Creates a new TeleopIntake. */
   String status;
+
   Intake intake;
   Feeder feeder;
   boolean hasNote;
@@ -22,14 +23,13 @@ public class TeleopIntakeFeed extends Command {
   int count = 0;
 
   /**
-   * Represents a command for teleoperated intake feeding.
-   * This command is responsible for controlling the intake, feeder, and wrist
-   * subsystems.
-   * 
+   * Represents a command for teleoperated intake feeding. This command is responsible for
+   * controlling the intake, feeder, and wrist subsystems.
+   *
    * @param intake The intake subsystem.
    * @param feeder The feeder subsystem.
    * @param status The status of the command.
-   * @param wrist  The wrist subsystem.
+   * @param wrist The wrist subsystem.
    */
   public TeleopIntakeFeed(Intake intake, Feeder feeder, String status, Wrist wrist) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,16 +43,13 @@ public class TeleopIntakeFeed extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   /**
-   * Executes the teleop intake feed command based on the current status.
-   * The status determines the behavior of the intake and feeder subsystems.
-   * 
-   * Possible status values:
-   * - "INTAKE": Intakes power cells into the robot.
-   * - "EXTAKE": Extakes power cells out of the robot.
-   * - "SHOOT": Shoots power cells from the robot.
-   * - "AMP": Activates the intake and feeder at amp speed.
-   * - "STOP": Stops the intake and feeder.
-   * - "MANUAL": Sets the intake and feeder to manual control mode.
+   * Executes the teleop intake feed command based on the current status. The status determines the
+   * behavior of the intake and feeder subsystems.
+   *
+   * <p>Possible status values: - "INTAKE": Intakes power cells into the robot. - "EXTAKE": Extakes
+   * power cells out of the robot. - "SHOOT": Shoots power cells from the robot. - "AMP": Activates
+   * the intake and feeder at amp speed. - "STOP": Stops the intake and feeder. - "MANUAL": Sets the
+   * intake and feeder to manual control mode.
    */
   @Override
   public void execute() {
@@ -62,8 +59,7 @@ public class TeleopIntakeFeed extends Command {
           intake.setSpeed(IntakeConstants.intakeSpeed);
         } else if (!intake.hasNote()) {
           intake.setSpeed(IntakeConstants.intakeSpeed);
-        } else
-          intake.stop();
+        } else intake.stop();
 
         if (feeder.holdingNote()) {
           feeder.stop();
@@ -103,8 +99,7 @@ public class TeleopIntakeFeed extends Command {
 
   // Called once the command ends or is interrupted.
   /**
-   * This method is called when the command ends.
-   * It stops the intake and feeder subsystems.
+   * This method is called when the command ends. It stops the intake and feeder subsystems.
    *
    * @param interrupted true if the command was interrupted, false otherwise
    */

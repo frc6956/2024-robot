@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Strip extends SubsystemBase {
   /** Creates a new Strip. */
   private int length;
+
   private final int start;
   private final int end;
 
@@ -18,7 +19,7 @@ public class Strip extends SubsystemBase {
   /**
    * Constructs a new Strip object with the specified start index and length.
    *
-   * @param start  The starting index of the LED strip.
+   * @param start The starting index of the LED strip.
    * @param length The length of the LED strip.
    */
   public Strip(int start, int length) {
@@ -78,7 +79,7 @@ public class Strip extends SubsystemBase {
    * Sets the color of all LEDs in the strip to the specified color.
    *
    * @param m_ledBuffer The addressable LED buffer.
-   * @param color       The color to set (an array of RGB values).
+   * @param color The color to set (an array of RGB values).
    * @return The updated addressable LED buffer.
    */
   public AddressableLEDBuffer setAllColor(AddressableLEDBuffer m_ledBuffer, int[] color) {

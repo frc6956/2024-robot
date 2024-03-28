@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shape extends SubsystemBase {
   /**
    * Creates a new Shape.
-   * 
+   *
    * @param initShape the initial shape as a 3D integer array
    */
   private int[][][] image;
@@ -28,9 +28,9 @@ public class Shape extends SubsystemBase {
   }
 
   /**
-   * Reverses the 15th row of the given shape, rotates the image 90 degrees, and
-   * returns the modified shape.
-   * 
+   * Reverses the 15th row of the given shape, rotates the image 90 degrees, and returns the
+   * modified shape.
+   *
    * @param shape the 3D array representing the shape
    * @return the modified shape with the reversed 15th row and rotated image
    */
@@ -52,7 +52,7 @@ public class Shape extends SubsystemBase {
 
   /**
    * Rotates a given shape by 90 degrees clockwise.
-   * 
+   *
    * @param shape The shape to be rotated.
    * @return The rotated shape.
    */
@@ -72,5 +72,4 @@ public class Shape extends SubsystemBase {
     // return the rotated shape
     return rotatedShape;
   }
-
 }

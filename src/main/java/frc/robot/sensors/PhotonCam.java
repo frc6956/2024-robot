@@ -1,13 +1,5 @@
 package frc.robot.sensors;
 
-import java.util.Optional;
-
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -19,6 +11,13 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Swerve;
+import java.util.Optional;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class PhotonCam extends SubsystemBase {
   private PhotonCamera cam;
@@ -31,29 +30,25 @@ public class PhotonCam extends SubsystemBase {
   private double lastEstTimestamp = 0;
   private Transform3d robotToCam;
 
-  /**
-   * Represents a Photon Camera used for vision processing on the robot.
-   */
-  public PhotonCam(String camName, Transform3d RobotToCam, Swerve swerve, AprilTagFieldLayout fieldLayout) {
+  /** Represents a Photon Camera used for vision processing on the robot. */
+  public PhotonCam(
+      String camName, Transform3d RobotToCam, Swerve swerve, AprilTagFieldLayout fieldLayout) {
     this.fieldLayout = fieldLayout;
     cam = new PhotonCamera(camName);
     this.swerve = swerve;
     hasTargets = false;
     this.robotToCam = RobotToCam;
 
-    photonEstimator = new PhotonPoseEstimator(
-        fieldLayout,
-        PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        cam,
-        robotToCam);
+    photonEstimator =
+        new PhotonPoseEstimator(
+            fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
     photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
 
   /**
-   * Updates the PhotonCam sensor data and performs vision processing.
-   * This method retrieves the latest result from the camera, estimates the
-   * robot's field-relative pose,
-   * and filters and adds the vision pose to the estimation.
+   * Updates the PhotonCam sensor data and performs vision processing. This method retrieves the
+   * latest result from the camera, estimates the robot's field-relative pose, and filters and adds
+   * the vision pose to the estimation.
    */
   public void update() {
     result = cam.getLatestResult();
@@ -63,10 +58,11 @@ public class PhotonCam extends SubsystemBase {
         est -> {
           // Calculate robot's field relative pose
           var tar = result.getBestTarget();
-          Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-              tar.getBestCameraToTarget(),
-              fieldLayout.getTagPose(tar.getFiducialId()).get(),
-              robotToCam);
+          Pose3d robotPose =
+              PhotonUtils.estimateFieldToRobotAprilTag(
+                  tar.getBestCameraToTarget(),
+                  fieldLayout.getTagPose(tar.getFiducialId()).get(),
+                  robotToCam);
 
           var estPose = est.estimatedPose.toPose2d();
           SmartDashboard.putString("Vision Estimated Pose", estPose.toString());
@@ -77,12 +73,10 @@ public class PhotonCam extends SubsystemBase {
   }
 
   /**
-   * Returns an optional estimated global pose of the robot based on vision
-   * estimation.
+   * Returns an optional estimated global pose of the robot based on vision estimation.
    *
-   * @return An optional EstimatedRobotPose object representing the estimated
-   *         global pose of the robot,
-   *         or an empty optional if no estimation is available.
+   * @return An optional EstimatedRobotPose object representing the estimated global pose of the
+   *     robot, or an empty optional if no estimation is available.
    */
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     var visionEstimation = photonEstimator.update(cam.getLatestResult());
@@ -96,7 +90,7 @@ public class PhotonCam extends SubsystemBase {
 
   /**
    * Calculates the estimated standard deviations for the given estimated pose.
-   * 
+   *
    * @param estimatedPose The estimated pose of the robot.
    * @return The estimated standard deviations as a matrix.
    */
@@ -111,7 +105,8 @@ public class PhotonCam extends SubsystemBase {
         continue;
       }
       numTags++;
-      avgDistance += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
+      avgDistance +=
+          tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
     }
 
     if (numTags == 0) {
@@ -124,15 +119,14 @@ public class PhotonCam extends SubsystemBase {
     }
     if (numTags == 1 && avgDistance > 4) {
       estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-    } else
-      estStdDevs = estStdDevs.times(1 + (avgDistance * avgDistance / 30));
+    } else estStdDevs = estStdDevs.times(1 + (avgDistance * avgDistance / 30));
 
     return estStdDevs;
   }
 
   /**
    * Filters and adds a vision pose to the robot's swerve drive system.
-   * 
+   *
    * @param pose The estimated robot pose.
    */
   public void filterAndAddVisionPose(EstimatedRobotPose pose) {
@@ -177,7 +171,7 @@ public class PhotonCam extends SubsystemBase {
 
   /**
    * Checks if the PhotonCam has detected any targets.
-   * 
+   *
    * @return true if targets are detected, false otherwise
    */
   public boolean hasTarget() {
@@ -192,5 +186,4 @@ public class PhotonCam extends SubsystemBase {
   public int getTagID() {
     return tagID;
   }
-
 }

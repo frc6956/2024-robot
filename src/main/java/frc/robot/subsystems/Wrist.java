@@ -4,10 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +16,6 @@ import frc.robot.Constants.WristConstants;
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Intake. */
-
   DutyCycleEncoder angleEncoder;
 
   CANSparkMax leftMotor;
@@ -29,9 +27,8 @@ public class Wrist extends SubsystemBase {
   double target = WristConstants.STOW;
 
   /**
-   * The Wrist class represents the wrist subsystem of the robot.
-   * It controls the angle of the wrist using PID controllers and
-   * manages the motors and encoders associated with the wrist.
+   * The Wrist class represents the wrist subsystem of the robot. It controls the angle of the wrist
+   * using PID controllers and manages the motors and encoders associated with the wrist.
    */
   public Wrist() {
     angleEncoder = new DutyCycleEncoder(WristConstants.wristPort);
@@ -45,7 +42,8 @@ public class Wrist extends SubsystemBase {
     rightMotor.enableVoltageCompensation(Constants.voltageComp);
 
     angleControllerHigh = new PIDController(0.0085, 0, 0);
-    angleController = new PIDController(WristConstants.wristP, WristConstants.wristI, WristConstants.wristD);
+    angleController =
+        new PIDController(WristConstants.wristP, WristConstants.wristI, WristConstants.wristD);
 
     angleController.setTolerance(3);
 
@@ -54,12 +52,11 @@ public class Wrist extends SubsystemBase {
 
     rightMotor.setInverted(WristConstants.rightInvert);
     leftMotor.setInverted(WristConstants.leftInvert);
-
   }
 
   /**
    * Sets the output value for the wrist motors.
-   * 
+   *
    * @param output the desired output value for the wrist motors
    */
   public void setOutput(double output) {
@@ -67,22 +64,18 @@ public class Wrist extends SubsystemBase {
     rightMotor.set(output);
   }
 
-  /**
-   * Stops the wrist movement by setting the left and right motors to 0.
-   */
+  /** Stops the wrist movement by setting the left and right motors to 0. */
   public void stop() {
     leftMotor.set(0);
     rightMotor.set(0);
   }
 
   /**
-   * Sets the speed of the wrist motors.
-   * If the speed is positive and the wrist angle is greater than the stow angle,
-   * the wrist motors will stop.
-   * If the speed is negative and the wrist angle is less than the pickup angle,
-   * the wrist motors will stop.
-   * Otherwise, the wrist motors will be set to the specified speed.
-   * 
+   * Sets the speed of the wrist motors. If the speed is positive and the wrist angle is greater
+   * than the stow angle, the wrist motors will stop. If the speed is negative and the wrist angle
+   * is less than the pickup angle, the wrist motors will stop. Otherwise, the wrist motors will be
+   * set to the specified speed.
+   *
    * @param speed the speed to set the wrist motors to
    */
   public void setSpeed(double speed) {
@@ -98,7 +91,7 @@ public class Wrist extends SubsystemBase {
 
   /**
    * Returns the current angle of the wrist in degrees.
-   * 
+   *
    * @return The angle of the wrist in degrees.
    */
   public double getDegrees() {
@@ -113,17 +106,13 @@ public class Wrist extends SubsystemBase {
   }
 
   /**
-   * Holds the wrist at the specified setpoint.
-   * If the setpoint is greater than the stow position, it will be set to the stow
-   * position.
-   * The output is calculated based on the current wrist angle and the setpoint.
-   * If the wrist angle is greater than 120 degrees, a high angle controller is
-   * used.
-   * Otherwise, a regular angle controller is used.
-   * The output is limited to the maximum rotate up speed and the maximum rotate
-   * speed.
-   * The output is then applied to both the left and right wrist motors.
-   * 
+   * Holds the wrist at the specified setpoint. If the setpoint is greater than the stow position,
+   * it will be set to the stow position. The output is calculated based on the current wrist angle
+   * and the setpoint. If the wrist angle is greater than 120 degrees, a high angle controller is
+   * used. Otherwise, a regular angle controller is used. The output is limited to the maximum
+   * rotate up speed and the maximum rotate speed. The output is then applied to both the left and
+   * right wrist motors.
+   *
    * @param setpoint The desired angle setpoint for the wrist.
    */
   public void holdWrist(double setpoint) {
@@ -167,7 +156,7 @@ public class Wrist extends SubsystemBase {
 
   /**
    * Sets the target rotation for the wrist.
-   * 
+   *
    * @param rotation the target rotation in degrees
    */
   public void setTarget(double rotation) {
@@ -176,7 +165,7 @@ public class Wrist extends SubsystemBase {
 
   /**
    * Checks if the wrist is on target.
-   * 
+   *
    * @return true if the wrist is on target, false otherwise
    */
   public boolean onTarget() {
@@ -184,13 +173,12 @@ public class Wrist extends SubsystemBase {
   }
 
   /**
-   * This method is called periodically by the scheduler.
-   * It updates the value of the "Wrist Encoder" on the SmartDashboard.
+   * This method is called periodically by the scheduler. It updates the value of the "Wrist
+   * Encoder" on the SmartDashboard.
    */
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Wrist Encoder", getDegrees());
-
   }
 }

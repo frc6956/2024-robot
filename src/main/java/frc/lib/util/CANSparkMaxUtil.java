@@ -1,11 +1,12 @@
 package frc.lib.util;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 
 /** Sets motor usage for a Spark Max motor controller */
 /**
- * The CANSparkMaxUtil class provides utility methods for adjusting the CAN bus usage of CANSparkMax motors.
+ * The CANSparkMaxUtil class provides utility methods for adjusting the CAN bus usage of CANSparkMax
+ * motors.
  */
 public class CANSparkMaxUtil {
   public enum Usage {
@@ -69,7 +70,7 @@ public class CANSparkMaxUtil {
    */
   /**
    * Sets the CANSparkMax bus usage for a given motor.
-   * 
+   *
    * @param motor The CANSparkMax motor to set the bus usage for.
    * @param usage The desired bus usage for the motor.
    */
