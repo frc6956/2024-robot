@@ -30,6 +30,10 @@ import frc.lib.geometry.Translation2dPlus;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ModuleConstants.*;
 
+/**
+ * The Swerve subsystem controls the swerve drive system of the robot.
+ * It handles the odometry, pose estimation, module control, and field-centric driving.
+ */
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] mSwerveMods;
@@ -38,13 +42,31 @@ public class Swerve extends SubsystemBase {
     public Pose3d visionPose3d;
 
 
+    /**
+     * The positions of the swerve drive wheels on the robot.
+     */
     private static final Translation2d[] WHEEL_POSITIONS =
         Arrays.copyOf(DriveConstants.moduleTranslations, DriveConstants.moduleTranslations.length);
 
+    /**
+     * Represents a network table used for communication between the robot and the driver station.
+     */
     NetworkTable SwerveTable;
 
+    /**
+     * The pose estimator for the Swerve drive subsystem.
+     */
     public SwerveDrivePoseEstimator poseEstimator;
+    /**
+     * The offset value for the gyro sensor.
+     */
     private double gyroOffset;
+
+    /**
+     * Represents a swerve drive subsystem.
+     * This class initializes and configures the swerve modules, gyro, odometry, pose estimator, and path follower.
+     * It provides methods for controlling the swerve drive system and accessing its state.
+     */
 
     public Swerve() {
         gyro = new Pigeon2(DriveConstants.GyroID);
@@ -157,6 +179,11 @@ public class Swerve extends SubsystemBase {
        //SwerveTable = NetworkTableInstance.getDefault().getTable(VisionConstants.camName);
     } // end of Swerve Contructor
 
+    /**
+     * This method is called periodically to update the state of the Swerve subsystem.
+     * It updates the swerve odometry, pose estimator, robot pose on the field, and
+     * displays relevant data on the SmartDashboard.
+     */
     @Override
     public void periodic() {
 
@@ -182,10 +209,25 @@ public class Swerve extends SubsystemBase {
     }
 
 
+    /**
+     * Returns the Field2d object associated with this Swerve subsystem.
+     * 
+     * @return the Field2d object
+     */
     public Field2d getField2d() {
         return m_field;
     }
 
+    /**
+     * Drives the swerve robot based on the given translation and rotation values.
+     * 
+     * @param translation     The translation vector representing the robot's desired movement in the field coordinate system.
+     * @param rotation        The robot's desired rotation in radians per second.
+     * @param fieldRelative   Specifies whether the translation and rotation values are relative to the field coordinate system.
+     * @param isOpenLoop      Specifies whether the robot should be driven in open loop control mode.
+     * @param isEvading       Specifies whether the robot is currently evading an obstacle.
+     * @param isLocked        Specifies whether the swerve modules should be locked in place.
+     */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean isEvading, boolean isLocked) {
         if(isLocked) {
 
@@ -239,37 +281,79 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Adds a vision measurement to the pose estimator.
+     * 
+     * @param pose The pose measurement from vision.
+     * @param timestamp The timestamp of the measurement.
+     * @param cov The covariance matrix of the measurement.
+     */
     public void addVisionMeasurement(Pose3d pose, double timestamp, Matrix<N3, N1> cov){
         visionPose3d = pose;
         poseEstimator.addVisionMeasurement(pose.toPose2d(), timestamp, cov);
     }
 
+    /**
+     * Returns the yaw angle of the robot.
+     * 
+     * @return The yaw angle in degrees.
+     */
     public double getYaw() {
         return (DriveConstants.GyroInvert) ?
             180 - (gyro.getYaw().getValueAsDouble() - gyroOffset) :
             gyro.getYaw().getValueAsDouble() - gyroOffset;
     }
 
+    /**
+     * Returns the heading of the robot as a Rotation2d object.
+     *
+     * @return the heading of the robot
+     */
     public Rotation2d getHeading() {
         return Rotation2d.fromDegrees(getYaw());
     }
 
+    /**
+     * Returns the pitch angle of the robot.
+     *
+     * @return the pitch angle of the robot
+     */
     public double getPitch() {
         return gyro.getPitch().getValueAsDouble();
     }
 
+    /**
+     * Returns the roll angle of the robot.
+     *
+     * @return the roll angle of the robot
+     */
     public double getRoll() {
         return gyro.getRoll().getValueAsDouble();
     }
 
+    /**
+     * Returns the current pose of the robot.
+     *
+     * @return the current pose of the robot
+     */
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
+    /**
+     * Returns the current pose of the swerve subsystem in the field coordinate system.
+     *
+     * @return the current pose of the swerve subsystem
+     */
     public Pose2d getOdomPose(){
         return swerveOdometry.getPoseMeters();
     }
 
+    /**
+     * Retrieves the current state of all swerve modules.
+     *
+     * @return an array of SwerveModuleState objects representing the state of each swerve module
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
@@ -278,6 +362,11 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Returns an array of the desired SwerveModuleState for each swerve module.
+     *
+     * @return an array of SwerveModuleState representing the desired state for each swerve module
+     */
     public SwerveModuleState[] getDesiredSwerveModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
@@ -286,6 +375,11 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Retrieves the positions of all swerve modules.
+     *
+     * @return An array of SwerveModulePosition objects representing the positions of each swerve module.
+     */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : mSwerveMods) {
@@ -294,6 +388,10 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
+    /**
+     * Represents a 2D translation in the Cartesian coordinate system.
+     * The Translation2d class is used to store and manipulate the x and y coordinates of a point in 2D space.
+     */
     private Translation2d getCenterOfRotation(final Rotation2d direction, final double rotation) {
         final var here = new Translation2dPlus(1.0, direction.minus(getHeading()));
 
@@ -320,10 +418,21 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Resets the gyro offset to the current yaw value.
+     */
     public void zeroGyro() {
         gyroOffset = gyro.getYaw().getValueAsDouble();
     }
 
+    /**
+     * Sets the desired states for each swerve module.
+     * The desired states are provided as an array of SwerveModuleState objects.
+     * The wheel speeds are desaturated to ensure they do not exceed the maximum speed defined in DriveConstants.
+     * Each swerve module's desired state is set using the corresponding element from the desiredStates array.
+     * 
+     * @param desiredStates An array of SwerveModuleState objects representing the desired states for each swerve module.
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MaxSpeed);
 
@@ -332,27 +441,48 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Resets all swerve modules to their absolute position.
+     */
     public void resetModulesToAbsolute() {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
     }
 
+    /**
+     * Resets the field orientation of the swerve subsystem.
+     * This method sets the field orientation to the default value (zero rotation).
+     */
     public void resetFieldOrientation(){
         Rotation2d redOrBlueZero = new Rotation2d();
         resetPose(new Pose2d(getPose().getTranslation(), redOrBlueZero));
     }
 
+    /**
+     * Resets the pose of the swerve subsystem to the specified pose.
+     * This method updates the swerve odometry and pose estimator with the new pose.
+     *
+     * @param pose The new pose to set for the swerve subsystem.
+     */
     public void resetPose(Pose2d pose){
         swerveOdometry.resetPosition(getHeading(), getModulePositions(), pose);
         poseEstimator.resetPosition(getHeading(), getModulePositions(), pose);
     }
 
+    /**
+     * Resets the pose of the Swerve subsystem to the pose obtained from vision.
+     */
     private void resetPoseToVision(){
         resetPose(visionPose3d.toPose2d());
     }
 
     // Rotates by a passed amount of degrees
+    /**
+     * Rotates the robot by the specified target angle in degrees using a PID controller.
+     * 
+     * @param target The target angle in degrees to rotate the robot.
+     */
     public void rotateDegrees(double target) {
         try (
             PIDController rotController = new PIDController(
