@@ -57,18 +57,20 @@ public class PhotonCam extends SubsystemBase {
     visionEst.ifPresent(
         est -> {
           // Calculate robot's field relative pose
-          var tar = result.getBestTarget();
-          Pose3d robotPose =
-              PhotonUtils.estimateFieldToRobotAprilTag(
-                  tar.getBestCameraToTarget(),
-                  fieldLayout.getTagPose(tar.getFiducialId()).get(),
-                  robotToCam);
+          if (result.getBestTarget() != null) {
+            var tar = result.getBestTarget();
+            Pose3d robotPose =
+                PhotonUtils.estimateFieldToRobotAprilTag(
+                    tar.getBestCameraToTarget(),
+                    fieldLayout.getTagPose(tar.getFiducialId()).get(),
+                    robotToCam);
 
-          var estPose = est.estimatedPose.toPose2d();
-          SmartDashboard.putString("Vision Estimated Pose", estPose.toString());
-          SmartDashboard.putString("Test Pose", robotPose.toPose2d().toString());
+            var estPose = est.estimatedPose.toPose2d();
+            SmartDashboard.putString("Vision Estimated Pose", estPose.toString());
+            SmartDashboard.putString("Test Pose", robotPose.toPose2d().toString());
 
-          filterAndAddVisionPose(est);
+            filterAndAddVisionPose(est);
+          }
         });
   }
 
