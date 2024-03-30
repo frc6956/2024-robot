@@ -27,7 +27,7 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    leds.togglePanel(leds.getRightPanel(), leds.getLeftPanel(), LEDConstants.shamrock.get());
+    leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
   }
 
   /*
