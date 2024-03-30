@@ -38,7 +38,7 @@ public class LEDManager extends Command {
       System.out.println("Index: " + color);
     }
 
-    if (color >= 50) {
+    if (color >= 49) {
       up = false;
     } else if (color <= 2) {
       up = true;
