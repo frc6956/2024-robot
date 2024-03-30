@@ -28,6 +28,11 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // defaultColors();
+
+  }
+
+  public void defaultColors() {
     count++;
     // leds.setAllColor(LEDConstants.green);
     if (count > 10) {
@@ -35,8 +40,6 @@ public class LEDManager extends Command {
       // leds.setAllColor(LEDConstants.colors[index]);
       leds.setAllColor(new int[] {0, (int) color, 0});
       count = 0;
-      System.out.println("Index: " + color);
-      System.out.println(up);
     }
 
     if (color > 20) {
