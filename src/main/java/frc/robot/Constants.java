@@ -109,7 +109,7 @@ public class Constants {
 
     public static final double TrackWidth = Units.inchesToMeters(20.75);
     public static final double WheelBase = Units.inchesToMeters(20.75);
-    public static final double WheelDiameter = Units.inchesToMeters(4);
+    public static final double WheelDiameter = Units.inchesToMeters(3.8);
     public static final double WheelCircumference = WheelDiameter * Math.PI;
 
     public static final double CenterToWheel =
