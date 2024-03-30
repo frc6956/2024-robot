@@ -273,7 +273,7 @@ public class Constants {
         new TrapezoidProfile.Constraints(MaxAngularSpeed, MaxAngularAcceleration);
 
     /* PID */
-    public static final double AutoTurnP = 0.04;
+    public static final double AutoTurnP = 0.1;
     public static final double AutoTurnI = 0.0;
     public static final double AutoTurnD = 0.0;
 
