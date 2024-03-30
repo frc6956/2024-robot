@@ -29,8 +29,14 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    int index = (int) (Math.random()) * 3;
-    leds.setAllColor(LEDConstants.colors[index]);
+    count++;
+    if (count > 40) {
+      int index = (int) (Math.random()) * 3;
+      leds.setAllColor(LEDConstants.colors[index]);
+      count = 0;
+      System.out.println("Index: " + index);
+    }
+    System.out.println("Count: " + count);
   }
 
   /*
