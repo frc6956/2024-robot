@@ -197,7 +197,7 @@ public class Constants {
 
     public static final double intakeSpeed = 0.2;
     public static final double feedSpeed = -0.6;
-    public static final double ampSpeed = -0.3;
+    public static final double ampSpeed = -0.25;
     public static final double extakeSpeed = -0.5;
     public static final double shootSpeed = -0.95;
 

@@ -60,6 +60,12 @@
           "data": {
             "name": "AutoShoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3.2.2"
+          }
         }
       ]
     }
