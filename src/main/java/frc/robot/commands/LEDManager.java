@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LEDs.LEDConstants;
 import frc.robot.subsystems.LEDs.LEDs;
 
 public class LEDManager extends Command {
@@ -26,8 +25,9 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leds.setAllColor(LEDConstants.green);
+    // leds.setAllColor(LEDConstants.green);
     // leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
+    leds.dimRainbow();
   }
 
   /*
