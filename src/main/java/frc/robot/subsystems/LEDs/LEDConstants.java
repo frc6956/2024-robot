@@ -16,9 +16,9 @@ public class LEDConstants {
 
   public static final int intakeGlow = 20;
 
-  public static final int[] green = {0, 50, 0};
-  public static final int[] blue = {0, 0, 50};
-  public static final int[] red = {50, 0, 0};
+  public static final int[] green = {0, 10, 0};
+  public static final int[] blue = {0, 0, 10};
+  public static final int[] red = {10, 0, 0};
 
   public static final int[] n = {0, 0, 0};
   public static final int[] G = green;
