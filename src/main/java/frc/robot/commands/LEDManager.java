@@ -32,7 +32,8 @@ public class LEDManager extends Command {
     count++;
     if (count > 80) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
-      leds.setAllColor(LEDConstants.colors[index]);
+      // leds.setAllColor(LEDConstants.colors[index]);
+      leds.setRainbow(leds.getAllLEDs());
       count = 0;
       System.out.println("Index: " + index);
     }
