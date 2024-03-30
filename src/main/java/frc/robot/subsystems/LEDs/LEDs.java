@@ -231,7 +231,7 @@ public class LEDs extends SubsystemBase {
         m_ledBuffer.setHSV(i, hue, 250, 140);
       }
 
-      m_rainbowFirstPixelHue += 0.015;
+      m_rainbowFirstPixelHue += 0.5;
 
       m_rainbowFirstPixelHue %= 180;
     }

@@ -28,11 +28,7 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    count++;
-    if (count > 30) {
-      leds.solidDimRainbow();
-      count = 0;
-    }
+    leds.solidDimRainbow();
   }
 
   /*
