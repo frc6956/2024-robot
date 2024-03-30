@@ -30,11 +30,11 @@ public class LEDManager extends Command {
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
     count++;
-    if (count > 20) {
+    if (count > 10) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
       // leds.setAllColor(LEDConstants.colors[index]);
       color++;
-      leds.setAllColor(new int[] {color, 0, 0});
+      leds.setAllColor(new int[] {0, color, 0});
       count = 0;
       System.out.println("Index: " + index);
     }
