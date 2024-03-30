@@ -17,6 +17,7 @@ public class LEDManager extends Command {
 
   private LEDs leds;
   private boolean hasNote = false;
+  private boolean up = true;
 
   public LEDManager(LEDs leds, boolean hasNote) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +30,6 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    count++;
     if (count > 5) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
       // leds.setAllColor(LEDConstants.colors[index]);
@@ -40,8 +40,14 @@ public class LEDManager extends Command {
     }
 
     if (color >= 50) {
-      color = 1;
+      up = false;
+    } else if (color <= 2) {
+      up = true;
     }
+
+    if (up) {
+      count++;
+    } else count--;
   }
 
   /*
