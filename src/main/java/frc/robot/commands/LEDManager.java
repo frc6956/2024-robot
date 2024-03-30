@@ -39,16 +39,16 @@ public class LEDManager extends Command {
       System.out.println(up);
     }
 
-    if (color > 49) {
+    if (color > 20) {
       up = false;
     } else if (color < 2) {
       up = true;
     }
 
     if (up) {
-      color += 0.3;
+      color += 0.1;
     } else if (!up) {
-      color -= 0.3;
+      color -= 0.1;
     }
   }
 
