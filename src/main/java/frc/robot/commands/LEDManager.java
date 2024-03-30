@@ -30,8 +30,8 @@ public class LEDManager extends Command {
     // leds.setAllColor(LEDConstants.green);
     // leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
     color++;
-    leds.setAllColor(new int[] {color, (int) color / 2, color * 2});
-    if (color > 20) {
+    leds.setAllColor(new int[] {color, (int) color / 4, color * 4});
+    if (color > 50) {
       color = 0;
     }
   }
