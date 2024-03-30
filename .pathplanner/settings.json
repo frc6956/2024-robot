@@ -1,13 +1,14 @@
 {
-  "robotWidth": 0.53,
-  "robotLength": 0.53,
+  "robotWidth": 0.82,
+  "robotLength": 0.82,
   "holonomicMode": true,
   "pathFolders": [
     "2",
     "AmpNoteScore",
-    "AmpToLine",
     "BackUpGetNotes",
     "Double",
+    "Nathans folder",
+    "3",
     "ShootBackUp"
   ],
   "autoFolders": [
@@ -15,7 +16,7 @@
     "3Note",
     "2Note"
   ],
-  "defaultMaxVel": 3.0,
+  "defaultMaxVel": 3.5,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

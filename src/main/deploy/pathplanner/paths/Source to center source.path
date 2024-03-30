@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.205731258309364,
-        "y": 6.550532534784503
+        "x": 0.5936243933556576,
+        "y": 4.532868505940574
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.242315279411105,
-        "y": 6.621971013811542
+        "x": 1.593624393355657,
+        "y": 4.532868505940574
       },
       "isLocked": false,
-      "linkedName": "2.3"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.446817325425873,
-        "y": 6.9141167938326396
+        "x": 3.7373880345725077,
+        "y": 2.799098524405701
       },
       "prevControl": {
-        "x": 2.3517289499209366,
-        "y": 6.96694366911316
+        "x": 2.1661882503434695,
+        "y": 3.5736336293073374
       },
       "nextControl": {
-        "x": 2.5419057009308097,
-        "y": 6.861289918552119
+        "x": 4.478940255590436,
+        "y": 2.4335446126363007
       },
       "isLocked": false,
-      "linkedName": "2.3.5"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.011632500133328,
-        "y": 7.0894042618452975
+        "x": 7.8315918463897995,
+        "y": 0.7415522210179295
       },
       "prevControl": {
-        "x": 3.068914022498553,
-        "y": 7.077593950766568
+        "x": 6.8315918463897995,
+        "y": 0.7415522210179295
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -143.42696902148066,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "2",
+  "folder": "Nathans folder",
   "previewStartingState": {
-    "rotation": 179.43821508156117,
+    "rotation": 119.57783868126138,
     "velocity": 0
   },
   "useDefaultConstraints": true

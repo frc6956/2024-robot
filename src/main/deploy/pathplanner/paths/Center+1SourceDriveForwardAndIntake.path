@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2392814346720042,
-        "y": 5.55076982040085
+        "x": 7.77936985899417,
+        "y": 2.464877805073676
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3074487833435935,
-        "y": 5.5410316277334815
+        "x": 8.779369858994176,
+        "y": 2.464877805073676
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.544199252099572,
-        "y": 5.55076982040085
+        "x": 8.844698401864997,
+        "y": 2.464877805073676
       },
       "prevControl": {
-        "x": 2.627032945643591,
-        "y": 5.549496503500717
+        "x": 8.05092419345144,
+        "y": 2.5066553949901804
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -175.45146717198736,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ShootBackUp",
+  "folder": "Nathans folder",
   "previewStartingState": {
-    "rotation": 178.8426669318704,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
