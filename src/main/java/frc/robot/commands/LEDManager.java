@@ -36,10 +36,10 @@ public class LEDManager extends Command {
       color++;
       leds.setAllColor(new int[] {0, color, 0});
       count = 0;
-      System.out.println("Index: " + index);
+      System.out.println("Index: " + color);
     }
 
-    if (color > 240) {
+    if (color > 100) {
       color = 1;
     }
   }
