@@ -142,7 +142,7 @@ public class Swerve extends SubsystemBase {
         speeds -> {
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
           speeds.omegaRadiansPerSecond = -speeds.omegaRadiansPerSecond;
-          speeds.SwerveModuleState[] swerveModuleStates =
+          SwerveModuleState[] swerveModuleStates =
               DriveConstants.swerveKinematics.toSwerveModuleStates(speeds);
           setModuleStates(swerveModuleStates);
         },
