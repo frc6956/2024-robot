@@ -28,27 +28,27 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    color++;
     // leds.setAllColor(LEDConstants.green);
     if (count > 5) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
       // leds.setAllColor(LEDConstants.colors[index]);
-      color++;
       leds.setAllColor(new int[] {0, color, 0});
       count = 0;
       System.out.println("Index: " + color);
       System.out.println(up);
     }
 
-    if (color >= 49) {
+    if (color > 49) {
       up = false;
-    } else if (color <= 2) {
+    } else if (color < 2) {
       up = true;
     }
 
     if (up) {
-      count += 1;
+      color += 1;
     } else if (!up) {
-      count -= 1;
+      color -= 1;
     }
   }
 
