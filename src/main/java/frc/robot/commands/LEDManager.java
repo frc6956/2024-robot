@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LEDs.LEDConstants;
 import frc.robot.subsystems.LEDs.LEDs;
 
 public class LEDManager extends Command {
@@ -28,9 +29,8 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    leds.solidDimRainbow();
-
-    System.out.println("Running");
+    int index = (int) (Math.random()) * 3;
+    leds.setAllColor(LEDConstants.colors[index]);
   }
 
   /*
