@@ -277,7 +277,7 @@ public class Constants {
     public static final double AutoTurnI = 0.0;
     public static final double AutoTurnD = 0.0;
 
-    public static final double AutoDriveP = 0.0;
+    public static final double AutoDriveP = 1.1;
     public static final double AutoDriveI = 0.0;
     public static final double AutoDriveD = 0.0;
   }
