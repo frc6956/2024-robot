@@ -13,7 +13,7 @@ public class LEDManager extends Command {
   /** Creates a new LEDManager. */
   int count = 0;
 
-  int color = 0;
+  int color = 1;
 
   private LEDs leds;
   private boolean hasNote = false;
@@ -30,12 +30,17 @@ public class LEDManager extends Command {
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
     count++;
-    if (count > 180) {
+    if (count > 100) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
       // leds.setAllColor(LEDConstants.colors[index]);
-      leds.setAllHSV((int) count);
+      color++;
+      leds.setAllColor(new int[] {color, 0, 0});
       count = 0;
       System.out.println("Index: " + index);
+    }
+
+    if (color > 100) {
+      color = 1;
     }
   }
 
