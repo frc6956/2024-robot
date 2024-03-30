@@ -29,6 +29,8 @@ public class LEDManager extends Command {
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
     leds.solidDimRainbow();
+
+    System.out.println("Running");
   }
 
   /*

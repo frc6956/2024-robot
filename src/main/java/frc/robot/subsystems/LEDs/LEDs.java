@@ -29,7 +29,7 @@ public class LEDs extends SubsystemBase {
   /** Represents the LEDs subsystem of the robot. */
   public LEDs() {
     // PWM port 2 on the Rio
-    m_led = new AddressableLED(0);
+    m_led = new AddressableLED(7);
 
     // sets the length of the LEDs
     m_ledBuffer = new AddressableLEDBuffer(getLength());
