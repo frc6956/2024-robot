@@ -12,6 +12,8 @@ public class LEDManager extends Command {
   /** Creates a new LEDManager. */
   int count = 0;
 
+  int color = 0;
+
   private LEDs leds;
   private boolean hasNote = false;
 
@@ -27,7 +29,11 @@ public class LEDManager extends Command {
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
     // leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
-    leds.dimRainbow();
+    color++;
+    leds.setAllColor(new int[] {color, (int) color / 2, color * 2});
+    if (color > 20) {
+      color = 0;
+    }
   }
 
   /*
