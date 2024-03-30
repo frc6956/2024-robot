@@ -28,7 +28,7 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    color++;
+    count++;
     // leds.setAllColor(LEDConstants.green);
     if (count > 5) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
