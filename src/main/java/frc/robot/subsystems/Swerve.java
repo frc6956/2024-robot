@@ -106,16 +106,18 @@ public class Swerve extends SubsystemBase {
     resetModulesToAbsolute();
 
     visionPose3d = new Pose3d();
-/**
- * SwerveDriveOdometry creates a new instance of swerve drive odometry. This class is responsible for
- * handling the odometry wheel tracking and pose estimation of a swerve drive.
- *
- * Initialization includes:
- * - The kinematic property of the drive is configured using the swerveKinematics object from DriveConstants.
- * - The heading of the robot is updated and tracked by the getHeading() function, which should return the current orientation of the robot.
- * - The positions of the swerve modules are updated and tracked by the getModulePositions() function, which should return an array of the current swerve module positions.
- * - The robot's pose is initially set to be at the origin (0.0, 0.0) with a rotation angle of 0 (facing straight upwards in the y-direction).
- */
+    /**
+     * SwerveDriveOdometry creates a new instance of swerve drive odometry. This class is
+     * responsible for handling the odometry wheel tracking and pose estimation of a swerve drive.
+     *
+     * <p>Initialization includes: - The kinematic property of the drive is configured using the
+     * swerveKinematics object from DriveConstants. - The heading of the robot is updated and
+     * tracked by the getHeading() function, which should return the current orientation of the
+     * robot. - The positions of the swerve modules are updated and tracked by the
+     * getModulePositions() function, which should return an array of the current swerve module
+     * positions. - The robot's pose is initially set to be at the origin (0.0, 0.0) with a rotation
+     * angle of 0 (facing straight upwards in the y-direction).
+     */
     swerveOdometry =
         new SwerveDriveOdometry(
             DriveConstants.swerveKinematics,
@@ -212,12 +214,13 @@ public class Swerve extends SubsystemBase {
   /**
    * Drives the swerve drive system based on the given translation and rotation values.
    *
-   * @param translation    The translation of the robot in x and y coordinates.
-   * @param rotation       The rotation of the robot.
-   * @param fieldRelative  True if the translation and rotation are field-relative, false otherwise.
-   * @param isOpenLoop     True if the drive should be performed in open loop mode, false for closed loop mode.
-   * @param isEvading      True if the robot is evading an obstacle, false otherwise.
-   * @param isLocked       True if the swerve drive system is locked, false otherwise.
+   * @param translation The translation of the robot in x and y coordinates.
+   * @param rotation The rotation of the robot.
+   * @param fieldRelative True if the translation and rotation are field-relative, false otherwise.
+   * @param isOpenLoop True if the drive should be performed in open loop mode, false for closed
+   *     loop mode.
+   * @param isEvading True if the robot is evading an obstacle, false otherwise.
+   * @param isLocked True if the swerve drive system is locked, false otherwise.
    */
   public void drive(
       Translation2d translation,
