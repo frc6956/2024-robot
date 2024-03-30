@@ -222,19 +222,11 @@ public class LEDs extends SubsystemBase {
   }
 
   public void solidDimRainbow() {
-    final int hue = (int) (m_rainbowFirstPixelHue);
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      if (i % 2 == 0) {
-
-        m_ledBuffer.setHSV(i, 0, 0, 0);
-      } else {
-        m_ledBuffer.setHSV(i, hue, 250, 140);
-      }
-
-      m_rainbowFirstPixelHue += 0.5;
-
-      m_rainbowFirstPixelHue %= 180;
+    int hue = (int) (Math.random() * 180);
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setHSV(i, hue, 100, 20);
     }
+    m_led.setData(m_ledBuffer);
   }
 
   /**
