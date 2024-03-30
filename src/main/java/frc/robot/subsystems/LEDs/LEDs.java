@@ -221,6 +221,22 @@ public class LEDs extends SubsystemBase {
     }
   }
 
+  public void solidDimRainbow() {
+    final int hue = (int) (m_rainbowFirstPixelHue);
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      if (i % 2 == 0) {
+
+        m_ledBuffer.setHSV(i, 0, 0, 0);
+      } else {
+        m_ledBuffer.setHSV(i, hue, 250, 140);
+      }
+
+      m_rainbowFirstPixelHue += 0.015;
+
+      m_rainbowFirstPixelHue %= 180;
+    }
+  }
+
   /**
    * Sets the shape of the LED panel.
    *
