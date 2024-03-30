@@ -36,6 +36,7 @@ public class LEDManager extends Command {
       leds.setAllColor(new int[] {0, color, 0});
       count = 0;
       System.out.println("Index: " + color);
+      System.out.println(up);
     }
 
     if (color >= 49) {
