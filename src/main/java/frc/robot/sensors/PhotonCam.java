@@ -138,13 +138,13 @@ public class PhotonCam extends SubsystemBase {
       ambiguity += t.getPoseAmbiguity() / pose.targetsUsed.size();
       distance += t.getBestCameraToTarget().getTranslation().getNorm() / pose.targetsUsed.size();
     }
-    SmartDashboard.putNumber("Ambiguity", ambiguity);
-    SmartDashboard.putNumber("Distance", distance);
+    // SmartDashboard.putNumber(camName + "Ambiguity", ambiguity);
+    // SmartDashboard.putNumber("Distance", distance);
     if (ambiguity > 0.25 || distance > 10) {
       return;
     } else {
-      System.out.println(ambiguity + " Excellent, Excellent");
-      System.out.println(distance + " Disisgood");
+      // System.out.println(ambiguity + " Excellent, Excellent");
+      // System.out.println(distance + " Disisgood");
     }
 
     /*
