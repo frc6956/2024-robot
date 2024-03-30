@@ -12,7 +12,7 @@
         "y": 2.9870976790299637
       },
       "isLocked": false,
-      "linkedName": "3.1"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -44,7 +44,7 @@
         "y": 0.6893302336223001
       },
       "isLocked": false,
-      "linkedName": "3.1.1"
+      "linkedName": null
     },
     {
       "anchor": {
