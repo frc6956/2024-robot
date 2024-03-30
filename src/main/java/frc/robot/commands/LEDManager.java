@@ -26,8 +26,8 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // leds.setAllColor(LEDConstants.green);
-    leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
+    leds.setAllColor(LEDConstants.green);
+    // leds.setShape(leds.getRightPanel(), LEDConstants.shamrock);
   }
 
   /*
