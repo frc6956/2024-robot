@@ -29,8 +29,7 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // leds.setAllColor(LEDConstants.green);
-    count++;
-    if (count > 10) {
+    if (count > 5) {
       int index = (int) (Math.random() * (LEDConstants.colors.length - 1));
       // leds.setAllColor(LEDConstants.colors[index]);
       color++;
@@ -39,7 +38,7 @@ public class LEDManager extends Command {
       System.out.println("Index: " + color);
     }
 
-    if (color > 100) {
+    if (color >= 70) {
       color = 1;
     }
   }
