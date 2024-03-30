@@ -42,7 +42,7 @@ public class LEDs extends SubsystemBase {
   /** Sets all LEDs to green color. */
   public void setGreen() {
     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-      m_ledBuffer.setRGB(i, 10, 0, 0);
+      m_ledBuffer.setRGB(i, 0, 10, 0);
     }
 
     m_led.setData(m_ledBuffer);
