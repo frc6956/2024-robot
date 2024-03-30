@@ -29,7 +29,7 @@ public class LEDManager extends Command {
   @Override
   public void execute() {
     // defaultColors();
-    leds.setColor(leds.getLeftPanelRange(), LEDConstants.blue);
+    leds.setColor(leds.getPanelsRange(), LEDConstants.blue);
   }
 
   public void defaultColors() {
