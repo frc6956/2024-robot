@@ -59,8 +59,8 @@ public class LEDManager extends Command {
   }
 
   public void alternateGreenGold() {
-    int[] green = {0, 255, 0};
-    int[] yellow = {255, 255, 0};
+    int[] green = {0, 100, 0};
+    int[] yellow = {100, 100, 0};
 
     if (Timer.getFPGATimestamp() % 1 < 0.5) {
       leds.setPanelColor(leds.getLeftPanel(), green);
