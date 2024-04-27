@@ -29,10 +29,10 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // defaultColors();
+    defaultColors();
     // leds.custom();
-    alternateGreenGold();
-    leds.update();
+    // alternateGreenGold();
+    // leds.update();
   }
 
   public void defaultColors() {
