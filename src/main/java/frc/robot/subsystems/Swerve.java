@@ -61,6 +61,8 @@ public class Swerve extends SubsystemBase {
     gyro.getConfigurator().apply(new Pigeon2Configuration());
     zeroGyro();
 
+    SmartDashboard.setDefaultNumber("Robot Max Speed", 1);
+
     mSwerveMods =
         new SwerveModule[] {
           new SwerveModule(
