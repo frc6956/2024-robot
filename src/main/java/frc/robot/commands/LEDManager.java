@@ -29,10 +29,9 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    defaultColors();
+    // defaultColors();
     // leds.custom();
-    // alternateGreenGold();
-    // leds.update();
+    alternateGreenGold();
   }
 
   public void defaultColors() {
@@ -58,17 +57,26 @@ public class LEDManager extends Command {
     }
   }
 
+  double lastUpdate = Timer.getFPGATimestamp();
+  double updateRate = 1.0;
+  boolean toggle = true;
+
   public void alternateGreenGold() {
     int[] green = {0, 30, 0};
     int[] yellow = {20, 20, 0};
 
-    if (Timer.getFPGATimestamp() % 1 < 0.5) {
-      leds.setPanelColor(leds.getLeftPanel(), green);
-      leds.setPanelColor(leds.getRightPanel(), yellow);
-    } else {
-      leds.setPanelColor(leds.getLeftPanel(), yellow);
-      leds.setPanelColor(leds.getRightPanel(), green);
+    if (Timer.getFPGATimestamp() > (lastUpdate + updateRate)) {
+      if (toggle) {
+        leds.setPanelColor(leds.getLeftPanel(), green);
+        leds.setPanelColor(leds.getRightPanel(), yellow);
+      } else {
+        leds.setPanelColor(leds.getLeftPanel(), yellow);
+        leds.setPanelColor(leds.getRightPanel(), green);
+      }
+      lastUpdate = Timer.getFPGATimestamp();
+      toggle = !toggle;
     }
+    leds.update();
   }
 
   /*
