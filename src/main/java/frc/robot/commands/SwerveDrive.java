@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -70,7 +71,8 @@ public class SwerveDrive extends Command {
 
     /* Drive */
     swerve.drive(
-        new Translation2d(-xAxisFiltered, -yAxisFiltered).times(DriveConstants.MaxSpeed),
+        new Translation2d(-xAxisFiltered, -yAxisFiltered)
+            .times(SmartDashboard.getNumber("Robot Max Speed", 1)),
         rAxis * DriveConstants.MaxAngularSpeed,
         !m_robotCentricSup.getAsBoolean(),
         true,
