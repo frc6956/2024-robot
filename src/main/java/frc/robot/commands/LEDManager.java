@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LEDs.LEDConstants;
 import frc.robot.subsystems.LEDs.LEDs;
@@ -28,8 +29,10 @@ public class LEDManager extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    defaultColors();
+    // defaultColors();
     // leds.custom();
+    alternateGreenGold();
+    leds.update();
   }
 
   public void defaultColors() {
@@ -52,6 +55,19 @@ public class LEDManager extends Command {
       color += 0.1;
     } else if (!up) {
       color -= 0.1;
+    }
+  }
+
+  public void alternateGreenGold() {
+    int[] green = {0, 255, 0};
+    int[] yellow = {255, 255, 0};
+
+    if (Timer.getFPGATimestamp() % 1 < 0.5) {
+      leds.setPanelColor(leds.getLeftPanel(), green);
+      leds.setPanelColor(leds.getRightPanel(), yellow);
+    } else {
+      leds.setPanelColor(leds.getLeftPanel(), yellow);
+      leds.setPanelColor(leds.getRightPanel(), green);
     }
   }
 

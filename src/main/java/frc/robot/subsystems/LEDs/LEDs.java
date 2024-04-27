@@ -172,7 +172,7 @@ public class LEDs extends SubsystemBase {
    * @param panel The panel to set the color for.
    * @param color An array representing the RGB color values.
    */
-  private void setPanelColor(Panel panel, int[] color) {
+  public void setPanelColor(Panel panel, int[] color) {
     panel.setAllColor(m_ledBuffer, color);
   }
 
