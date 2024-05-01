@@ -63,14 +63,14 @@ public class LEDManager extends Command {
 
   public void alternateGreenGold() {
     int[] green = {0, 30, 0};
-    int[] yellow = {20, 20, 0};
+    int[] gold = {20, 20, 0};
 
     if (Timer.getFPGATimestamp() > (lastUpdate + updateRate)) {
       if (toggle) {
         leds.setPanelColor(leds.getLeftPanel(), green);
-        leds.setPanelColor(leds.getRightPanel(), yellow);
+        leds.setPanelColor(leds.getRightPanel(), gold);
       } else {
-        leds.setPanelColor(leds.getLeftPanel(), yellow);
+        leds.setPanelColor(leds.getLeftPanel(), gold);
         leds.setPanelColor(leds.getRightPanel(), green);
       }
       lastUpdate = Timer.getFPGATimestamp();

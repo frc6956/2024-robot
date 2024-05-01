@@ -232,8 +232,6 @@ public class Swerve extends SubsystemBase {
       boolean isOpenLoop,
       boolean isEvading,
       boolean isLocked) {
-    System.out.println("X: " + translation.getX());
-    System.out.println("Y: " + translation.getY());
 
     if (isLocked) {
 
